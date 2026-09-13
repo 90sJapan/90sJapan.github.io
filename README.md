@@ -1,6 +1,6 @@
 # CRMSN site
 
-Static homepage for CRMSN. Four files, no build step: `index.html`, `styles.css`, `y2k.css`, `script.js`.
+Static homepage for CRMSN. No build step: `index.html`, `styles.css`, `y2k.css`, `script.js`, plus `tracks.json` and `upload.sh` for the discography.
 The music section embeds your SoundCloud profile directly, so new uploads to
 soundcloud.com/officialcrmsn show up on the site automatically — no code changes needed.
 
@@ -28,20 +28,22 @@ should be public. That's fine — it only contains site code (HTML/CSS/JS), noth
 3. In the repo, go to **Settings → Pages** and confirm the source is the `main` branch, root folder.
 4. Your site goes live at `https://yourusername.github.io` within a minute or two.
 
-## Keeping your discography private
+## Discography (full-quality files)
 
-GitHub Pages needs a public repo to publish from, so anything in *this* repo is visible
-to anyone. For your actual working files — unreleased tracks, stems, masters, older
-projects — don't put them here. Instead:
+Song files you upload from your PC live in `music/`, which is **git-ignored** — they never enter
+this public repo's history. Instead `upload.sh` publishes them as assets on the repo's
+`discography` GitHub Release (free, up to 2 GB per file), and the site's player streams them
+from there. `tracks.json` is the small committed manifest the player reads.
 
-1. Create a **second, separate repository** and set its visibility to **Private**
-   (e.g. `crmsn-discography`). Private repos are free and unlimited on GitHub's free plan.
-2. Upload/push your audio files and project folders there. It's just your personal
-   archive with version history — it's never linked from the public site, so visitors
-   never see it exists.
-3. If you're storing a lot of large lossless files (wav masters, big sample packs),
-   plain git handles individual files up to 100MB but isn't great at scale for large
-   binaries — look into [Git LFS](https://git-lfs.github.com/) for that repo if it grows large.
+```
+cp ~/Desktop/new-song.wav music/     # drop files in (mp3, wav, flac, m4a, aac, ogg, opus)
+./upload.sh --push                   # upload new files + commit/push tracks.json
+```
 
-Public site repo and private discography repo are completely independent — you can
-update your archive as often as you want without touching the live site at all.
+- Titles come from filenames (`Night_Drive-v2.wav` → "Night Drive v2"); edit them in `tracks.json` any time.
+- Re-running the script skips files already uploaded and never touches existing entries.
+- To remove a song: delete it from `music/`, remove its entry from `tracks.json`, and run
+  `gh release delete-asset discography <file>`.
+- To replace a file with a new version: delete the asset first (command above), then re-run.
+- Anything the site can play, a visitor can download — that's true of every audio host. WAV/FLAC
+  are large; MP3 320k or M4A are a good middle ground if bandwidth matters.
