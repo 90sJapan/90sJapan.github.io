@@ -1,0 +1,4 @@
+# local-only files
+.DS_Store
+*.zip
+files/
