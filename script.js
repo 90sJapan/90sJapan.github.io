@@ -213,7 +213,7 @@ const viz = (function () {
     fade(onBg ? 0.16 : 0.11);
     const k = onBg ? 0.34 : 1;                   // gentler behind the page so text stays readable
     ctx.globalCompositeOperation = onBg ? 'source-over' : 'lighter';
-    const R = Math.max(W, H) * 0.6;
+    const R = Math.max(W, H) * (onBg ? 0.34 : 0.6);   // smaller orbs behind the page so several fit on screen
     for (let k = 0; k < 5; k++) {
       let g = 0; for (let i = k * 5; i < k * 5 + 5 && i < N; i++) g += cur[i]; g /= 5;
       const t = clock * (0.10 + k * 0.035), ph = k * 1.7;
