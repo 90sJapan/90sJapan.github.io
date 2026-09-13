@@ -16,9 +16,11 @@ similarity and by a "private"/"public" hint in the sub-folder name. Anything sti
 left with the filename as its title and flagged "needs_review" so you can fix it by hand.
 Hand-edited titles are never overwritten — delete the "soundcloud" key on an entry to re-match.
 
-Private tracks need your SoundCloud OAuth token (they are invisible to the public API):
+Private tracks need the OAuth token of the account that owns them (invisible to the public API).
+Each SoundCloud account has its own token: log in as that account, then
   soundcloud.com -> DevTools -> Application -> Cookies -> soundcloud.com -> "oauth_token"
-Pass it with --token, env SC_OAUTH_TOKEN, or put it in ./.sc_token (git-ignored).
+and save the value as music/<alias>/token.txt (music/ is git-ignored). A single-account fallback
+can go in --token, env SC_OAUTH_TOKEN, or ./.sc_token.
 """
 import argparse, hashlib, json, os, re, subprocess, sys, tempfile, unicodedata
 from difflib import SequenceMatcher
@@ -116,13 +118,19 @@ def hint_of(rel):
     r = rel.lower()
     return "private" if "private" in r else "public" if "public" in r else None
 
+def is_exact(rel, t):
+    """filename stem equals the title / permalink, or one is a prefix of the other"""
+    ns, nt, npl = norm(Path(rel).stem), norm(t["title"]), norm(t["permalink"].rsplit("/", 1)[-1])
+    return ns in (nt, npl) or (len(ns) >= 8 and (nt.startswith(ns) or ns.startswith(nt)))
+
 def score(rel, t, d):
     """how well a local file fits a SoundCloud track (higher = better)"""
     stem = Path(rel).stem
     s = similarity(stem, t["title"]) + 0.5 * similarity(stem, t["permalink"].rsplit("/", 1)[-1])
+    if is_exact(rel, t): s += 2                              # a name match beats everything else
     s -= abs(t["duration"] - d) / TOLERANCE * 0.1          # closer length nudges ahead
     h = hint_of(rel)
-    if h: s += 0.4 if t["sharing"] == h else -0.4
+    if h: s += 0.2 if t["sharing"] == h else -0.2           # folder name is only a weak hint
     return s
 
 def assign(pending, catalog, claimed):
@@ -142,8 +150,7 @@ def assign(pending, catalog, claimed):
         cs = cands[rel]
         margin = sc - score(rel, cs[1], pending[rel]["duration"]) if len(cs) > 1 else 9
         h = hint_of(rel)
-        exact = norm(Path(rel).stem) in (norm(t["title"]), norm(t["permalink"].rsplit("/", 1)[-1]))
-        confident = (exact or margin >= 0.35) and (h is None or t["sharing"] == h)
+        confident = is_exact(rel, t) or (margin >= 0.35 and (h is None or t["sharing"] == h))
         out[rel] = (t, confident, cs); taken.add(t["permalink"])
     for rel in pending:
         if rel not in out: out[rel] = (None, False, cands[rel])
@@ -152,7 +159,17 @@ def assign(pending, catalog, claimed):
 def cmd_match(args):
     data = load_tracks()
     token = args.token or os.environ.get("SC_OAUTH_TOKEN") or ((ROOT / ".sc_token").read_text().strip() if (ROOT / ".sc_token").exists() else None)
-    if not token: print("note: no OAuth token — private SoundCloud tracks won't be visible (see --help)\n")
+    def token_for(alias):
+        for name in ("token.txt", "token.rtf", ".sc_token", "oauth_token.txt"):
+            f = MUSIC / alias / name
+            if not f.exists(): continue
+            text = subprocess.run(["textutil", "-convert", "txt", "-stdout", str(f)], capture_output=True, text=True).stdout if f.suffix == ".rtf" else f.read_text()
+            # accept "oauth_token: <value>" style notes too — the token itself looks like 2-12345-678901-AbCdEf
+            m = re.search(r"\b\d+-\d+-\d+-[A-Za-z0-9]+\b", text)
+            if m: return m.group(0)
+            words = text.split()
+            if words: return words[-1]
+        return token
     by_source = {t["source"]: t for t in data["tracks"] if "source" in t}
     client_id = None
     catalog = {}       # alias -> list of sc tracks
@@ -187,13 +204,18 @@ def cmd_match(args):
         if not profile: report["unmapped"].add(alias); continue
         if alias not in catalog:
             client_id = client_id or sc_client_id()
+            tk = token_for(alias)
+            if tk and subprocess.run(["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "-A", "Mozilla/5.0", "-H", f"Authorization: OAuth {tk}",
+                                      f"https://api-v2.soundcloud.com/me?client_id={client_id}"], capture_output=True, text=True).stdout != "200":
+                print(f"  ! {alias}: token rejected (expired — logging out of SoundCloud invalidates it). Falling back to public tracks only.")
+                tk = None
             try:
-                user, tracks = sc_tracks(profile, client_id, token)
+                user, tracks = sc_tracks(profile, client_id, tk)
             except Exception as e:
                 die(f"SoundCloud lookup failed for {alias} ({profile}): {e}")
             CACHE.mkdir(exist_ok=True); (CACHE / f"{slug(alias)}.json").write_text(json.dumps(tracks, indent=2))
             priv = sum(t["sharing"] != "public" for t in tracks)
-            print(f"  {alias}: {len(tracks)} tracks on {profile} ({priv} private)")
+            print(f"  {alias}: {len(tracks)} tracks on {profile} ({priv} private{'' if tk else ' — no working token, private tracks hidden'})")
             catalog[alias] = tracks
 
         pending[rel] = entry

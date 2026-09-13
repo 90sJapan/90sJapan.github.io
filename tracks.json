@@ -1,7 +1,9 @@
 {
   "release": "discography",
   "sources": {
-    "crmsn": "https://soundcloud.com/officialcrmsn"
+    "crmsn": "https://soundcloud.com/officialcrmsn",
+    "hush witch": "https://soundcloud.com/sploooooosh",
+    "spotlife": "https://soundcloud.com/daspotlife"
   },
   "tracks": [
     {
@@ -125,6 +127,54 @@
       "created_at": "2022-09-22T21:01:27Z"
     },
     {
+      "title": "Beattt.3",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/beattt.3.wav",
+      "file": "crmsn--beattt-3.wav",
+      "bytes": 28390068,
+      "duration": 160.941179,
+      "sha256": "5bd36026bd883573110a7d5465216776fbc044cb333fd6d7a3ca5649df7d4f9e",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/beattt3/s-pllqMUOMCpn",
+      "sharing": "private",
+      "created_at": "2022-09-20T14:25:59Z"
+    },
+    {
+      "title": "Idk2 Newcomp",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/idk2_newcomp.wav",
+      "file": "crmsn--idk2-newcomp.wav",
+      "bytes": 14376644,
+      "duration": 81.5,
+      "sha256": "26b98e1a07fd0a8b5aaa22f4f23f33f8bcb561d6068a2a114f1c911bd244cbd7",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/idk2-newcomp/s-HuCKyR9QRV3",
+      "sharing": "private",
+      "created_at": "2022-07-30T18:06:18Z"
+    },
+    {
+      "title": "Lofi",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/lofi.wav",
+      "file": "crmsn--lofi.wav",
+      "bytes": 10210492,
+      "duration": 57.882358,
+      "sha256": "b17ea5205d536f7919295586b683825f84bf1728d130d0e19cebf6ce78d49371",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/lofi-2/s-iOoZfzuPNPb",
+      "sharing": "private",
+      "created_at": "2022-07-30T17:34:25Z"
+    },
+    {
+      "title": "Idk2",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/idk2.wav",
+      "file": "crmsn--idk2.wav",
+      "bytes": 11466044,
+      "duration": 65.0,
+      "sha256": "3aef74b7c3bd93d86ca4b3e85829845c7d875269047e0f4c8029d76d0a8b7e28",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/idk2/s-hAaioDJLGRY",
+      "sharing": "private",
+      "created_at": "2022-07-28T13:35:23Z"
+    },
+    {
       "title": "Stangre",
       "artist": "crmsn",
       "source": "crmsn/soundcloud_public/stangre.wav",
@@ -197,16 +247,124 @@
       "created_at": "2020-09-06T02:10:09Z"
     },
     {
-      "title": "skream [2016]",
+      "title": "I'm Right Master 006 (2nd Settings) [Rverse Masterchain] 2016 [2020 Version]",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_public/I'm Right Master 006 (2nd Settings) [Rverse Masterchain].wav",
+      "file": "crmsn--i-m-right-master-006-2nd-settings-rverse-masterchain.wav",
+      "bytes": 64165544,
+      "duration": 363.75,
+      "sha256": "7bf6951b8ccecce1aeb643d4f757e9967ade5950cbda208e6f01a402709c8408",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/im-right-master-006-2nd-settings-rverse-masterchain/s-G9cdNFvPm7K",
+      "sharing": "private",
+      "created_at": "2020-08-11T18:40:47Z"
+    },
+    {
+      "title": "Bum Bum Bum / CRIMSON+",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/B3 Master 2018.wav",
+      "file": "crmsn--b3-master-2018.wav",
+      "bytes": 34997828,
+      "duration": 198.400136,
+      "sha256": "c117ee5487cccbba5855d32d58480cdbd9afb9aa9a759e376693c1069e06451f",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/bum-bum-bum-crimson/s-xIHZZ",
+      "sharing": "private",
+      "created_at": "2018-06-06T06:34:29Z"
+    },
+    {
+      "title": "The Better Side 2018 Master",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/The Better Side 2018 Master.wav",
+      "file": "crmsn--the-better-side-2018-master.wav",
+      "bytes": 52920044,
+      "duration": 300.0,
+      "sha256": "6247aef09cf46c1ef5e0aa2140b031e93e04d045c7d6382ff0f76845cfd517a5",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/the-better-side-2018-master/s-eY3HK",
+      "sharing": "private",
+      "created_at": "2018-05-31T03:01:06Z"
+    },
+    {
+      "title": "EVOL 2018 NO VOX MASTER",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/EVOL 2018 NO VOX MASTER.wav",
+      "file": "crmsn--evol-2018-no-vox-master.wav",
+      "bytes": 42940844,
+      "duration": 243.428571,
+      "sha256": "833ac57b3aef0868cefcadaee7dc9d4eb7c69859c8bd25a697f0dec65d5bbf82",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/evol-2018-no-vox-master/s-TrhTy",
+      "sharing": "private",
+      "created_at": "2018-05-30T17:35:42Z"
+    },
+    {
+      "title": "CRIMSON+ - horrific (2018)",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/CRIMSON+ Horiffic.wav",
+      "file": "crmsn--crimson-horiffic.wav",
+      "bytes": 44100044,
+      "duration": 250.0,
+      "sha256": "2cc24a7197eff339fb094bb80c05b0a32c2945454b93ce039725057e34faeb41",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/crimson-horiffic/s-dzZz76sT1ZN",
+      "sharing": "private",
+      "created_at": "2018-05-24T04:10:04Z"
+    },
+    {
+      "title": "Horrific2018v2master V2v3",
       "artist": "crmsn",
       "source": "crmsn/soundcloud_public/horrific2018v2master V2v3final Apr21.19.wav",
       "file": "crmsn--horrific2018v2master-v2v3final-apr21-19.wav",
       "bytes": 42335996,
       "duration": 239.999728,
       "sha256": "b76f70d2a9e4e8ef4458ddb87dd2e540368e9d5b15a515967d7b5d124a57e47a",
-      "soundcloud": "https://soundcloud.com/officialcrmsn/skream",
-      "sharing": "public",
-      "created_at": "2019-04-22T04:47:45Z"
+      "soundcloud": "https://soundcloud.com/officialcrmsn/horrific2018v2master-v2v3/s-GFD9q",
+      "sharing": "private",
+      "created_at": "2018-05-23T09:28:05Z"
+    },
+    {
+      "title": "This Is The End V2 2018 Version (og 2016)",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/this is the end v2 2018 version.wav",
+      "file": "crmsn--this-is-the-end-v2-2018-version.wav",
+      "bytes": 39916844,
+      "duration": 226.285714,
+      "sha256": "d03c735edd058ce818d43f1f9491686e3d0d5544d8127d627a8ce4cb568a27fc",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/this-is-the-end-v2-2018-version/s-xnxez",
+      "sharing": "private",
+      "created_at": "2018-05-21T04:55:25Z"
+    },
+    {
+      "title": "Suicide2018 (og 2016)",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/suicide2018.wav",
+      "file": "crmsn--suicide2018.wav",
+      "bytes": 34398044,
+      "duration": 195.0,
+      "sha256": "caae8361c5a5e8ef144e366bf338821597289d0ce72f743530bf5d0936b9916c",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/suicide2018/s-zs64U",
+      "sharing": "private",
+      "created_at": "2018-05-18T19:06:53Z"
+    },
+    {
+      "title": "2018",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/2018.wav",
+      "file": "crmsn--2018.wav",
+      "bytes": 20485208,
+      "duration": 116.129048,
+      "sha256": "855aaf30663580fc504ede515d71da93f1662a7024d73374df693f2098e772c7",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/2018a/s-p6Yw1",
+      "sharing": "private",
+      "created_at": "2018-05-18T16:52:20Z"
+    },
+    {
+      "title": "Sam Smith Remix (og 2016) (gross&muddy)",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/sam smith remix.wav",
+      "file": "crmsn--sam-smith-remix.wav",
+      "bytes": 42773728,
+      "duration": 242.481202,
+      "sha256": "c17823a1d3f873f76eb56366e0f002250b79216ea45ba38bff66be129b3e52b1",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/sam-smith-remix/s-Jn02C",
+      "sharing": "private",
+      "created_at": "2018-05-17T23:16:04Z"
     },
     {
       "title": "Little Ladyy (og 2014-2015)",
@@ -245,16 +403,48 @@
       "created_at": "2017-06-17T08:33:46Z"
     },
     {
-      "title": "crmsn - fairweather",
+      "title": "Crmsn June2017",
       "artist": "crmsn",
-      "source": "crmsn/soundcloud_public/record 3.wav",
-      "file": "crmsn--record-3.wav",
-      "bytes": 33868844,
-      "duration": 192.0,
-      "sha256": "98f22b0107c1a2f65143022567f49ff8934c775f0a2bde5f669df9f2475d5964",
-      "soundcloud": "https://soundcloud.com/officialcrmsn/fair-weather",
-      "sharing": "public",
-      "created_at": "2017-05-15T16:18:56Z"
+      "source": "crmsn/soundcloud_private/crmsn june2017.wav",
+      "file": "crmsn--crmsn-june2017.wav",
+      "bytes": 37266882,
+      "duration": 211.262494,
+      "sha256": "27f03f54fa83a38f2ffb79e7beb0412e5a46599118cd1b4cefe5aac8fd68b70b",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/crmsn-june2017/s-vj024",
+      "sharing": "private",
+      "created_at": "2017-06-14T15:57:26Z"
+    },
+    {
+      "title": "Fuck Em",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/fuck 2.wav",
+      "file": "crmsn--fuck-2.wav",
+      "bytes": 44152154,
+      "duration": 250.294649,
+      "sha256": "02b38ba7abd7847b2990c0497eff439d665ab2a813d6648c618a2a339a3ccae0",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/fuck-em/s-dl7U6",
+      "sharing": "private",
+      "created_at": "2017-05-10T00:11:15Z",
+      "needs_review": [
+        "Fuck Em  (https://soundcloud.com/officialcrmsn/fuck-em/s-dl7U6)",
+        "Fuc 2 (og 2015)  (https://soundcloud.com/officialcrmsn/fuck-2/s-Gjc6g)",
+        "CRIMSON+ - horrific (2018)  (https://soundcloud.com/officialcrmsn/crimson-horiffic/s-dzZz76sT1ZN)",
+        "CRMSN - Ace Of Spades  (https://soundcloud.com/officialcrmsn/aceofspades/s-naob7)",
+        "HO2018  (https://soundcloud.com/officialcrmsn/ho2018/s-OsGey)",
+        "CRMSN - Ace Of Spades (Original Mix)  (https://soundcloud.com/officialcrmsn/crmsn-ace-of-spades-original/s-HuJnD)"
+      ]
+    },
+    {
+      "title": "cr,",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/CRMSN - KATY PERRY.wav",
+      "file": "crmsn--crmsn-katy-perry.wav",
+      "bytes": 69040292,
+      "duration": 391.384626,
+      "sha256": "c914f37b725642e796ae7a43e0711d860fbc35e279d8d220864aa2012a273f6b",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/cr/s-84m9q",
+      "sharing": "private",
+      "created_at": "2017-03-25T14:06:40Z"
     },
     {
       "title": "Alasen - Temple (CRMSN Edit)",
@@ -267,6 +457,18 @@
       "soundcloud": "https://soundcloud.com/officialcrmsn/templeedit",
       "sharing": "public",
       "created_at": "2017-03-22T21:51:27Z"
+    },
+    {
+      "title": "Record 3",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_public/record 3.wav",
+      "file": "crmsn--record-3.wav",
+      "bytes": 33868844,
+      "duration": 192.0,
+      "sha256": "98f22b0107c1a2f65143022567f49ff8934c775f0a2bde5f669df9f2475d5964",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/record-3/s-ShMuI",
+      "sharing": "private",
+      "created_at": "2017-01-12T19:28:31Z"
     },
     {
       "title": "PMU",
@@ -317,6 +519,24 @@
       "created_at": "2016-08-08T04:14:33Z"
     },
     {
+      "title": "STEEZY PRIME - SEE YOU IN YOUR DREAMS (CRMSN REMIX)",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/see you in your dreams remix.wav",
+      "file": "crmsn--see-you-in-your-dreams-remix.wav",
+      "bytes": 25754444,
+      "duration": 146.0,
+      "sha256": "0838970a24c0531a08057283df079aa989212e9624a355e40d9770343158772c",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/crmsn-steezy-prime-see-you-in-your-dreams-crmsn-remix/s-mzxZQ",
+      "sharing": "private",
+      "created_at": "2016-08-08T04:14:32Z",
+      "needs_review": [
+        "STEEZY PRIME - SEE YOU IN YOUR DREAMS (CRMSN REMIX)  (https://soundcloud.com/officialcrmsn/crmsn-steezy-prime-see-you-in-your-dreams-crmsn-remix/s-mzxZQ)",
+        "STEEZY PRIME - See You In My Dreams (CRMSN Remix)  (https://soundcloud.com/officialcrmsn/seeyouinmydreams/s-82Xt6)",
+        "electro house ??  (https://soundcloud.com/officialcrmsn/electro-house/s-yYzZq)",
+        "CRMSN - Sweet Tooth  (https://soundcloud.com/officialcrmsn/sweettooth)"
+      ]
+    },
+    {
       "title": "SIXTYSIX",
       "artist": "crmsn",
       "source": "crmsn/soundcloud_public/05 Sixty Six.wav",
@@ -327,6 +547,18 @@
       "soundcloud": "https://soundcloud.com/officialcrmsn/sixtysix",
       "sharing": "public",
       "created_at": "2016-08-08T04:14:32Z"
+    },
+    {
+      "title": "funny",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/funny.wav",
+      "file": "crmsn--funny.wav",
+      "bytes": 33868844,
+      "duration": 192.0,
+      "sha256": "fe7ed6d341daaa921466ad912c5c5a3d1a178eb1c2c3e3b5a9019de3cec5694f",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/funny-1/s-EAJtP",
+      "sharing": "private",
+      "created_at": "2016-07-30T22:14:48Z"
     },
     {
       "title": "THE FUN RM",
@@ -341,6 +573,18 @@
       "created_at": "2016-07-05T16:58:09Z"
     },
     {
+      "title": "broken world broken people-",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/broken world broken people-.wav",
+      "file": "crmsn--broken-world-broken-people.wav",
+      "bytes": 45662444,
+      "duration": 258.857143,
+      "sha256": "46a811b2b85f72bd35e7a9b4399125b459d6cdaaa131eeeaf4e19b1ef8c1ee3a",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/broken-world-broken-people/s-x3sSz",
+      "sharing": "private",
+      "created_at": "2016-06-25T21:29:43Z"
+    },
+    {
       "title": "CRMSN - K's Up",
       "artist": "crmsn",
       "source": "crmsn/soundcloud_public/K's Up.wav",
@@ -351,6 +595,30 @@
       "soundcloud": "https://soundcloud.com/officialcrmsn/ksup",
       "sharing": "public",
       "created_at": "2016-06-17T00:05:58Z"
+    },
+    {
+      "title": "Major Lazer & Wild Belle - Be Together(CRMSN Remix)",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/major lazer rem2ix.wav",
+      "file": "crmsn--major-lazer-rem2ix.wav",
+      "bytes": 56095244,
+      "duration": 318.0,
+      "sha256": "59ffa3e4c640871eaffaeb68f15b2be30bdfd416fcbd068f85e59d4b8d7bdb70",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/betogether/s-50JxW",
+      "sharing": "private",
+      "created_at": "2016-03-14T03:32:18Z"
+    },
+    {
+      "title": "We Still In This (earpiercing)",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/we still in this.wav",
+      "file": "crmsn--we-still-in-this.wav",
+      "bytes": 40219244,
+      "duration": 228.0,
+      "sha256": "cc18e4de13a4b51514b8f60fbfac48a05f07adc14d63a5af1049f73a91f4a181",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/we-still-in-this/s-rLn7Q",
+      "sharing": "private",
+      "created_at": "2016-03-04T03:34:28Z"
     },
     {
       "title": "C.L.F. S.S.",
@@ -449,6 +717,24 @@
       "created_at": "2015-08-13T18:17:27Z"
     },
     {
+      "title": "STEEZY PRIME - See You In My Dreams (CRMSN Remix)",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/06 See You in Your Dreams (crmsn remix) [bonus].wav",
+      "file": "crmsn--06-see-you-in-your-dreams-crmsn-remix-bonus.wav",
+      "bytes": 25754444,
+      "duration": 146.0,
+      "sha256": "379a0bb2b8a854437f08bf121eb5bad99fa7e0598c281a9ad8e03cb40ed5e7dc",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/seeyouinmydreams/s-82Xt6",
+      "sharing": "private",
+      "created_at": "2015-08-12T00:05:18Z",
+      "needs_review": [
+        "STEEZY PRIME - SEE YOU IN YOUR DREAMS (CRMSN REMIX)  (https://soundcloud.com/officialcrmsn/crmsn-steezy-prime-see-you-in-your-dreams-crmsn-remix/s-mzxZQ)",
+        "STEEZY PRIME - See You In My Dreams (CRMSN Remix)  (https://soundcloud.com/officialcrmsn/seeyouinmydreams/s-82Xt6)",
+        "electro house ??  (https://soundcloud.com/officialcrmsn/electro-house/s-yYzZq)",
+        "CRMSN - Sweet Tooth  (https://soundcloud.com/officialcrmsn/sweettooth)"
+      ]
+    },
+    {
       "title": "CRMSN - 1986",
       "artist": "crmsn",
       "source": "crmsn/soundcloud_public/1986.wav",
@@ -459,6 +745,18 @@
       "soundcloud": "https://soundcloud.com/officialcrmsn/its1986",
       "sharing": "public",
       "created_at": "2015-08-04T19:57:05Z"
+    },
+    {
+      "title": "nineteen-seventythree",
+      "artist": "crmsn",
+      "source": "crmsn/soundcloud_private/808mafia.wav",
+      "file": "crmsn--808mafia.wav",
+      "bytes": 15704848,
+      "duration": 89.029501,
+      "sha256": "632efd3971fad46e14d03f502dafabec7274673eddbcd5ed6a122c1734033dc8",
+      "soundcloud": "https://soundcloud.com/officialcrmsn/the1973/s-ALT5c",
+      "sharing": "private",
+      "created_at": "2015-07-31T23:26:08Z"
     },
     {
       "title": "CRMSN - Sweet Tooth",
@@ -473,36 +771,6 @@
       "created_at": "2015-07-25T19:27:56Z"
     },
     {
-      "title": "06 See You in Your Dreams (crmsn remix) [bonus]",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/06 See You in Your Dreams (crmsn remix) [bonus].wav",
-      "file": "crmsn--06-see-you-in-your-dreams-crmsn-remix-bonus.wav",
-      "bytes": 25754444,
-      "duration": 146.0,
-      "sha256": "379a0bb2b8a854437f08bf121eb5bad99fa7e0598c281a9ad8e03cb40ed5e7dc",
-      "needs_review": [
-        "CRMSN - Sweet Tooth  (https://soundcloud.com/officialcrmsn/sweettooth)"
-      ]
-    },
-    {
-      "title": "2018",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/2018.wav",
-      "file": "crmsn--2018.wav",
-      "bytes": 20485208,
-      "duration": 116.129048,
-      "sha256": "855aaf30663580fc504ede515d71da93f1662a7024d73374df693f2098e772c7"
-    },
-    {
-      "title": "808mafia",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/808mafia.wav",
-      "file": "crmsn--808mafia.wav",
-      "bytes": 15704848,
-      "duration": 89.029501,
-      "sha256": "632efd3971fad46e14d03f502dafabec7274673eddbcd5ed6a122c1734033dc8"
-    },
-    {
       "title": "Alasen   Temple (CRMSN Edit)",
       "artist": "crmsn",
       "source": "crmsn/soundcloud_private/Alasen - Temple (CRMSN Edit).wav",
@@ -511,51 +779,6 @@
       "duration": 129.005215,
       "sha256": "4a33e81c5eb9d9518d79445b456d07fe12e7ebdfa4c62eded8dbdf4ecd0822db",
       "duplicate_of": "crmsn/soundcloud_public/Alasen - Temple (CRMSN Edit).wav"
-    },
-    {
-      "title": "B3 Master 2018",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/B3 Master 2018.wav",
-      "file": "crmsn--b3-master-2018.wav",
-      "bytes": 34997828,
-      "duration": 198.400136,
-      "sha256": "c117ee5487cccbba5855d32d58480cdbd9afb9aa9a759e376693c1069e06451f"
-    },
-    {
-      "title": "CRIMSON+ Horiffic",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/CRIMSON+ Horiffic.wav",
-      "file": "crmsn--crimson-horiffic.wav",
-      "bytes": 44100044,
-      "duration": 250.0,
-      "sha256": "2cc24a7197eff339fb094bb80c05b0a32c2945454b93ce039725057e34faeb41"
-    },
-    {
-      "title": "CRMSN   KATY PERRY",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/CRMSN - KATY PERRY.wav",
-      "file": "crmsn--crmsn-katy-perry.wav",
-      "bytes": 69040292,
-      "duration": 391.384626,
-      "sha256": "c914f37b725642e796ae7a43e0711d860fbc35e279d8d220864aa2012a273f6b"
-    },
-    {
-      "title": "EVOL 2018 NO VOX MASTER",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/EVOL 2018 NO VOX MASTER.wav",
-      "file": "crmsn--evol-2018-no-vox-master.wav",
-      "bytes": 42940844,
-      "duration": 243.428571,
-      "sha256": "833ac57b3aef0868cefcadaee7dc9d4eb7c69859c8bd25a697f0dec65d5bbf82"
-    },
-    {
-      "title": "The Better Side 2018 Master",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/The Better Side 2018 Master.wav",
-      "file": "crmsn--the-better-side-2018-master.wav",
-      "bytes": 52920044,
-      "duration": 300.0,
-      "sha256": "6247aef09cf46c1ef5e0aa2140b031e93e04d045c7d6382ff0f76845cfd517a5"
     },
     {
       "title": "XXXTENTACION   in Miami (CRMSN remix)",
@@ -568,40 +791,6 @@
       "duplicate_of": "crmsn/soundcloud_public/XXXTENTACION - in Miami (CRMSN remix).wav"
     },
     {
-      "title": "beattt.3",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/beattt.3.wav",
-      "file": "crmsn--beattt-3.wav",
-      "bytes": 28390068,
-      "duration": 160.941179,
-      "sha256": "5bd36026bd883573110a7d5465216776fbc044cb333fd6d7a3ca5649df7d4f9e",
-      "needs_review": [
-        "Beatsane  (https://soundcloud.com/officialcrmsn/beatsane)"
-      ]
-    },
-    {
-      "title": "broken world broken people",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/broken world broken people-.wav",
-      "file": "crmsn--broken-world-broken-people.wav",
-      "bytes": 45662444,
-      "duration": 258.857143,
-      "sha256": "46a811b2b85f72bd35e7a9b4399125b459d6cdaaa131eeeaf4e19b1ef8c1ee3a"
-    },
-    {
-      "title": "crmsn june2017",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/crmsn june2017.wav",
-      "file": "crmsn--crmsn-june2017.wav",
-      "bytes": 37266882,
-      "duration": 211.262494,
-      "sha256": "27f03f54fa83a38f2ffb79e7beb0412e5a46599118cd1b4cefe5aac8fd68b70b",
-      "needs_review": [
-        "CRMSN - White Lies (Odessa) (2014-2015)  (https://soundcloud.com/officialcrmsn/whitelies)",
-        "CANDID  (https://soundcloud.com/officialcrmsn/candid)"
-      ]
-    },
-    {
       "title": "free release master",
       "artist": "crmsn",
       "source": "crmsn/soundcloud_private/free release master.mp3",
@@ -610,69 +799,6 @@
       "duration": 359.131425,
       "sha256": "1389d068772511cb2101384ca61e7a0a1dd202b4f53b783dc647e10c0a4344f7",
       "duplicate_of": "crmsn/soundcloud_public/03 I'm Right.mp3"
-    },
-    {
-      "title": "fuck 2",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/fuck 2.wav",
-      "file": "crmsn--fuck-2.wav",
-      "bytes": 44152154,
-      "duration": 250.294649,
-      "sha256": "02b38ba7abd7847b2990c0497eff439d665ab2a813d6648c618a2a339a3ccae0"
-    },
-    {
-      "title": "funny",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/funny.wav",
-      "file": "crmsn--funny.wav",
-      "bytes": 33868844,
-      "duration": 192.0,
-      "sha256": "fe7ed6d341daaa921466ad912c5c5a3d1a178eb1c2c3e3b5a9019de3cec5694f",
-      "needs_review": [
-        "crmsn - fairweather  (https://soundcloud.com/officialcrmsn/fair-weather)"
-      ]
-    },
-    {
-      "title": "idk2",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/idk2.wav",
-      "file": "crmsn--idk2.wav",
-      "bytes": 11466044,
-      "duration": 65.0,
-      "sha256": "3aef74b7c3bd93d86ca4b3e85829845c7d875269047e0f4c8029d76d0a8b7e28"
-    },
-    {
-      "title": "idk2 newcomp",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/idk2_newcomp.wav",
-      "file": "crmsn--idk2-newcomp.wav",
-      "bytes": 14376644,
-      "duration": 81.5,
-      "sha256": "26b98e1a07fd0a8b5aaa22f4f23f33f8bcb561d6068a2a114f1c911bd244cbd7",
-      "needs_review": [
-        "140house_master_7  (https://soundcloud.com/officialcrmsn/140house_master_7)"
-      ]
-    },
-    {
-      "title": "lofi",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/lofi.wav",
-      "file": "crmsn--lofi.wav",
-      "bytes": 10210492,
-      "duration": 57.882358,
-      "sha256": "b17ea5205d536f7919295586b683825f84bf1728d130d0e19cebf6ce78d49371",
-      "needs_review": [
-        "Stangre  (https://soundcloud.com/officialcrmsn/stangre)"
-      ]
-    },
-    {
-      "title": "major lazer rem2ix",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/major lazer rem2ix.wav",
-      "file": "crmsn--major-lazer-rem2ix.wav",
-      "bytes": 56095244,
-      "duration": 318.0,
-      "sha256": "59ffa3e4c640871eaffaeb68f15b2be30bdfd416fcbd068f85e59d4b8d7bdb70"
     },
     {
       "title": "odesza white lies crmsn remix",
@@ -685,73 +811,64 @@
       "duplicate_of": "crmsn/soundcloud_public/odesza white lies crmsn remix.mp3"
     },
     {
-      "title": "sam smith remix",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/sam smith remix.wav",
-      "file": "crmsn--sam-smith-remix.wav",
-      "bytes": 42773728,
-      "duration": 242.481202,
-      "sha256": "c17823a1d3f873f76eb56366e0f002250b79216ea45ba38bff66be129b3e52b1"
-    },
-    {
-      "title": "see you in your dreams remix",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/see you in your dreams remix.wav",
-      "file": "crmsn--see-you-in-your-dreams-remix.wav",
-      "bytes": 25754444,
-      "duration": 146.0,
-      "sha256": "0838970a24c0531a08057283df079aa989212e9624a355e40d9770343158772c",
-      "needs_review": [
-        "CRMSN - Sweet Tooth  (https://soundcloud.com/officialcrmsn/sweettooth)"
-      ]
-    },
-    {
-      "title": "suicide2018",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/suicide2018.wav",
-      "file": "crmsn--suicide2018.wav",
-      "bytes": 34398044,
-      "duration": 195.0,
-      "sha256": "caae8361c5a5e8ef144e366bf338821597289d0ce72f743530bf5d0936b9916c"
-    },
-    {
-      "title": "this is the end v2 2018 version",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/this is the end v2 2018 version.wav",
-      "file": "crmsn--this-is-the-end-v2-2018-version.wav",
-      "bytes": 39916844,
-      "duration": 226.285714,
-      "sha256": "d03c735edd058ce818d43f1f9491686e3d0d5544d8127d627a8ce4cb568a27fc",
-      "needs_review": [
-        "CRMSN - K's Up  (https://soundcloud.com/officialcrmsn/ksup)"
-      ]
-    },
-    {
-      "title": "we still in this",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_private/we still in this.wav",
-      "file": "crmsn--we-still-in-this.wav",
-      "bytes": 40219244,
-      "duration": 228.0,
-      "sha256": "cc18e4de13a4b51514b8f60fbfac48a05f07adc14d63a5af1049f73a91f4a181"
-    },
-    {
-      "title": "I'm Right Master 006 (2nd Settings) [Rverse Masterchain]",
-      "artist": "crmsn",
-      "source": "crmsn/soundcloud_public/I'm Right Master 006 (2nd Settings) [Rverse Masterchain].wav",
-      "file": "crmsn--i-m-right-master-006-2nd-settings-rverse-masterchain.wav",
-      "bytes": 64165544,
-      "duration": 363.75,
-      "sha256": "7bf6951b8ccecce1aeb643d4f757e9967ade5950cbda208e6f01a402709c8408"
-    },
-    {
-      "title": "BLUSH DOJA",
+      "title": "housetime 2",
       "artist": "hush witch",
-      "source": "hush witch/BLUSH_DOJA.wav",
-      "file": "hush-witch--blush-doja.wav",
-      "bytes": 15486928,
-      "duration": 87.794127,
-      "sha256": "b9a6f7dbbdc133330e06fe12cd6a75c6c068d18478be304dcca9eaa29b041ea7"
+      "source": "hush witch/housetime.wav",
+      "file": "hush-witch--housetime.wav",
+      "bytes": 42615386,
+      "duration": 147.969937,
+      "sha256": "e6bc850435de2fde80f3ec052fc86b8696296153fcf3a4b18dff6cb8c724e998",
+      "soundcloud": "https://soundcloud.com/sploooooosh/housetime-2",
+      "sharing": "public",
+      "created_at": "2026-02-02T09:33:15Z"
+    },
+    {
+      "title": "lp33_master",
+      "artist": "hush witch",
+      "source": "hush witch/lp33_master.wav",
+      "file": "hush-witch--lp33-master.wav",
+      "bytes": 31442868,
+      "duration": 163.764708,
+      "sha256": "bb6a1fd7e109b7b528c61109bc3e1ededecec0bf4420765a3ca4e92de9770016",
+      "soundcloud": "https://soundcloud.com/sploooooosh/lp33_master",
+      "sharing": "public",
+      "created_at": "2026-01-06T08:19:37Z"
+    },
+    {
+      "title": "Who Is Accent_newmix2_master_bb",
+      "artist": "hush witch",
+      "source": "hush witch/Who Is Accent_newmix2_master_bb.wav",
+      "file": "hush-witch--who-is-accent-newmix2-master-bb.wav",
+      "bytes": 32040044,
+      "duration": 166.875,
+      "sha256": "7a6b9bca1da9870ab95b2a51bff254583522614b64a751a0da6de82dc397c8e7",
+      "soundcloud": "https://soundcloud.com/sploooooosh/who-is-accent_newmix2_master_bb-1",
+      "sharing": "public",
+      "created_at": "2026-01-06T03:19:30Z"
+    },
+    {
+      "title": "field_ritual.wav",
+      "artist": "hush witch",
+      "source": "hush witch/mixtape 002 untutlrf.wav",
+      "file": "hush-witch--mixtape-002-untutlrf.wav",
+      "bytes": 66138404,
+      "duration": 172.235312,
+      "sha256": "bbee8c7f028d5a98efe4a4433913e168bf51fb5ea9c4be23d0068ed83967ce8b",
+      "soundcloud": "https://soundcloud.com/sploooooosh/mixtape-002-untutlrf",
+      "sharing": "public",
+      "created_at": "2025-11-27T19:46:12Z"
+    },
+    {
+      "title": "lp 34 idea_missingitems_tst_master",
+      "artist": "hush witch",
+      "source": "hush witch/lp 34 idea_missingitems_tst_master.wav",
+      "file": "hush-witch--lp-34-idea-missingitems-tst-master.wav",
+      "bytes": 60146572,
+      "duration": 156.631583,
+      "sha256": "14c15b265000271b159da64b162a24bc7099047d944b279b5f618edad34be5d7",
+      "soundcloud": "https://soundcloud.com/sploooooosh/lp-34",
+      "sharing": "public",
+      "created_at": "2025-11-23T21:14:20Z"
     },
     {
       "title": "Okay But... Layers2",
@@ -760,52 +877,46 @@
       "file": "hush-witch--okay-but-layers2.wav",
       "bytes": 29081024,
       "duration": 100.975625,
-      "sha256": "1fa7aa1b8ab8c7396da8dd85a8cee953a19fdef3e984a5b9331152e79195ae77"
+      "sha256": "1fa7aa1b8ab8c7396da8dd85a8cee953a19fdef3e984a5b9331152e79195ae77",
+      "soundcloud": "https://soundcloud.com/sploooooosh/okay-but-layers2",
+      "sharing": "public",
+      "created_at": "2025-11-11T17:15:00Z"
     },
     {
-      "title": "Who Is Accent newmix2 master bb",
-      "artist": "hush witch",
-      "source": "hush witch/Who Is Accent_newmix2_master_bb.wav",
-      "file": "hush-witch--who-is-accent-newmix2-master-bb.wav",
-      "bytes": 32040044,
-      "duration": 166.875,
-      "sha256": "7a6b9bca1da9870ab95b2a51bff254583522614b64a751a0da6de82dc397c8e7"
-    },
-    {
-      "title": "bassnectar master 2",
-      "artist": "hush witch",
-      "source": "hush witch/bassnectar_master_2.wav",
-      "file": "hush-witch--bassnectar-master-2.wav",
-      "bytes": 53814902,
-      "duration": 186.857146,
-      "sha256": "7da62a662a48e85ba500e50bf332c3aa391a4f5455ec7d289ba27933c8c5f622"
-    },
-    {
-      "title": "bassnectar master 2 no vocals",
-      "artist": "hush witch",
-      "source": "hush witch/bassnectar_master_2_no_vocals.wav",
-      "file": "hush-witch--bassnectar-master-2-no-vocals.wav",
-      "bytes": 53814902,
-      "duration": 186.857146,
-      "sha256": "6e0c3dc2d4a8455b5513360402f408980d5ad0ac190c0c2b8be7dda8853fb5c8"
-    },
-    {
-      "title": "dojaremix remixdown master",
+      "title": "dojaremix_remixdown_master explicit",
       "artist": "hush witch",
       "source": "hush witch/dojaremix_remixdown_master.wav",
       "file": "hush-witch--dojaremix-remixdown-master.wav",
       "bytes": 47765900,
       "duration": 165.853667,
-      "sha256": "acfd11aad33d19894957c60f95bf4f2ef8da0b8e8c3c9b916d5945d1e3484d85"
+      "sha256": "acfd11aad33d19894957c60f95bf4f2ef8da0b8e8c3c9b916d5945d1e3484d85",
+      "soundcloud": "https://soundcloud.com/sploooooosh/dojaremix_remixdown_master-1",
+      "sharing": "public",
+      "created_at": "2025-10-22T22:26:34Z"
     },
     {
-      "title": "dojaremix remixdown master instr",
+      "title": "dojaremix_remixdown_master_instr",
       "artist": "hush witch",
       "source": "hush witch/dojaremix_remixdown_master_instr.wav",
       "file": "hush-witch--dojaremix-remixdown-master-instr.wav",
       "bytes": 47765900,
       "duration": 165.853667,
-      "sha256": "74286346d3500bdf83a5650e950f56154690aad2950b9fa7ade48b91ab2e8b88"
+      "sha256": "74286346d3500bdf83a5650e950f56154690aad2950b9fa7ade48b91ab2e8b88",
+      "soundcloud": "https://soundcloud.com/sploooooosh/dojaremix_remixdown_master_instr-2",
+      "sharing": "public",
+      "created_at": "2025-10-22T22:26:34Z"
+    },
+    {
+      "title": "fun_messedwih (second version)",
+      "artist": "hush witch",
+      "source": "hush witch/fun_messedwih.wav",
+      "file": "hush-witch--fun-messedwih.wav",
+      "bytes": 44434334,
+      "duration": 154.285729,
+      "sha256": "12e42ead3f32df97f1754dff4448bfee8ad5b22e15ae827813f623a05486407f",
+      "soundcloud": "https://soundcloud.com/sploooooosh/fun_messedwih",
+      "sharing": "public",
+      "created_at": "2025-10-21T00:49:40Z"
     },
     {
       "title": "fun",
@@ -814,52 +925,62 @@
       "file": "hush-witch--fun.wav",
       "bytes": 44434334,
       "duration": 154.285729,
-      "sha256": "104b2ce2cd8779b2dfafec5c2dac5bea176eb060b652ec8c450aaa75da9d9e02"
+      "sha256": "104b2ce2cd8779b2dfafec5c2dac5bea176eb060b652ec8c450aaa75da9d9e02",
+      "soundcloud": "https://soundcloud.com/sploooooosh/fun-1",
+      "sharing": "public",
+      "created_at": "2025-10-18T00:00:02Z"
     },
     {
-      "title": "fun messedwih",
+      "title": "blush_master_2_no_vocals",
       "artist": "hush witch",
-      "source": "hush witch/fun_messedwih.wav",
-      "file": "hush-witch--fun-messedwih.wav",
-      "bytes": 44434334,
-      "duration": 154.285729,
-      "sha256": "12e42ead3f32df97f1754dff4448bfee8ad5b22e15ae827813f623a05486407f"
+      "source": "hush witch/bassnectar_master_2_no_vocals.wav",
+      "file": "hush-witch--bassnectar-master-2-no-vocals.wav",
+      "bytes": 53814902,
+      "duration": 186.857146,
+      "sha256": "6e0c3dc2d4a8455b5513360402f408980d5ad0ac190c0c2b8be7dda8853fb5c8",
+      "soundcloud": "https://soundcloud.com/sploooooosh/bassnectar_master_2_no_vocals",
+      "sharing": "public",
+      "created_at": "2025-10-04T23:19:18Z"
     },
     {
-      "title": "housetime",
+      "title": "blush_master_2",
       "artist": "hush witch",
-      "source": "hush witch/housetime.wav",
-      "file": "hush-witch--housetime.wav",
-      "bytes": 42615386,
-      "duration": 147.969937,
-      "sha256": "e6bc850435de2fde80f3ec052fc86b8696296153fcf3a4b18dff6cb8c724e998"
+      "source": "hush witch/bassnectar_master_2.wav",
+      "file": "hush-witch--bassnectar-master-2.wav",
+      "bytes": 53814902,
+      "duration": 186.857146,
+      "sha256": "7da62a662a48e85ba500e50bf332c3aa391a4f5455ec7d289ba27933c8c5f622",
+      "soundcloud": "https://soundcloud.com/sploooooosh/blush_master_2",
+      "sharing": "public",
+      "created_at": "2025-10-04T16:07:56Z",
+      "needs_review": [
+        "blush_master_2  (https://soundcloud.com/sploooooosh/blush_master_2)",
+        "blush_master_2_no_vocals  (https://soundcloud.com/sploooooosh/bassnectar_master_2_no_vocals)"
+      ]
     },
     {
-      "title": "lp 34 idea missingitems tst master",
+      "title": "[BLUSH_DOJA]",
       "artist": "hush witch",
-      "source": "hush witch/lp 34 idea_missingitems_tst_master.wav",
-      "file": "hush-witch--lp-34-idea-missingitems-tst-master.wav",
-      "bytes": 60146572,
-      "duration": 156.631583,
-      "sha256": "14c15b265000271b159da64b162a24bc7099047d944b279b5f618edad34be5d7"
+      "source": "hush witch/BLUSH_DOJA.wav",
+      "file": "hush-witch--blush-doja.wav",
+      "bytes": 15486928,
+      "duration": 87.794127,
+      "sha256": "b9a6f7dbbdc133330e06fe12cd6a75c6c068d18478be304dcca9eaa29b041ea7",
+      "soundcloud": "https://soundcloud.com/sploooooosh/blush_doja",
+      "sharing": "public",
+      "created_at": "2025-09-28T12:53:41Z"
     },
     {
-      "title": "lp33 master",
-      "artist": "hush witch",
-      "source": "hush witch/lp33_master.wav",
-      "file": "hush-witch--lp33-master.wav",
-      "bytes": 31442868,
-      "duration": 163.764708,
-      "sha256": "bb6a1fd7e109b7b528c61109bc3e1ededecec0bf4420765a3ca4e92de9770016"
-    },
-    {
-      "title": "mixtape 002 untutlrf",
-      "artist": "hush witch",
-      "source": "hush witch/mixtape 002 untutlrf.wav",
-      "file": "hush-witch--mixtape-002-untutlrf.wav",
-      "bytes": 66138404,
-      "duration": 172.235312,
-      "sha256": "bbee8c7f028d5a98efe4a4433913e168bf51fb5ea9c4be23d0068ed83967ce8b"
+      "title": "Kp L4f",
+      "artist": "spotlife",
+      "source": "spotlife/lp33.wav",
+      "file": "spotlife--lp33.wav",
+      "bytes": 35237692,
+      "duration": 91.764708,
+      "sha256": "0862167848d72013a709f267718c39b084d840ee23dca6896e41d11558de450c",
+      "soundcloud": "https://soundcloud.com/daspotlife/kp-l4f",
+      "sharing": "public",
+      "created_at": "2023-03-07T07:41:10Z"
     },
     {
       "title": "Coming Back",
@@ -923,15 +1044,6 @@
       "bytes": 44755244,
       "duration": 126.857143,
       "sha256": "94c9d56050b46cbaf9bb8412f9b1dbaa15e21c8d13d73a0096e8645f4ed8ab5f"
-    },
-    {
-      "title": "lp33",
-      "artist": "spotlife",
-      "source": "spotlife/lp33.wav",
-      "file": "spotlife--lp33.wav",
-      "bytes": 35237692,
-      "duration": 91.764708,
-      "sha256": "0862167848d72013a709f267718c39b084d840ee23dca6896e41d11558de450c"
     },
     {
       "title": "lp383 mdbmastered Low",
