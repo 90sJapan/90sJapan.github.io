@@ -340,9 +340,15 @@ const viz = (function () {
   const durEl = document.getElementById('timeDur');
   const fileEl = document.getElementById('playerFile');
   const fileY2k = document.getElementById('playerFileY2k');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  const scopeSwitch = document.getElementById('scopeSwitch');
   let tracks = [];
   let current = -1;
   let seeking = false;
+  // shuffle on/off, and whether next/prev/auto-advance roam all playlists or stay in the current song's
+  let shuffle = false, scope = 'all';
+  try { shuffle = localStorage.getItem('crmsn-shuffle') === '1'; if (localStorage.getItem('crmsn-scope') === 'list') scope = 'list'; } catch (e) {}
+  const played = new Set(), history = [];
 
   const fmt = s => isFinite(s) ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0') : '0:00';
 
@@ -435,8 +441,11 @@ const viz = (function () {
     playBtn.setAttribute('aria-label', audio.paused ? 'Play' : 'Pause');
   }
 
-  function load(i, autoplay) {
+  function load(i, autoplay, back) {
+    if (current >= 0 && !back) history.push(current);
+    if (history.length > 200) history.shift();
     current = (i + tracks.length) % tracks.length;
+    played.add(current);
     audio.src = tracks[current].url;
     audio.dataset.file = tracks[current].file;
     viz.setTrack(tracks[current]);
@@ -451,12 +460,49 @@ const viz = (function () {
   }
   function toggle() { if (current < 0) return load(0, true); audio.paused ? audio.play() : audio.pause(); }
 
+  // ---- what plays next
+  const groupOf = i => (tracks[i].artist || '') + '|' + visibility(tracks[i]);
+  function pool() {                                 // the indices next/prev may move between
+    const all = tracks.map((_, i) => i);
+    return scope === 'list' && current >= 0 ? all.filter(i => groupOf(i) === groupOf(current)) : all;
+  }
+  function step(dir) {
+    const cands = pool();
+    if (!cands.length) return;
+    if (shuffle) {
+      if (dir < 0 && history.length) return load(history.pop(), true, true);
+      let open = cands.filter(i => i !== current && !played.has(i));
+      if (!open.length) { played.clear(); open = cands.filter(i => i !== current); }   // everything heard: start over
+      if (!open.length) open = cands;
+      return load(open[Math.floor(Math.random() * open.length)], true);
+    }
+    const pos = cands.indexOf(current);
+    load(cands[(pos + dir + cands.length) % cands.length], true);
+  }
+  function setShuffle(on) {
+    shuffle = on; played.clear(); history.length = 0;
+    if (current >= 0) played.add(current);
+    shuffleBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    player.classList.toggle('is-shuffle', on);
+    try { localStorage.setItem('crmsn-shuffle', on ? '1' : '0'); } catch (e) {}
+  }
+  function setScope(v) {
+    scope = v; played.clear(); history.length = 0;
+    if (current >= 0) played.add(current);
+    scopeSwitch.setAttribute('aria-checked', v === 'list' ? 'true' : 'false');
+    scopeSwitch.classList.toggle('is-list', v === 'list');
+    try { localStorage.setItem('crmsn-scope', v); } catch (e) {}
+  }
+  shuffleBtn.addEventListener('click', () => setShuffle(!shuffle));
+  scopeSwitch.addEventListener('click', () => setScope(scope === 'list' ? 'all' : 'list'));
+  setShuffle(shuffle); setScope(scope);
+
   playBtn.addEventListener('click', toggle);
-  document.getElementById('prevBtn').addEventListener('click', () => load(current - 1, true));
-  document.getElementById('nextBtn').addEventListener('click', () => load(current + 1, true));
+  document.getElementById('prevBtn').addEventListener('click', () => step(-1));
+  document.getElementById('nextBtn').addEventListener('click', () => step(1));
   audio.addEventListener('play', mark);
   audio.addEventListener('pause', mark);
-  audio.addEventListener('ended', () => load(current + 1, true));
+  audio.addEventListener('ended', () => step(1));
   audio.addEventListener('loadedmetadata', () => { durEl.textContent = fmt(audio.duration); });
   audio.addEventListener('timeupdate', () => {
     curEl.textContent = fmt(audio.currentTime);

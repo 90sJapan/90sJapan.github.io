@@ -72,7 +72,9 @@ python3 discog.py viz [--force]    # (re)build visualizer data on its own
 
 The player shows one list per artist, split into **public** and **private** when an artist has both —
 decided by the folder a file sits in (`…/soundcloud_private/…` vs `…/soundcloud_public/…`), falling
-back to what SoundCloud reported. Each list shows 7 rows and scrolls for the rest.
+back to what SoundCloud reported. Each list shows 7 rows and scrolls for the rest. The player's shuffle
+button has an **All / List** switch attached: next/previous and auto-advance (shuffled or not) either roam
+every playlist or stay inside the playlist of the song that's playing.
 
 ### Visualizer
 

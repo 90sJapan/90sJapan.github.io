@@ -201,6 +201,21 @@ html[data-theme="y2k"] .player-skip{
   background: linear-gradient(180deg, #8fb8ff 0%, var(--y2k-blue) 48%, #0f4fd6 52%, #5c98ff 100%);
   box-shadow: 0 0 0 1px var(--y2k-blue), 0 3px 10px rgba(43,123,255,0.4);
 }
+html[data-theme="y2k"] .shuffle-btn[aria-pressed="true"]{
+  background: linear-gradient(180deg, #ff8de4 0%, var(--y2k-pink) 48%, #c800a0 52%, #ff5ad3 100%);
+  box-shadow: 0 0 0 1px var(--y2k-pink), 0 3px 10px rgba(255,46,196,0.4);
+}
+html[data-theme="y2k"] .scope-switch{
+  border:2px solid #fff; border-left:0; color:var(--y2k-silver-4); font-family:var(--font-body); font-weight:400;
+  background:linear-gradient(180deg, #b7c3da, #dfe6f2); box-shadow:0 0 0 1px var(--y2k-blue), 0 1px 2px rgba(0,0,0,0.25) inset;
+}
+html[data-theme="y2k"] .scope-switch .scope-all,
+html[data-theme="y2k"] .scope-switch.is-list .scope-list{ color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.4); }
+html[data-theme="y2k"] .scope-switch.is-list .scope-all{ color:var(--y2k-silver-4); text-shadow:none; }
+html[data-theme="y2k"] .scope-knob{
+  border:1px solid #fff; background:linear-gradient(180deg, #8fb8ff 0%, var(--y2k-blue) 48%, #0f4fd6 52%, #5c98ff 100%);
+  box-shadow:0 2px 6px rgba(43,123,255,0.5);
+}
 html[data-theme="y2k"] .player-seek{ margin:1rem 0.9rem 0; width:calc(100% - 1.8rem); height:8px; border:1px solid #fff; background:linear-gradient(180deg, #b7c3da, #dfe6f2); box-shadow:0 1px 2px rgba(0,0,0,0.25) inset; }
 html[data-theme="y2k"] .player-seek::-webkit-slider-thumb{ width:18px; height:18px; border:2px solid #fff; background:linear-gradient(180deg, #ff8de4, var(--y2k-pink)); box-shadow:0 0 10px var(--y2k-pink); }
 html[data-theme="y2k"] .player-seek::-moz-range-thumb{ width:18px; height:18px; border:2px solid #fff; background:linear-gradient(180deg, #ff8de4, var(--y2k-pink)); box-shadow:0 0 10px var(--y2k-pink); }
