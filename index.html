@@ -12,8 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Space+Grotesk:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Audiowide&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260913e">
-<link rel="stylesheet" href="y2k.css?v=20260913e">
+<link rel="stylesheet" href="styles.css?v=20260913f">
+<link rel="stylesheet" href="y2k.css?v=20260913f">
 </head>
 <body>
 
@@ -71,6 +71,16 @@
             <button class="player-skip" id="prevBtn" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM19 5v14L9 12z"/></svg></button>
             <button class="player-skip" id="nextBtn" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM5 5v14l10-7z"/></svg></button>
           </div>
+          <div class="player-shuffle">
+            <button class="player-skip shuffle-btn" id="shuffleBtn" type="button" aria-pressed="false" aria-label="Shuffle" title="Shuffle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            </button>
+            <button class="scope-switch" id="scopeSwitch" type="button" role="switch" aria-checked="false" title="Play across all playlists, or only the playlist of the current song">
+              <span class="scope-opt scope-all">All</span>
+              <span class="scope-opt scope-list">List</span>
+              <i class="scope-knob" aria-hidden="true"></i>
+            </button>
+          </div>
         </div>
         <input class="player-seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
         <audio id="audio" preload="metadata"></audio>
@@ -118,6 +128,6 @@
   </div>
 </footer>
 
-<script src="script.js?v=20260913e"></script>
+<script src="script.js?v=20260913f"></script>
 </body>
 </html>
