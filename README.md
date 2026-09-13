@@ -77,6 +77,8 @@ back to what SoundCloud reported. Each list shows 7 rows and scrolls for the res
 ### Visualizer
 
 The player has a visualizer (Bars & Waves / Scope / Ambience / Spikes — click the screen to cycle).
+Bars & Waves and Scope draw on the screen inside the player; Ambience and Spikes take over the whole
+page background instead. The **Pastel RGB** toggle swaps the theme palette for a slowly cycling pastel hue fade.
 GitHub's release host sends no CORS headers, so a browser can't analyse the streamed audio itself;
 instead `discog.py viz` decodes each file locally (`afconvert` + numpy) and writes a small
 `viz/<file>.bin` (24 log-spaced bands + tone + level at 16 fps, ~40 KB/min) that the page syncs to

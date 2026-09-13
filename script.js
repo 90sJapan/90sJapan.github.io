@@ -19,50 +19,73 @@ themeToggle.addEventListener('click', () => {
    The audio host sends no CORS headers, so the browser can't analyse the stream itself.
    discog.py precomputes a small spectrum file per track (viz/<file>.bin: 24 log-spaced bands +
    tone + level, 16 fps); this reads it and follows audio.currentTime, interpolating between
-   frames and smoothing so the motion stays fluid. Colours come from the active theme's
-   --viz-* tokens, shifted along the palette by the tone (spectral centroid) of the music. */
+   frames and smoothing so the motion stays fluid. Bars & Waves and Scope draw on the screen
+   inside the player; Ambience and Spikes draw on a full-page canvas behind everything.
+   Colours come from the active theme's --viz-* tokens, shifted along the palette by the tone
+   (spectral centroid) of the music — or, with Pastel RGB on, from a slowly cycling pastel hue. */
 const viz = (function () {
-  const canvas = document.getElementById('viz');
-  const ctx = canvas.getContext('2d');
-  const stage = canvas.parentElement;
+  const stage = document.querySelector('.viz-stage');
+  const wrap = document.querySelector('.player-viz');
   const modesEl = document.getElementById('vizModes');
   const hint = document.getElementById('vizHint');
   const MODES = [
     { id: 'bars', name: 'Bars & Waves' },
     { id: 'scope', name: 'Scope' },
-    { id: 'ambience', name: 'Ambience' },
-    { id: 'spikes', name: 'Spikes' },
+    { id: 'ambience', name: 'Ambience', bg: true },
+    { id: 'spikes', name: 'Spikes', bg: true },
   ];
+  const isBg = id => !!MODES.find(m => m.id === id).bg;
+  // two drawing targets: the screen in the player, and the fixed canvas behind the page
+  const targets = {
+    stage: { canvas: document.getElementById('viz'), W: 0, H: 0 },
+    bg: { canvas: document.getElementById('vizBg'), W: 0, H: 0 },
+  };
+  for (const k in targets) targets[k].ctx = targets[k].canvas.getContext('2d');
+  let ctx = targets.stage.ctx, W = 0, H = 0, onBg = false;
+
   const N = 24;                                   // bands drawn (matches the analysis)
   const cur = new Float32Array(N), peak = new Float32Array(N), peakV = new Float32Array(N);
   const wavePts = new Float32Array(128);
-  let mode = 'bars';
-  try { const m = localStorage.getItem('crmsn-viz'); if (MODES.some(x => x.id === m)) mode = m; } catch (e) {}
+  let mode = 'bars', rgb = false;
+  try {
+    const m = localStorage.getItem('crmsn-viz'); if (MODES.some(x => x.id === m)) mode = m;
+    rgb = localStorage.getItem('crmsn-viz-rgb') === '1';
+  } catch (e) {}
   let audio = null, data = null, fetchCtl = null;
   const cache = new Map();
   let tone = 0.35, level = 0, energy = 0, clock = 0, spin = 0;
-  let W = 0, H = 0, dpr = 1, raf = 0, last = 0, inView = true;
+  let raf = 0, last = 0, inView = true;
   let colors = null;
 
   // ---- colours from the theme
   const clamp = (x, a, b) => x < a ? a : x > b ? b : x;
   function parseColor(s) {
-    ctx.fillStyle = '#000'; ctx.fillStyle = s.trim();
-    const v = ctx.fillStyle;                       // canvas normalises to #rrggbb for opaque colours
+    const c = targets.stage.ctx;
+    c.fillStyle = '#000'; c.fillStyle = s.trim();
+    const v = c.fillStyle;                         // canvas normalises to #rrggbb for opaque colours
     if (v[0] === '#') return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)];
     const m = v.match(/[\d.]+/g) || [0, 0, 0]; return [+m[0], +m[1], +m[2]];
   }
   function readColors() {
-    const cs = getComputedStyle(canvas);
+    const cs = getComputedStyle(targets.stage.canvas);
     const get = (n, fb) => parseColor(cs.getPropertyValue(n) || fb);
     colors = { stops: [get('--viz-a', '#8b5cff'), get('--viz-b', '#ff3ea5'), get('--viz-c', '#35e6ff')],
                hot: get('--viz-hot', '#ffffff'), bg: get('--viz-bg', '#05050b') };
   }
   const mix = (a, b, u) => [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u];
-  function grad(u) {                               // position along the 3-stop palette, 0..1
-    u = clamp(u, 0, 1) * 2; const s = colors.stops;
+  function hsl(h, s, l) {                          // h in degrees -> [r,g,b]
+    h = ((h % 360) + 360) % 360 / 60;
+    const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h % 2 - 1)), m = l - c / 2;
+    const [r, g, b] = h < 1 ? [c, x, 0] : h < 2 ? [x, c, 0] : h < 3 ? [0, c, x] : h < 4 ? [0, x, c] : h < 5 ? [x, 0, c] : [c, 0, x];
+    return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
+  }
+  function grad(u) {                               // position along the palette, 0..1
+    u = clamp(u, 0, 1);
+    if (rgb) return hsl(clock * 14 + u * 150, 0.72, 0.72);   // soft pastel hues drifting round the wheel
+    u *= 2; const s = colors.stops;
     return u < 1 ? mix(s[0], s[1], u) : mix(s[1], s[2], u - 1);
   }
+  const hot = () => rgb ? hsl(clock * 14 + 200, 0.6, 0.9) : colors.hot;
   const rgba = (c, a) => 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + a.toFixed(3) + ')';
 
   // ---- data
@@ -135,9 +158,18 @@ const viz = (function () {
   }
 
   // ---- drawing
-  function drawBg(alpha) {
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = rgba(colors.bg, alpha); ctx.fillRect(0, 0, W, H);
+  function fade(alpha) {                           // settle the previous frame: paint the screen colour,
+    if (onBg) {                                    // or on the page canvas just thin out what's there
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0,0,0,' + alpha.toFixed(3) + ')'; ctx.fillRect(0, 0, W, H);
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = rgba(colors.bg, alpha); ctx.fillRect(0, 0, W, H);
+    }
+  }
+  function clear(t) {
+    if (t === targets.bg) t.ctx.clearRect(0, 0, t.W, t.H);
+    else { t.ctx.globalCompositeOperation = 'source-over'; t.ctx.fillStyle = rgba(colors.bg, 1); t.ctx.fillRect(0, 0, t.W, t.H); }
   }
   function drawWave(width, alpha, scale) {
     ctx.beginPath();
@@ -149,24 +181,24 @@ const viz = (function () {
     ctx.strokeStyle = rgba(grad(tone), alpha); ctx.stroke();
   }
   function drawBars() {
-    drawBg(1);
+    fade(1);
     const gap = Math.max(2, W / N * 0.22), bw = (W - gap * (N + 1)) / N, base = H - 6, maxH = H * 0.86;
     ctx.globalCompositeOperation = 'lighter';
     for (let i = 0; i < N; i++) {
       const x = gap + i * (bw + gap), h = Math.max(2, cur[i] * maxH);
       const c = grad(tone * 0.55 + (i / (N - 1)) * 0.45);
       const g = ctx.createLinearGradient(0, base, 0, base - maxH);
-      g.addColorStop(0, rgba(mix(c, colors.bg, 0.45), 0.9)); g.addColorStop(0.55, rgba(c, 0.95)); g.addColorStop(1, rgba(colors.hot, 0.9));
+      g.addColorStop(0, rgba(mix(c, colors.bg, 0.45), 0.9)); g.addColorStop(0.55, rgba(c, 0.95)); g.addColorStop(1, rgba(hot(), 0.9));
       ctx.fillStyle = g; ctx.fillRect(x, base - h, bw, h);
       const ph = peak[i] * maxH;
-      if (ph > 3) { ctx.fillStyle = rgba(colors.hot, 0.5 + 0.5 * peak[i]); ctx.fillRect(x, base - ph - 3, bw, 2.5); }
+      if (ph > 3) { ctx.fillStyle = rgba(hot(), 0.5 + 0.5 * peak[i]); ctx.fillRect(x, base - ph - 3, bw, 2.5); }
     }
     ctx.shadowColor = rgba(grad(tone), 0.9); ctx.shadowBlur = 14;
     drawWave(2, 0.85, 0.32);
     ctx.shadowBlur = 0;
   }
   function drawScope() {
-    drawBg(0.28);                                   // faint trails
+    fade(0.28);                                     // faint trails
     ctx.globalCompositeOperation = 'lighter';
     ctx.strokeStyle = rgba(grad(tone), 0.18); ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(0, H * 0.5); ctx.lineTo(W, H * 0.5); ctx.stroke();
@@ -174,43 +206,45 @@ const viz = (function () {
     drawWave(7, 0.22, 0.42);
     drawWave(3, 0.95, 0.42);
     ctx.shadowBlur = 0;
-    ctx.strokeStyle = rgba(colors.hot, 0.55); drawWave(1, 0.55, 0.42);
+    ctx.strokeStyle = rgba(hot(), 0.55); drawWave(1, 0.55, 0.42);
   }
   function drawAmbience() {
-    drawBg(0.11);
-    ctx.globalCompositeOperation = 'lighter';
-    const R = Math.min(W, H);
+    fade(onBg ? 0.16 : 0.11);
+    const k = onBg ? 0.34 : 1;                   // gentler behind the page so text stays readable
+    ctx.globalCompositeOperation = onBg ? 'source-over' : 'lighter';
+    const R = Math.max(W, H) * 0.6;
     for (let k = 0; k < 5; k++) {
       let g = 0; for (let i = k * 5; i < k * 5 + 5 && i < N; i++) g += cur[i]; g /= 5;
       const t = clock * (0.10 + k * 0.035), ph = k * 1.7;
-      const x = W * (0.5 + 0.34 * Math.sin(t + ph)), y = H * (0.5 + 0.30 * Math.cos(t * 1.3 + ph * 0.6));
-      const r = R * (0.14 + 0.32 * g + 0.08 * level);
+      const x = W * (0.5 + 0.38 * Math.sin(t + ph)), y = H * (0.5 + 0.36 * Math.cos(t * 1.3 + ph * 0.6));
+      const r = R * (0.16 + 0.34 * g + 0.08 * level);
       const c = grad(tone + (k - 2) * 0.11);
       const rg = ctx.createRadialGradient(x, y, 0, x, y, r);
-      rg.addColorStop(0, rgba(mix(c, colors.hot, 0.35), 0.28 + 0.5 * g)); rg.addColorStop(0.5, rgba(c, 0.18 + 0.25 * g)); rg.addColorStop(1, rgba(c, 0));
+      rg.addColorStop(0, rgba(mix(c, hot(), 0.35), (0.26 + 0.5 * g) * k)); rg.addColorStop(0.5, rgba(c, (0.16 + 0.25 * g) * k)); rg.addColorStop(1, rgba(c, 0));
       ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill();
     }
   }
   function drawSpikes() {
-    drawBg(0.35);
-    ctx.globalCompositeOperation = 'lighter';
+    fade(0.35);
+    const k = onBg ? 0.4 : 1;
+    ctx.globalCompositeOperation = onBg ? 'source-over' : 'lighter';
     const cx = W / 2, cy = H / 2, R = Math.min(W, H), r0 = R * (0.19 + 0.07 * level), len = R * 0.5;
     const M = N * 2;
     for (let k = 0; k < M; k++) {
       const i = k < N ? k : M - 1 - k;              // mirrored so the ring is symmetric
       const a = spin + k / M * 6.2832, h = r0 + cur[i] * len, w = 0.55 * (6.2832 / M);
       const c = grad(tone * 0.6 + (i / (N - 1)) * 0.4);
-      ctx.fillStyle = rgba(c, 0.35 + 0.6 * cur[i]);
+      ctx.fillStyle = rgba(c, (0.35 + 0.6 * cur[i]) * k);
       ctx.beginPath();
       ctx.moveTo(cx + Math.cos(a - w) * r0, cy + Math.sin(a - w) * r0);
       ctx.lineTo(cx + Math.cos(a) * h, cy + Math.sin(a) * h);
       ctx.lineTo(cx + Math.cos(a + w) * r0, cy + Math.sin(a + w) * r0);
       ctx.closePath(); ctx.fill();
       const p = r0 + peak[i] * len;
-      ctx.fillStyle = rgba(colors.hot, 0.6 * peak[i]); ctx.beginPath(); ctx.arc(cx + Math.cos(a) * p, cy + Math.sin(a) * p, 1.6, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = rgba(hot(), 0.6 * peak[i] * k); ctx.beginPath(); ctx.arc(cx + Math.cos(a) * p, cy + Math.sin(a) * p, R * 0.006, 0, 6.2832); ctx.fill();
     }
     const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, r0);
-    rg.addColorStop(0, rgba(mix(grad(tone), colors.hot, 0.5), 0.55 + 0.4 * level)); rg.addColorStop(1, rgba(grad(tone), 0.05));
+    rg.addColorStop(0, rgba(mix(grad(tone), hot(), 0.5), (0.55 + 0.4 * level) * k)); rg.addColorStop(1, rgba(grad(tone), 0.05 * k));
     ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, r0, 0, 6.2832); ctx.fill();
   }
   const DRAW = { bars: drawBars, scope: drawScope, ambience: drawAmbience, spikes: drawSpikes };
@@ -219,30 +253,42 @@ const viz = (function () {
   function frame(now) {
     raf = 0;
     const dt = last ? clamp((now - last) / 1000, 0.001, 0.05) : 0.016; last = now;
+    onBg = isBg(mode);
+    const T = onBg ? targets.bg : targets.stage;
+    ctx = T.ctx; W = T.W; H = T.H;
     step(dt); DRAW[mode]();
     const playing = audio && !audio.paused && !audio.ended;
-    if (inView && (playing || energy > 0.003 || mode === 'ambience')) raf = requestAnimationFrame(frame);
+    if ((onBg || inView) && (playing || energy > 0.003 || mode === 'ambience' || rgb)) raf = requestAnimationFrame(frame);
     else last = 0;
   }
-  function kick() { if (!raf && inView) raf = requestAnimationFrame(frame); }
+  function kick() { if (!raf && (isBg(mode) || inView)) raf = requestAnimationFrame(frame); }
 
-  function resize() {
-    const r = stage.getBoundingClientRect();
-    dpr = Math.min(2, window.devicePixelRatio || 1);
-    W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
-    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawBg(1); kick();
+  function size(t, w, h, maxDpr) {
+    const dpr = Math.min(maxDpr, window.devicePixelRatio || 1);
+    t.W = Math.max(1, Math.round(w)); t.H = Math.max(1, Math.round(h));
+    t.canvas.width = Math.round(t.W * dpr); t.canvas.height = Math.round(t.H * dpr);
+    t.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    clear(t); kick();
   }
-  new ResizeObserver(resize).observe(stage);
+  function resizeStage() { const r = stage.getBoundingClientRect(); size(targets.stage, r.width, r.height, 2); }
+  function resizeBg() { size(targets.bg, window.innerWidth, window.innerHeight, 1.5); }
+  new ResizeObserver(resizeStage).observe(stage);
+  window.addEventListener('resize', resizeBg);
   new IntersectionObserver(es => { inView = es[0].isIntersecting; kick(); }).observe(stage);
-  new MutationObserver(() => { readColors(); drawBg(1); kick(); }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  new MutationObserver(() => { readColors(); clear(targets.stage); kick(); }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 
   function setMode(id) {
     mode = id;
     try { localStorage.setItem('crmsn-viz', id); } catch (e) {}
-    modesEl.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === id ? 'true' : 'false'));
-    drawBg(1); kick();
+    modesEl.querySelectorAll('.viz-mode').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === id ? 'true' : 'false'));
+    wrap.classList.toggle('is-bg', isBg(id));     // the player's screen folds away while the page is the canvas
+    clear(targets.stage); clear(targets.bg); kick();
+  }
+  function setRgb(on) {
+    rgb = on;
+    try { localStorage.setItem('crmsn-viz-rgb', on ? '1' : '0'); } catch (e) {}
+    rgbBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    kick();
   }
   MODES.forEach(m => {
     const b = document.createElement('button');
@@ -250,9 +296,14 @@ const viz = (function () {
     b.addEventListener('click', () => setMode(m.id));
     modesEl.appendChild(b);
   });
-  canvas.addEventListener('click', () => setMode(MODES[(MODES.findIndex(m => m.id === mode) + 1) % MODES.length].id));
+  const rgbBtn = document.createElement('button');
+  rgbBtn.type = 'button'; rgbBtn.className = 'viz-rgb'; rgbBtn.title = 'Fade through soft rainbow colours instead of the theme palette';
+  rgbBtn.innerHTML = '<i aria-hidden="true"></i>Pastel RGB';
+  rgbBtn.addEventListener('click', () => setRgb(!rgb));
+  modesEl.appendChild(rgbBtn);
+  targets.stage.canvas.addEventListener('click', () => setMode(MODES[(MODES.findIndex(m => m.id === mode) + 1) % MODES.length].id));
 
-  readColors(); setMode(mode);
+  readColors(); resizeBg(); setMode(mode); setRgb(rgb);
   return {
     attach(el) { audio = el; ['play', 'playing', 'seeked'].forEach(ev => el.addEventListener(ev, kick)); },
     setTrack,
