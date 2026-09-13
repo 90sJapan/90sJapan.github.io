@@ -6,3 +6,5 @@ files/
 
 # song files live here locally only; they are published as GitHub Release assets
 music/
+.sc_token
+.soundcloud-cache/

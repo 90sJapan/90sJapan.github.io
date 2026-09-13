@@ -188,6 +188,8 @@ html[data-theme="y2k"] .player-btn{
 }
 html[data-theme="y2k"] .player-title{ font-family:var(--font-display); letter-spacing:0.04em; color:var(--y2k-ink); }
 html[data-theme="y2k"] .player-time{ color:var(--y2k-silver-4); font-family:'Space Grotesk', system-ui, sans-serif; }
+html[data-theme="y2k"] .player-file{ display:none; }   /* the window title bar shows the file name instead */
+html[data-theme="y2k"] .track-group-name{ font-family:var(--font-body); color:var(--y2k-blue); text-shadow:1px 1px 0 #fff; }
 html[data-theme="y2k"] .player-skip{
   color:#fff; border:2px solid #fff;
   background: linear-gradient(180deg, #8fb8ff 0%, var(--y2k-blue) 48%, #0f4fd6 52%, #5c98ff 100%);

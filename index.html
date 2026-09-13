@@ -51,7 +51,7 @@
 
       <div class="player" id="player" hidden>
         <div class="y2k-titlebar" aria-hidden="true">
-          <span class="y2k-titlebar-text">crmsn_discography.exe</span>
+          <span class="y2k-titlebar-text" id="playerFileY2k">crmsn_discography.exe</span>
           <span class="y2k-titlebar-btns"><i></i><i></i><i></i></span>
         </div>
         <div class="player-main">
@@ -61,7 +61,10 @@
           </button>
           <div class="player-info">
             <div class="player-title" id="playerTitle">—</div>
-            <div class="player-time"><span id="timeCur">0:00</span> / <span id="timeDur">0:00</span></div>
+            <div class="player-sub">
+              <span class="player-time"><span id="timeCur">0:00</span> / <span id="timeDur">0:00</span></span>
+              <span class="player-file" id="playerFile" title="Source file"></span>
+            </div>
           </div>
           <div class="player-nav">
             <button class="player-skip" id="prevBtn" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM19 5v14L9 12z"/></svg></button>
@@ -72,7 +75,7 @@
         <audio id="audio" preload="metadata"></audio>
       </div>
 
-      <ol class="track-list" id="trackList"></ol>
+      <div class="track-groups" id="trackList"></div>
       <p class="track-empty" id="trackEmpty" hidden>No tracks uploaded yet — check back soon.</p>
     </div>
   </section>

@@ -168,7 +168,19 @@ nav.primary-nav{ align-items:center; }
 .player.is-playing .player-btn .icon-pause{ display:block; }
 .player-info{ flex:1 1 auto; min-width:0; }
 .player-title{ font-family:var(--font-display); font-weight:700; font-size:1.05rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.player-sub{ display:flex; align-items:center; gap:0.9rem; flex-wrap:wrap; }
 .player-time{ font-size:0.82rem; color:var(--text-muted); font-variant-numeric:tabular-nums; }
+.player-file{
+  font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.72rem; letter-spacing:0.02em;
+  color:var(--text-muted); padding:0.15rem 0.55rem; border:1px solid var(--border); border-radius:6px;
+  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.player-file:empty{ display:none; }
+.track-groups{ display:flex; flex-direction:column; gap:1.75rem; }
+.track-group-name{
+  font-family:var(--font-body); font-weight:600; font-size:0.8rem; letter-spacing:0.16em; text-transform:uppercase;
+  color:var(--text-muted); margin:0 0 0.7rem; padding-left:0.2rem;
+}
 .player-nav{ display:flex; gap:0.4rem; }
 .player-skip{
   width:38px; height:38px; border-radius:50%; cursor:pointer;
