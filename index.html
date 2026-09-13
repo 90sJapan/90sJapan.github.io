@@ -5,58 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRMSN — music</title>
 <meta name="description" content="Official site and music for CRMSN.">
+<script>
+  // Apply the saved design before first paint so there's no flash of the other theme.
+  try { var t = localStorage.getItem('crmsn-theme'); if (t === 'y2k') document.documentElement.dataset.theme = 'y2k'; } catch (e) {}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Space+Grotesk:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Audiowide&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="y2k.css">
 </head>
 <body>
 
 <div class="aurora"><span></span><span></span><span></span></div>
 <div class="grain"></div>
+<div class="y2k-grid" aria-hidden="true"></div>
+<div class="y2k-sparkles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
 <header>
   <a href="#top" class="logo-mark">CRMSN</a>
   <nav class="primary-nav">
     <a href="#music">Music</a>
-    <a href="#shows">Shows</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
+    <a href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">SoundCloud</a>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Switch design">
+      <span class="theme-toggle-label">Y2K mode</span>
+    </button>
   </nav>
-  <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-  </button>
 </header>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#music">Music</a>
-  <a href="#shows">Shows</a>
-  <a href="#about">About</a>
-  <a href="#contact">Contact</a>
-</div>
 
 <main id="top">
 
   <section class="hero">
     <h1 class="chrome-text">CRMSN</h1>
-    <p class="tagline">From bedroom haze to festival glow.</p>
     <div class="cta-row">
       <a href="#music" class="btn btn-glow">Listen now</a>
-      <a href="#shows" class="btn">Tour dates</a>
-    </div>
-  </section>
-
-  <section id="moods">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Four moods, one glow</h2>
-        <p>Every set moves between these — pick a lane or scroll through all of them.</p>
-      </div>
-      <div class="mood-strip">
-        <div class="mood-card lofi"><div class="orb"></div><h3>Lofi</h3><p>Late-night, low-fi loops for slow evenings.</p></div>
-        <div class="mood-card house"><div class="orb"></div><h3>House</h3><p>Warm, rolling grooves built for dancing.</p></div>
-        <div class="mood-card dubstep"><div class="orb"></div><h3>Dubstep</h3><p>Heavy low end, sharp and electric.</p></div>
-        <div class="mood-card edm"><div class="orb"></div><h3>EDM</h3><p>Full-spectrum energy for the main stage.</p></div>
-      </div>
     </div>
   </section>
 
@@ -67,47 +49,15 @@
         <p>Streaming straight from SoundCloud — this list updates itself whenever a new track goes up.</p>
       </div>
       <div class="sc-embed-wrap">
+        <div class="y2k-titlebar" aria-hidden="true">
+          <span class="y2k-titlebar-text">crmsn_player.exe</span>
+          <span class="y2k-titlebar-btns"><i></i><i></i><i></i></span>
+        </div>
         <iframe class="sc-frame" title="CRMSN on SoundCloud" scrolling="no" frameborder="no" allow="autoplay"
           src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fofficialcrmsn&color=%23ff3ea5&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true">
         </iframe>
       </div>
       <a class="sc-full-link" href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">Full catalog on SoundCloud</a>
-    </div>
-  </section>
-
-  <section id="shows">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Upcoming shows</h2>
-        <p>New dates added through the winter.</p>
-      </div>
-      <div class="shows-list">
-        <div class="show-row">
-          <div class="show-date">Oct 18<span>2026</span></div>
-          <div class="show-venue"><h4>Low End Theory</h4><p>Nashville, TN</p></div>
-          <a href="#" class="btn">Tickets</a>
-        </div>
-        <div class="show-row">
-          <div class="show-date">Nov 2<span>2026</span></div>
-          <div class="show-venue"><h4>Static Room</h4><p>Austin, TX</p></div>
-          <a href="#" class="btn">Tickets</a>
-        </div>
-        <div class="show-row">
-          <div class="show-date">Dec 6<span>2026</span></div>
-          <div class="show-venue"><h4>Afterglow Festival</h4><p>Miami, FL</p></div>
-          <a href="#" class="btn">Tickets</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="about">
-    <div class="wrap about-grid">
-      <p class="about-quote">Built from bedroom recordings, finished on festival systems.</p>
-      <div class="about-body">
-        <p>CRMSN started as late-night lofi loops before pulling in the low end of house and dubstep, and eventually the full energy of EDM. The range stayed — the sets just got louder.</p>
-        <p>Currently finishing a full-length record for early next year.</p>
-      </div>
     </div>
   </section>
 
@@ -118,10 +68,7 @@
     <p class="logo-mark" style="font-size:1.4rem;">CRMSN</p>
   </div>
   <div class="contact-links">
-    <a href="mailto:booking@example.com">booking@example.com</a>
     <a href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">SoundCloud</a>
-    <a href="#">Instagram</a>
-    <a href="#">Newsletter</a>
   </div>
 </footer>
 

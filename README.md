@@ -1,8 +1,20 @@
 # CRMSN site
 
-Static homepage for CRMSN. Three files, no build step: `index.html`, `styles.css`, `script.js`.
+Static homepage for CRMSN. Four files, no build step: `index.html`, `styles.css`, `y2k.css`, `script.js`.
 The music section embeds your SoundCloud profile directly, so new uploads to
 soundcloud.com/officialcrmsn show up on the site automatically — no code changes needed.
+
+## Two designs
+
+The site ships with two looks, switched by the **Y2K mode / Classic mode** button in the header:
+
+- **Classic** (`styles.css`) — dark, chrome type, soft aurora glow.
+- **Y2K** (`y2k.css`) — silver chrome, glossy bubble buttons, holographic title, perspective grid, sparkles.
+
+The visitor's choice is remembered in their browser (`localStorage`). To make Y2K the default
+instead, change `'classic'` to `'y2k'` in the fallback line of `script.js` and flip the check in the
+small inline script at the top of `index.html`. All Y2K rules are scoped under
+`html[data-theme="y2k"]`, so editing one design never affects the other.
 
 ## Publish it on GitHub Pages (free)
 
@@ -12,7 +24,7 @@ should be public. That's fine — it only contains site code (HTML/CSS/JS), noth
 1. Create a new repo on GitHub named exactly `yourusername.github.io` (replace
    `yourusername` with your actual GitHub username — this exact naming is what makes it
    your personal site instead of a project subpage).
-2. Push these three files to the root of that repo's `main` branch.
+2. Push these files to the root of that repo's `main` branch.
 3. In the repo, go to **Settings → Pages** and confirm the source is the `main` branch, root folder.
 4. Your site goes live at `https://yourusername.github.io` within a minute or two.
 
