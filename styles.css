@@ -198,7 +198,10 @@ nav.primary-nav{ align-items:center; }
   font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted);
   pointer-events:none; white-space:nowrap;
 }
-.viz-modes{ display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.7rem; }
+/* Ambience / Spikes draw here, behind the whole page; the player's screen folds away meanwhile */
+.viz-bg{ position:fixed; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; }
+.player-viz.is-bg .viz-stage{ display:none; }
+.viz-modes{ display:flex; flex-wrap:wrap; align-items:center; gap:0.35rem; margin-top:0.7rem; }
 .viz-mode{
   font-family:var(--font-body); font-size:0.72rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase;
   padding:0.32rem 0.8rem; border-radius:999px; cursor:pointer;
@@ -207,6 +210,31 @@ nav.primary-nav{ align-items:center; }
 }
 .viz-mode:hover{ color:var(--text-primary); border-color:var(--border-strong); }
 .viz-mode[aria-pressed="true"]{ color:var(--text-primary); border-color:rgba(53,230,255,0.45); background:rgba(53,230,255,0.08); }
+/* pastel RGB fade toggle, kept to the right of the styles */
+.viz-rgb{
+  margin-left:auto; display:inline-flex; align-items:center; gap:0.45rem;
+  font-family:var(--font-body); font-size:0.72rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase;
+  padding:0.32rem 0.8rem 0.32rem 0.55rem; border-radius:999px; cursor:pointer;
+  border:1px solid var(--border); background:transparent; color:var(--text-muted);
+  transition:color .2s ease, border-color .2s ease, background .2s ease;
+}
+.viz-rgb i{
+  width:12px; height:12px; border-radius:50%; opacity:0.55;
+  background:conic-gradient(#ffb3c6, #ffe0a3, #c6ffb3, #a3e6ff, #d1b3ff, #ffb3c6);
+  transition:opacity .2s ease;
+}
+.viz-rgb:hover{ color:var(--text-primary); border-color:var(--border-strong); }
+.viz-rgb[aria-pressed="true"]{ color:var(--text-primary); border-color:transparent; background:rgba(255,255,255,0.06); position:relative; }
+.viz-rgb[aria-pressed="true"] i{ opacity:1; animation:rgb-spin 4s linear infinite; }
+.viz-rgb[aria-pressed="true"]::before{
+  content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; pointer-events:none;
+  background:linear-gradient(90deg, #ffb3c6, #ffe0a3, #c6ffb3, #a3e6ff, #d1b3ff, #ffb3c6);
+  background-size:300% 100%; animation:rgb-slide 6s linear infinite;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+}
+@keyframes rgb-spin{ to{ transform:rotate(360deg); } }
+@keyframes rgb-slide{ to{ background-position:300% 0; } }
 
 /* ---------- track lists: one card per artist (public / private split), 2x2 ---------- */
 .discog-grid{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:1.25rem; align-items:stretch; }
@@ -312,6 +340,6 @@ footer.contact{
 }
 
 @media (prefers-reduced-motion: reduce){
-  .aurora span, .hero .chrome-text, .btn-glow::after{ animation:none !important; }
+  .aurora span, .hero .chrome-text, .btn-glow::after, .viz-rgb i, .viz-rgb::before{ animation:none !important; }
   html{ scroll-behavior:auto; }
 }
