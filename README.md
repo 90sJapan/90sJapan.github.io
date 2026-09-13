@@ -30,20 +30,37 @@ should be public. That's fine — it only contains site code (HTML/CSS/JS), noth
 
 ## Discography (full-quality files)
 
-Song files you upload from your PC live in `music/`, which is **git-ignored** — they never enter
-this public repo's history. Instead `upload.sh` publishes them as assets on the repo's
-`discography` GitHub Release (free, up to 2 GB per file), and the site's player streams them
-from there. `tracks.json` is the small committed manifest the player reads.
+Song files live in `music/<artist>/…`, which is **git-ignored** — they never enter this public
+repo's history. `discog.py` publishes them as assets on the repo's `discography` GitHub Release
+(free, up to 2 GB per file) and the site's player streams them from there. `tracks.json` is the
+small committed manifest the player reads: it carries the *display title*, while the original
+file name is shown as a small detail for whatever's playing.
 
 ```
-cp ~/Desktop/new-song.wav music/     # drop files in (mp3, wav, flac, m4a, aac, ogg, opus)
-./upload.sh --push                   # upload new files + commit/push tracks.json
+music/
+  crmsn/…            # one top-level folder per artist/alias
+  hush witch/…
+  spotlife/…
 ```
 
-- Titles come from filenames (`Night_Drive-v2.wav` → "Night Drive v2"); edit them in `tracks.json` any time.
-- Re-running the script skips files already uploaded and never touches existing entries.
-- To remove a song: delete it from `music/`, remove its entry from `tracks.json`, and run
-  `gh release delete-asset discography <file>`.
-- To replace a file with a new version: delete the asset first (command above), then re-run.
-- Anything the site can play, a visitor can download — that's true of every audio host. WAV/FLAC
-  are large; MP3 320k or M4A are a good middle ground if bandwidth matters.
+Each folder is mapped to a SoundCloud profile in `tracks.json` → `"sources"`. Then:
+
+```
+python3 discog.py match            # pull titles from SoundCloud, match them to the local files
+python3 discog.py status           # see what matched / needs review
+python3 discog.py upload --push    # upload new files to the release, commit tracks.json, push
+```
+
+- **Matching** is by track length (SoundCloud's duration vs the local file's), with the filename
+  as a tie-breaker. Confident matches get the SoundCloud title; ambiguous ones are flagged
+  `needs_review` with the candidates listed; files with no match keep a cleaned-up filename as
+  their title. Edit `title` in `tracks.json` by hand any time — re-running never overwrites a
+  matched or edited title (delete the entry's `soundcloud` key to force a re-match).
+- **Private SoundCloud tracks** are invisible to the public API. Give the script your session's
+  OAuth token (soundcloud.com → DevTools → Application → Cookies → `oauth_token`) via
+  `--token`, `SC_OAUTH_TOKEN`, or a git-ignored `.sc_token` file.
+- Identical files that appear in two folders are uploaded once (`duplicate_of` marks the copy).
+- Upload skips files already on the release and checkpoints after every file, so it can be
+  interrupted and resumed. To replace a file: `gh release delete-asset discography <asset>`,
+  then re-run upload.
+- Anything the site can play, a visitor can download — that's true of every audio host.
