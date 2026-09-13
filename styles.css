@@ -225,11 +225,11 @@ nav.primary-nav{ align-items:center; }
 }
 .viz-rgb:hover{ color:var(--text-primary); border-color:var(--border-strong); }
 .viz-rgb[aria-pressed="true"]{ color:var(--text-primary); border-color:transparent; background:rgba(255,255,255,0.06); position:relative; }
-.viz-rgb[aria-pressed="true"] i{ opacity:1; animation:rgb-spin 4s linear infinite; }
+.viz-rgb[aria-pressed="true"] i{ opacity:1; animation:rgb-spin 2s linear infinite; }
 .viz-rgb[aria-pressed="true"]::before{
   content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; pointer-events:none;
   background:linear-gradient(90deg, #ffb3c6, #ffe0a3, #c6ffb3, #a3e6ff, #d1b3ff, #ffb3c6);
-  background-size:300% 100%; animation:rgb-slide 6s linear infinite;
+  background-size:300% 100%; animation:rgb-slide 2.5s linear infinite;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
 }

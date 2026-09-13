@@ -233,7 +233,7 @@ html[data-theme="y2k"] .viz-rgb:hover{ color:var(--y2k-ink); border-color:#fff; 
 html[data-theme="y2k"] .viz-rgb[aria-pressed="true"]{
   color:var(--y2k-ink); text-shadow:0 1px 0 rgba(255,255,255,0.7); border-color:#fff;
   background:linear-gradient(90deg, #ff9ecf, #ffd08a, #b6f59a, #8ad8ff, #c9a8ff, #ff9ecf);
-  background-size:300% 100%; animation:rgb-slide 6s linear infinite;
+  background-size:300% 100%; animation:rgb-slide 2.5s linear infinite;
   box-shadow:0 0 0 1px var(--y2k-pink), 0 3px 10px rgba(255,46,196,0.35);
 }
 html[data-theme="y2k"] .viz-rgb[aria-pressed="true"]::before{ display:none; }

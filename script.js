@@ -81,11 +81,12 @@ const viz = (function () {
   }
   function grad(u) {                               // position along the palette, 0..1
     u = clamp(u, 0, 1);
-    if (rgb) return hsl(clock * 14 + u * 150, 0.72, 0.72);   // soft pastel hues drifting round the wheel
+    if (rgb) return light() ? hsl(clock * 45 + u * 150, 0.8, 0.6) : hsl(clock * 45 + u * 150, 0.72, 0.72);   // pastel hues flowing round the wheel (a shade deeper on the light theme)
     u *= 2; const s = colors.stops;
     return u < 1 ? mix(s[0], s[1], u) : mix(s[1], s[2], u - 1);
   }
-  const hot = () => rgb ? hsl(clock * 14 + 200, 0.6, 0.9) : colors.hot;
+  const hot = () => rgb ? hsl(clock * 45 + 200, 0.6, 0.9) : colors.hot;
+  const light = () => root.dataset.theme === 'y2k';
   const rgba = (c, a) => 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + a.toFixed(3) + ')';
 
   // ---- data
@@ -226,7 +227,7 @@ const viz = (function () {
   }
   function drawSpikes() {
     fade(0.35);
-    const k = onBg ? 0.4 : 1;
+    const k = onBg ? 0.34 : 1;
     ctx.globalCompositeOperation = onBg ? 'source-over' : 'lighter';
     const cx = W / 2, cy = H / 2, R = Math.min(W, H), r0 = R * (0.19 + 0.07 * level), len = R * 0.5;
     const M = N * 2;
@@ -243,9 +244,23 @@ const viz = (function () {
       const p = r0 + peak[i] * len;
       ctx.fillStyle = rgba(hot(), 0.6 * peak[i] * k); ctx.beginPath(); ctx.arc(cx + Math.cos(a) * p, cy + Math.sin(a) * p, R * 0.006, 0, 6.2832); ctx.fill();
     }
-    const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, r0);
-    rg.addColorStop(0, rgba(mix(grad(tone), hot(), 0.5), (0.55 + 0.4 * level) * k)); rg.addColorStop(1, rgba(grad(tone), 0.05 * k));
-    ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, r0, 0, 6.2832); ctx.fill();
+    drawSphere(cx, cy, r0);
+  }
+  function drawSphere(cx, cy, r) {                 // the core: a lit sphere with a halo, kept vivid on the page too
+    const c = grad(tone), A = onBg ? 0.82 + 0.15 * level : 0.9 + 0.1 * level;
+    ctx.globalCompositeOperation = 'source-over';
+    const halo = ctx.createRadialGradient(cx, cy, r * 0.85, cx, cy, r * 1.6);
+    halo.addColorStop(0, rgba(c, 0.45 * A)); halo.addColorStop(0.35, rgba(c, 0.14 * A)); halo.addColorStop(1, rgba(c, 0));
+    ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(cx, cy, r * 1.6, 0, 6.2832); ctx.fill();
+    const body = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.38, r * 0.05, cx, cy, r * 1.05);
+    body.addColorStop(0, rgba(mix(c, hot(), 0.8), A));
+    body.addColorStop(0.3, rgba(mix(c, hot(), 0.3), A));
+    body.addColorStop(0.75, rgba(c, A));
+    body.addColorStop(1, rgba(mix(c, [0, 0, 0], 0.55), A));
+    ctx.fillStyle = body; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.2832); ctx.fill();
+    const rim = ctx.createRadialGradient(cx, cy, r * 0.8, cx, cy, r);   // bright limb so the edge reads as a ball
+    rim.addColorStop(0, rgba(hot(), 0)); rim.addColorStop(0.85, rgba(hot(), 0.12 * A)); rim.addColorStop(1, rgba(hot(), 0.5 * A));
+    ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.2832); ctx.fill();
   }
   const DRAW = { bars: drawBars, scope: drawScope, ambience: drawAmbience, spikes: drawSpikes };
 
