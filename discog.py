@@ -273,7 +273,13 @@ def cmd_upload(args):
         print(f"creating release '{tag}' ...")
         gh("release", "create", tag, "--title", "Discography", "--latest=false", "--notes",
            f"Full-quality audio served by the site. Managed by discog.py — not the source of truth.")
-    existing = set(gh("release", "view", tag, "--json", "assets", "--jq", ".assets[].name").split())
+    # a killed upload can leave a half-registered asset behind; drop those so they get re-uploaded
+    assets = json.loads(gh("release", "view", tag, "--json", "assets", "--jq", ".assets"))
+    for a in assets:
+        if a.get("state") not in (None, "uploaded"):
+            print(f"  removing broken asset {a['name']} (state {a['state']})")
+            gh("release", "delete-asset", tag, a["name"], "--yes")
+    existing = {a["name"] for a in assets if a.get("state") in (None, "uploaded")}
     todo = [t for t in data["tracks"] if "source" in t and not t.get("duplicate_of")]
     n_up = 0
     with tempfile.TemporaryDirectory() as tmp:
