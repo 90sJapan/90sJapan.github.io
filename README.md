@@ -4,6 +4,10 @@ Static homepage for CRMSN. No build step: `index.html`, `styles.css`, `y2k.css`,
 The music section embeds your SoundCloud profile directly, so new uploads to
 soundcloud.com/officialcrmsn show up on the site automatically — no code changes needed.
 
+`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `styles.css`,
+`y2k.css` or `script.js`, otherwise visitors' browsers can keep the old copies cached for a while
+after a deploy (GitHub Pages serves everything with a 10-minute cache).
+
 ## Two designs
 
 The site ships with two looks, switched by the **Y2K mode / Classic mode** button in the header:
