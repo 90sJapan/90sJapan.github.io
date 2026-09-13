@@ -229,7 +229,8 @@ const viz = (function () {
     fade(0.35);
     const k = onBg ? 0.34 : 1;
     ctx.globalCompositeOperation = onBg ? 'source-over' : 'lighter';
-    const cx = W / 2, cy = H / 2, R = Math.min(W, H), r0 = R * (0.19 + 0.07 * level), len = R * 0.5;
+    // behind the page the whole ring (core + longest spike) is kept inside the viewport
+    const cx = W / 2, cy = H / 2, R = Math.min(W, H) * (onBg ? 0.56 : 1), r0 = R * (0.19 + 0.07 * level), len = R * 0.5;
     const M = N * 2;
     for (let k = 0; k < M; k++) {
       const i = k < N ? k : M - 1 - k;              // mirrored so the ring is symmetric
