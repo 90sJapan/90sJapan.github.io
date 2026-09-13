@@ -1022,27 +1022,56 @@
       "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/hush-witch--blush-doja.wav"
     },
     {
-      "title": "Kp L4f",
+      "title": "Lp 40 Master Agust2021",
+      "artist": "spotlife",
+      "source": "spotlife/lp 40 master agust2021.wav",
+      "file": "spotlife--lp-40-master-agust2021.wav",
+      "bytes": 44755244,
+      "duration": 126.857143,
+      "sha256": "94c9d56050b46cbaf9bb8412f9b1dbaa15e21c8d13d73a0096e8645f4ed8ab5f",
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp-40-master-agust2021.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/lp-40-master-agust2021/s-I1fMYL6UYPu",
+      "sharing": "private",
+      "created_at": "2021-08-04T22:34:43Z"
+    },
+    {
+      "title": "Lp383 Mdbmastered Low",
+      "artist": "spotlife",
+      "source": "spotlife/lp383_mdbmastered_Low.mp3",
+      "file": "spotlife--lp383-mdbmastered-low.mp3",
+      "bytes": 3042532,
+      "duration": 126.746083,
+      "sha256": "7ff28c454aebd05ea798abea73019a136870840c57e10e1a034ab1a2df56cfa9",
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp383-mdbmastered-low.mp3",
+      "soundcloud": "https://soundcloud.com/daspotlife/lp383-mdbmastered-low/s-6RiTmye7HN6",
+      "sharing": "private",
+      "created_at": "2021-06-30T05:36:19Z"
+    },
+    {
+      "title": "Lp 35",
+      "artist": "spotlife",
+      "source": "spotlife/lp 35.wav",
+      "file": "spotlife--lp-35.wav",
+      "bytes": 41472044,
+      "duration": 108.0,
+      "sha256": "cc65449c6c636e8988eb30e6b9682a2c0f875492ee67d59ad6fd0ff8e14befb1",
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp-35.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/lp-35/s-NN71jnpPkbb",
+      "sharing": "private",
+      "created_at": "2021-06-02T05:18:33Z"
+    },
+    {
+      "title": "Lp33",
       "artist": "spotlife",
       "source": "spotlife/lp33.wav",
       "file": "spotlife--lp33.wav",
       "bytes": 35237692,
       "duration": 91.764708,
       "sha256": "0862167848d72013a709f267718c39b084d840ee23dca6896e41d11558de450c",
-      "soundcloud": "https://soundcloud.com/daspotlife/kp-l4f",
-      "sharing": "public",
-      "created_at": "2023-03-07T07:41:10Z",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp33.wav"
-    },
-    {
-      "title": "Coming Back",
-      "artist": "spotlife",
-      "source": "spotlife/Coming Back.wav",
-      "file": "spotlife--coming-back.wav",
-      "bytes": 19039080,
-      "duration": 107.931043,
-      "sha256": "366d5852cb7e8cd387a9cd7cd71075bf1ee775c551944e26e80c9c943a3dfe37",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--coming-back.wav"
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp33.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/lp33-1/s-oQ98dBgF2xX",
+      "sharing": "private",
+      "created_at": "2021-06-02T05:17:53Z"
     },
     {
       "title": "Lp 30.9 May 24, Master",
@@ -1052,7 +1081,10 @@
       "bytes": 28800044,
       "duration": 150.0,
       "sha256": "6d8692bb41002a3e193eefb5aa9933584ea21b9ad8f5f479d48fac1591434ae5",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp-30-9-may-24-master.wav"
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp-30-9-may-24-master.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/lp-309-may-24-master/s-moFfx7mTKFb",
+      "sharing": "private",
+      "created_at": "2021-05-25T03:01:57Z"
     },
     {
       "title": "Lp10 Final May Master",
@@ -1062,17 +1094,10 @@
       "bytes": 23853224,
       "duration": 124.235313,
       "sha256": "460ec8ddffa2d14bf40b97891872d3e82551af3b1571d5552a6ea8f42cb7c90d",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp10-final-may-master.wav"
-    },
-    {
-      "title": "Lp20 mix ll",
-      "artist": "spotlife",
-      "source": "spotlife/Lp20 mix ll.wav",
-      "file": "spotlife--lp20-mix-ll.wav",
-      "bytes": 40370444,
-      "duration": 152.571429,
-      "sha256": "ea2442f2d07580864b80de49b7359a25c24caea5c8410f973a13e1a0490bd297",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp20-mix-ll.wav"
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp10-final-may-master.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/lp10-final-may-master/s-XCApCrhbdUg",
+      "sharing": "private",
+      "created_at": "2021-05-22T01:56:48Z"
     },
     {
       "title": "Lp27",
@@ -1082,47 +1107,49 @@
       "bytes": 13824044,
       "duration": 36.0,
       "sha256": "163e61df0cd6243af571aba0161a34b1d63941390f5e7f7b82e4e6dc216f55b4",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp27.wav"
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp27.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/lp27/s-6G0DC3hndZ6",
+      "sharing": "private",
+      "created_at": "2021-04-26T02:28:22Z"
     },
     {
-      "title": "lp 35",
+      "title": "Lp20 Mix Ll",
       "artist": "spotlife",
-      "source": "spotlife/lp 35.wav",
-      "file": "spotlife--lp-35.wav",
-      "bytes": 41472044,
-      "duration": 108.0,
-      "sha256": "cc65449c6c636e8988eb30e6b9682a2c0f875492ee67d59ad6fd0ff8e14befb1",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp-35.wav"
+      "source": "spotlife/Lp20 mix ll.wav",
+      "file": "spotlife--lp20-mix-ll.wav",
+      "bytes": 40370444,
+      "duration": 152.571429,
+      "sha256": "ea2442f2d07580864b80de49b7359a25c24caea5c8410f973a13e1a0490bd297",
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp20-mix-ll.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/lp20-mix-ll/s-Fa5rhuOwrON",
+      "sharing": "private",
+      "created_at": "2021-02-15T22:57:59Z"
     },
     {
-      "title": "lp 40 master agust2021",
-      "artist": "spotlife",
-      "source": "spotlife/lp 40 master agust2021.wav",
-      "file": "spotlife--lp-40-master-agust2021.wav",
-      "bytes": 44755244,
-      "duration": 126.857143,
-      "sha256": "94c9d56050b46cbaf9bb8412f9b1dbaa15e21c8d13d73a0096e8645f4ed8ab5f",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp-40-master-agust2021.wav"
-    },
-    {
-      "title": "lp383 mdbmastered Low",
-      "artist": "spotlife",
-      "source": "spotlife/lp383_mdbmastered_Low.mp3",
-      "file": "spotlife--lp383-mdbmastered-low.mp3",
-      "bytes": 3042532,
-      "duration": 126.746083,
-      "sha256": "7ff28c454aebd05ea798abea73019a136870840c57e10e1a034ab1a2df56cfa9",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--lp383-mdbmastered-low.mp3"
-    },
-    {
-      "title": "try me no dither",
+      "title": "Try Me No Dither",
       "artist": "spotlife",
       "source": "spotlife/try me no dither.wav",
       "file": "spotlife--try-me-no-dither.wav",
       "bytes": 55381444,
       "duration": 156.976757,
       "sha256": "d46cbf04b094f36741e392b6c9ff0ec956e7fd00fb3dd224404e1b6fd2a061f4",
-      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--try-me-no-dither.wav"
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--try-me-no-dither.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/try-me-no-dither/s-5leNFrjaNjw",
+      "sharing": "private",
+      "created_at": "2021-02-02T13:43:33Z"
+    },
+    {
+      "title": "Coming Back",
+      "artist": "spotlife",
+      "source": "spotlife/Coming Back.wav",
+      "file": "spotlife--coming-back.wav",
+      "bytes": 19039080,
+      "duration": 107.931043,
+      "sha256": "366d5852cb7e8cd387a9cd7cd71075bf1ee775c551944e26e80c9c943a3dfe37",
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/spotlife--coming-back.wav",
+      "soundcloud": "https://soundcloud.com/daspotlife/coming-back/s-F3HwmwZKl41",
+      "sharing": "private",
+      "created_at": "2020-12-05T19:09:10Z"
     }
   ]
 }
