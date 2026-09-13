@@ -1,0 +1,5 @@
+# local-only files
+.DS_Store
+CLAUDE.md
+*.zip
+files/
