@@ -19,6 +19,13 @@
   --violet:#8b5cff;
   --amber:#ffb84d;
 
+  /* visualizer palette: dark/bassy tone -> --viz-a, bright tone -> --viz-c; caps/peaks use --viz-hot */
+  --viz-a:#8b5cff;
+  --viz-b:#ff3ea5;
+  --viz-c:#35e6ff;
+  --viz-hot:#ffffff;
+  --viz-bg:#05050b;
+
   --font-display:'Unbounded', system-ui, sans-serif;
   --font-body:'Space Grotesk', system-ui, sans-serif;
 
@@ -176,11 +183,50 @@ nav.primary-nav{ align-items:center; }
   max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 .player-file:empty{ display:none; }
-.track-groups{ display:flex; flex-direction:column; gap:1.75rem; }
+
+/* ---------- visualizer (inside the player) ---------- */
+.player-viz{ margin-top:1rem; }
+.viz-stage{
+  position:relative; height:clamp(170px, 26vw, 250px);
+  border-radius:var(--radius-md); overflow:hidden; background:var(--viz-bg);
+  border:1px solid var(--border);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.4) inset, 0 10px 40px rgba(0,0,0,0.35);
+}
+.viz-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; cursor:pointer; }
+.viz-hint{
+  position:absolute; left:50%; bottom:0.8rem; transform:translateX(-50%);
+  font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted);
+  pointer-events:none; white-space:nowrap;
+}
+.viz-modes{ display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.7rem; }
+.viz-mode{
+  font-family:var(--font-body); font-size:0.72rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase;
+  padding:0.32rem 0.8rem; border-radius:999px; cursor:pointer;
+  border:1px solid var(--border); background:transparent; color:var(--text-muted);
+  transition:color .2s ease, border-color .2s ease, background .2s ease;
+}
+.viz-mode:hover{ color:var(--text-primary); border-color:var(--border-strong); }
+.viz-mode[aria-pressed="true"]{ color:var(--text-primary); border-color:rgba(53,230,255,0.45); background:rgba(53,230,255,0.08); }
+
+/* ---------- track lists: one card per artist (public / private split), 2x2 ---------- */
+.discog-grid{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:1.25rem; align-items:stretch; }
+.discog-cell{
+  display:flex; flex-direction:column; min-width:0;
+  border-radius:var(--radius-lg); border:1px solid var(--border); background:var(--panel);
+  padding:1.1rem 1.1rem 1rem;
+}
+.cell-head{ display:flex; align-items:baseline; justify-content:space-between; gap:0.75rem; margin-bottom:0.8rem; padding-left:0.2rem; }
 .track-group-name{
   font-family:var(--font-body); font-weight:600; font-size:0.8rem; letter-spacing:0.16em; text-transform:uppercase;
-  color:var(--text-muted); margin:0 0 0.7rem; padding-left:0.2rem;
+  color:var(--text-secondary); margin:0; display:flex; align-items:center; gap:0.6rem; min-width:0;
 }
+.track-vis{
+  font-size:0.62rem; letter-spacing:0.12em; padding:0.12rem 0.5rem; border-radius:999px;
+  border:1px solid var(--border-strong); color:var(--text-muted);
+}
+.track-vis.is-private{ border-color:rgba(255,62,165,0.5); color:var(--magenta); }
+.track-vis.is-public{ border-color:rgba(53,230,255,0.45); color:var(--cyan); }
+.track-count{ font-size:0.72rem; letter-spacing:0.08em; color:var(--text-muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
 .player-nav{ display:flex; gap:0.4rem; }
 .player-skip{
   width:38px; height:38px; border-radius:50%; cursor:pointer;
@@ -199,7 +245,19 @@ nav.primary-nav{ align-items:center; }
 }
 .player-seek::-moz-range-thumb{ width:14px; height:14px; border:0; border-radius:50%; background:var(--chrome-1); box-shadow:0 0 12px rgba(53,230,255,0.7); }
 
-.track-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.5rem; }
+.track-list{
+  list-style:none; margin:0; padding:0 0.3rem 0 0; display:flex; flex-direction:column; gap:0.5rem;
+  position:relative; overflow-y:auto; overscroll-behavior:contain;
+  scrollbar-width:thin; scrollbar-color: var(--border-strong) transparent;
+}
+.track-list::-webkit-scrollbar{ width:6px; }
+.track-list::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:999px; }
+/* lists longer than the visible rows fade out at the bottom until scrolled to the end */
+.track-list.is-scroll:not(.at-end){
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 2.75rem), transparent);
+  mask-image:linear-gradient(to bottom, #000 calc(100% - 2.75rem), transparent);
+}
+.track{ flex:0 0 auto; }
 .track-btn{
   width:100%; display:grid; grid-template-columns: 2.5rem 1fr auto; align-items:center; gap:1rem;
   padding:0.9rem 1.2rem; border-radius:var(--radius-md); cursor:pointer; text-align:left;
@@ -248,6 +306,9 @@ footer.contact{
   .player-nav{ display:none; }
   .track-btn{ grid-template-columns:2rem 1fr; }
   .track-meta{ grid-column:2; }
+  .discog-grid{ grid-template-columns:1fr; gap:1rem; }
+  .discog-cell{ padding:0.9rem 0.85rem 0.85rem; }
+  .viz-stage{ height:190px; }
 }
 
 @media (prefers-reduced-motion: reduce){
