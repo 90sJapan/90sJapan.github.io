@@ -73,9 +73,16 @@
         </div>
         <input class="player-seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
         <audio id="audio" preload="metadata"></audio>
+        <div class="player-viz">
+          <div class="viz-stage">
+            <canvas id="viz" aria-label="Audio visualizer" title="Click to switch style"></canvas>
+            <p class="viz-hint" id="vizHint" hidden></p>
+          </div>
+          <div class="viz-modes" id="vizModes" role="group" aria-label="Visualizer style"></div>
+        </div>
       </div>
 
-      <div class="track-groups" id="trackList"></div>
+      <div class="discog-grid" id="trackList" hidden></div>
       <p class="track-empty" id="trackEmpty" hidden>No tracks uploaded yet — check back soon.</p>
     </div>
   </section>

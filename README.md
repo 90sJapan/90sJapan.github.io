@@ -48,7 +48,8 @@ Each folder is mapped to a SoundCloud profile in `tracks.json` → `"sources"`. 
 ```
 python3 discog.py match            # pull titles from SoundCloud, match them to the local files
 python3 discog.py status           # see what matched / needs review
-python3 discog.py upload --push    # upload new files to the release, commit tracks.json, push
+python3 discog.py upload --push    # upload new files to the release, build viz data, commit, push
+python3 discog.py viz [--force]    # (re)build visualizer data on its own
 ```
 
 - **Matching** is by track length (SoundCloud's duration vs the local file's), with the filename
@@ -64,3 +65,16 @@ python3 discog.py upload --push    # upload new files to the release, commit tra
   interrupted and resumed. To replace a file: `gh release delete-asset discography <asset>`,
   then re-run upload.
 - Anything the site can play, a visitor can download — that's true of every audio host.
+
+The player shows one list per artist, split into **public** and **private** when an artist has both —
+decided by the folder a file sits in (`…/soundcloud_private/…` vs `…/soundcloud_public/…`), falling
+back to what SoundCloud reported. Each list shows 7 rows and scrolls for the rest.
+
+### Visualizer
+
+The player has a visualizer (Bars & Waves / Scope / Ambience / Spikes — click the screen to cycle).
+GitHub's release host sends no CORS headers, so a browser can't analyse the streamed audio itself;
+instead `discog.py viz` decodes each file locally (`afconvert` + numpy) and writes a small
+`viz/<file>.bin` (24 log-spaced bands + tone + level at 16 fps, ~40 KB/min) that the page syncs to
+the playback position. `upload` runs it automatically; a track with no file just shows an idle screen.
+Colours come from the theme's `--viz-*` tokens and slide along that palette with the tone of the music.

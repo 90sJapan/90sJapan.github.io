@@ -4,6 +4,7 @@ discog.py — build and publish the discography for the site.
 
   python3 discog.py match [--token TOKEN]   scan music/, pull titles from SoundCloud, update tracks.json
   python3 discog.py upload [--push]         upload new files to the GitHub Release, fill in URLs
+  python3 discog.py viz [--force]           precompute visualizer data (viz/*.bin) for the site's player
   python3 discog.py status                  show what's matched / unmatched / uploaded
 
 Folder layout (music/ is git-ignored, files never enter the repo):
@@ -22,7 +23,7 @@ Each SoundCloud account has its own token: log in as that account, then
 and save the value as music/<alias>/token.txt (music/ is git-ignored). A single-account fallback
 can go in --token, env SC_OAUTH_TOKEN, or ./.sc_token.
 """
-import argparse, hashlib, json, os, re, subprocess, sys, tempfile, unicodedata
+import argparse, hashlib, json, os, re, struct, subprocess, sys, tempfile, unicodedata
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -30,6 +31,7 @@ ROOT = Path(__file__).resolve().parent
 MUSIC = ROOT / "music"
 TRACKS = ROOT / "tracks.json"
 CACHE = ROOT / ".soundcloud-cache"     # raw API responses, git-ignored
+VIZ = ROOT / "viz"                      # precomputed spectrum data the site's visualizer reads (committed)
 AUDIO_EXT = {".mp3", ".wav", ".flac", ".m4a", ".aac", ".ogg", ".opus", ".aif", ".aiff"}
 TOLERANCE = 1.5  # seconds
 
@@ -297,8 +299,9 @@ def cmd_upload(args):
     save_tracks(data)
     ready = sum(1 for t in data["tracks"] if t.get("url") and not t.get("duplicate_of"))
     print(f"\nuploaded {n_up} new file(s); {ready} track(s) have URLs")
+    build_viz(data)
     if args.push:
-        subprocess.run(["git", "add", "tracks.json"], check=True)
+        subprocess.run(["git", "add", "tracks.json", "viz"], check=True)
         if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
             print("nothing new to commit")
         else:
@@ -306,7 +309,73 @@ def cmd_upload(args):
             subprocess.run(["git", "push", "-q", "origin", "main"], check=True)
             print("pushed — live site updates in about a minute")
     else:
-        print("run `python3 discog.py upload --push` (or commit tracks.json) to update the live site")
+        print("run `python3 discog.py upload --push` (or commit tracks.json and viz/) to update the live site")
+
+# ---------------------------------------------------------------- visualizer data
+# The release host sends no CORS headers, so the browser can't run an FFT on the streamed audio
+# (Web Audio would silence a cross-origin source). Instead the spectrum is computed here, once,
+# and saved next to the site as a tiny per-track file the visualizer syncs to audio.currentTime:
+#   viz/<file>.bin = 16-byte header + frames x (VIZ_BANDS log-spaced bands, tone, level) as uint8
+VIZ_FPS, VIZ_BANDS, VIZ_SR, VIZ_N = 16, 24, 22050, 2048
+
+def viz_path(t): return VIZ / (t["file"] + ".bin")
+
+def analyze(path):
+    import numpy as np, wave
+    fd, tmp = tempfile.mkstemp(suffix=".wav"); os.close(fd)
+    try:
+        subprocess.run(["afconvert", "-f", "WAVE", "-d", f"LEI16@{VIZ_SR}", "-c", "1", "--mix", str(path), tmp],
+                       check=True, capture_output=True)
+        with wave.open(tmp) as w: pcm = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").astype(np.float32) / 32768
+    finally:
+        os.unlink(tmp)
+    n = VIZ_N
+    nframes = max(1, int(len(pcm) * VIZ_FPS / VIZ_SR))
+    pcm = np.concatenate([np.zeros(n // 2, np.float32), pcm, np.zeros(n, np.float32)])
+    starts = (np.arange(nframes) * VIZ_SR / VIZ_FPS).astype(np.int64)
+    win = np.hanning(n).astype(np.float32)
+    freqs = np.fft.rfftfreq(n, 1 / VIZ_SR)
+    edges = np.searchsorted(freqs, np.geomspace(35, 10000, VIZ_BANDS + 1))
+    for b in range(VIZ_BANDS):                       # every band owns at least one bin
+        edges[b + 1] = max(edges[b + 1], edges[b] + 1)
+    centers = np.sqrt(freqs[edges[:-1]] * freqs[np.minimum(edges[1:], len(freqs) - 1)])
+    tilt = 4.5 * np.log2(np.maximum(centers, 40) / 100)   # ~pink-noise slope so highs still register
+    bands, tone, level = [], [], []
+    for c in range(0, nframes, 512):
+        idx = starts[c:c + 512, None] + np.arange(n)[None, :]
+        fr = pcm[idx] * win
+        power = np.abs(np.fft.rfft(fr, axis=1)) ** 2
+        bp = np.stack([power[:, edges[b]:edges[b + 1]].mean(axis=1) for b in range(VIZ_BANDS)], axis=1)
+        bands.append(10 * np.log10(bp + 1e-12) + tilt)
+        ps = power[:, 1:]; cent = (ps * freqs[1:]).sum(axis=1) / (ps.sum(axis=1) + 1e-12)
+        tone.append(np.log(np.clip(cent, 150, 5000) / 150) / np.log(5000 / 150))   # 0 = dark/bassy, 1 = bright
+        level.append(20 * np.log10(np.sqrt((fr ** 2).mean(axis=1)) + 1e-9))
+    bands, tone, level = np.concatenate(bands), np.concatenate(tone), np.concatenate(level)
+    def u8(x, top, rng): return np.clip((x - (top - rng)) / rng * 255, 0, 255).astype(np.uint8)
+    out = np.column_stack([u8(bands, np.percentile(bands, 99), 60), (tone * 255).astype(np.uint8),
+                           u8(level, np.percentile(level, 99.5), 50)])
+    return out
+
+def build_viz(data, force=False):
+    VIZ.mkdir(exist_ok=True)
+    todo = [t for t in data["tracks"] if "source" in t and not t.get("duplicate_of")]
+    done = 0
+    for t in todo:
+        out = viz_path(t)
+        if out.exists() and not force: continue
+        src = MUSIC / t["source"]
+        if not src.exists(): print(f"  ! missing on disk: {t['source']}"); continue
+        print(f"  analyze {t['source']}  ->  {out.relative_to(ROOT)}")
+        try:
+            frames = analyze(src)
+        except subprocess.CalledProcessError as e:
+            print(f"  ! afconvert failed for {t['source']}: {e.stderr.decode(errors='ignore').strip()[:200]}"); continue
+        header = b"CRMV" + bytes([1, VIZ_FPS, VIZ_BANDS, 2]) + struct.pack("<I", len(frames)) + bytes(4)
+        out.write_bytes(header + frames.tobytes()); done += 1
+    have = sum(viz_path(t).exists() for t in todo)
+    print(f"visualizer data: {done} built, {have}/{len(todo)} tracks covered")
+
+def cmd_viz(args): build_viz(load_tracks(), force=args.force)
 
 # ---------------------------------------------------------------- status
 def cmd_status(args):
@@ -323,7 +392,8 @@ if __name__ == "__main__":
     sub = ap.add_subparsers(dest="cmd", required=True)
     m = sub.add_parser("match"); m.add_argument("--token")
     u = sub.add_parser("upload"); u.add_argument("--push", action="store_true")
+    v = sub.add_parser("viz"); v.add_argument("--force", action="store_true", help="rebuild files that already exist")
     sub.add_parser("status")
     a = ap.parse_args()
     os.chdir(ROOT)
-    {"match": cmd_match, "upload": cmd_upload, "status": cmd_status}[a.cmd](a)
+    {"match": cmd_match, "upload": cmd_upload, "viz": cmd_viz, "status": cmd_status}[a.cmd](a)
