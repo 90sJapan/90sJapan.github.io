@@ -8,3 +8,4 @@ files/
 music/
 .sc_token
 .soundcloud-cache/
+__pycache__/
