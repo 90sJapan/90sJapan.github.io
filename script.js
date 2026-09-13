@@ -1,14 +1,16 @@
-const navToggle = document.getElementById('navToggle');
-const mobileMenu = document.getElementById('mobileMenu');
+const themeToggle = document.getElementById('themeToggle');
+const root = document.documentElement;
 
-navToggle.addEventListener('click', () => {
-  const open = mobileMenu.classList.toggle('open');
-  navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-});
+function applyTheme(theme) {
+  if (theme === 'y2k') root.dataset.theme = 'y2k';
+  else delete root.dataset.theme;
+  themeToggle.setAttribute('aria-pressed', theme === 'y2k' ? 'true' : 'false');
+  themeToggle.querySelector('.theme-toggle-label').textContent = theme === 'y2k' ? 'Classic mode' : 'Y2K mode';
+  try { localStorage.setItem('crmsn-theme', theme); } catch (e) {}
+}
 
-mobileMenu.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    mobileMenu.classList.remove('open');
-    navToggle.setAttribute('aria-expanded', 'false');
-  });
+applyTheme(root.dataset.theme === 'y2k' ? 'y2k' : 'classic');
+
+themeToggle.addEventListener('click', () => {
+  applyTheme(root.dataset.theme === 'y2k' ? 'classic' : 'y2k');
 });
