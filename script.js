@@ -496,12 +496,13 @@ const viz = (function () {
 
   function render() {
     grid.innerHTML = '';
-    // one list per artist; an artist with both public and private tracks gets one list of each
+    // one list per artist; an artist with both public and private tracks gets one list of each,
+    // and every Bandcamp release (album) is a list of its own
     const groups = [];
     tracks.forEach((t, i) => {
-      const name = t.artist || '', vis = visibility(t);
-      let g = groups.find(x => x.name === name && x.vis === vis);
-      if (!g) { g = { name, vis, items: [] }; groups.push(g); }
+      const name = t.artist || '', vis = visibility(t), album = vis === 'bandcamp' ? (t.album || '') : '';
+      let g = groups.find(x => x.name === name && x.vis === vis && x.album === album);
+      if (!g) { g = { name, vis, album, items: [] }; groups.push(g); }
       g.items.push(i);
     });
     const artists = [...new Set(groups.map(g => g.name))];   // keep artist order; public, then releases, then private
@@ -511,7 +512,7 @@ const viz = (function () {
       const cell = document.createElement('div'); cell.className = 'discog-cell track-group';
       const bar = document.createElement('div'); bar.className = 'y2k-titlebar'; bar.setAttribute('aria-hidden', 'true');
       bar.innerHTML = '<span class="y2k-titlebar-text"></span><span class="y2k-titlebar-btns"><i></i><i></i><i></i></span>';
-      bar.querySelector('.y2k-titlebar-text').textContent = ((g.name || 'tracks') + (split ? ' ' + g.vis : '')).replace(/\s+/g, '_') + '.m3u';
+      bar.querySelector('.y2k-titlebar-text').textContent = ((g.name || 'tracks') + (split ? ' ' + (g.album || g.vis) : '')).replace(/[^\w.&-]+/g, '_') + '.m3u';
       cell.appendChild(bar);
       const head = document.createElement('div'); head.className = 'cell-head';
       const h = document.createElement('h3'); h.className = 'track-group-name'; h.textContent = g.name || 'Tracks';
@@ -604,7 +605,7 @@ const viz = (function () {
   function toggle() { if (current < 0) return load(0, true); audio.paused ? audio.play() : audio.pause(); }
 
   // ---- what plays next
-  const groupOf = i => (tracks[i].artist || '') + '|' + visibility(tracks[i]);
+  const groupOf = i => (tracks[i].artist || '') + '|' + visibility(tracks[i]) + (visibility(tracks[i]) === 'bandcamp' ? '|' + (tracks[i].album || '') : '');
   function pool() {                                 // the indices next/prev may move between
     const all = tracks.map((_, i) => i);
     return scope === 'list' && current >= 0 ? all.filter(i => groupOf(i) === groupOf(current)) : all;

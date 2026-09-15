@@ -67,7 +67,8 @@ python3 discog.py viz [--force]    # (re)build visualizer data on its own
   `--token`, `SC_OAUTH_TOKEN`, or a git-ignored `.sc_token` file.
 - **Bandcamp releases** (`music/<artist>/bandcamp/…`) are never matched against SoundCloud. Bandcamp's
   download names (`「artist」 - 「album」 - 01 「title」.wav`) are parsed into `title` / `album` / `track`;
-  the player shows the folder as a separate playlist headed by the album name, in track order.
+  the player shows each album in the folder as a separate playlist headed by the album name, in track order.
+  Bandcamp's newer `Artist - Album - 01 01 Title.wav` names are handled too (a title's own leading number is dropped, and a `-` standing in for `:` in the album name is put back).
 - Identical files that appear in two folders are uploaded once (`duplicate_of` marks the copy).
 - Upload skips files already on the release and checkpoints after every file, so it can be
   interrupted and resumed. To replace a file: `gh release delete-asset discography <asset>`,
