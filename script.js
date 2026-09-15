@@ -488,7 +488,7 @@ const viz = (function () {
 
   // which playlist a track belongs to follows the folder the file was sorted into
   // (music/<artist>/…private…/, …public…/, bandcamp/), falling back to what SoundCloud reported at match time
-  const LIST_ORDER = ['public', 'bandcamp', 'private'];
+  const LIST_ORDER = ['public', 'private', 'bandcamp'];
   function visibility(t) {
     const folder = (t.source || '').split('/').slice(0, -1).join('/').toLowerCase();
     return /bandcamp/.test(folder) ? 'bandcamp' : /private/.test(folder) ? 'private' : /public/.test(folder) ? 'public' : (t.sharing || 'public');
@@ -497,22 +497,22 @@ const viz = (function () {
   function render() {
     grid.innerHTML = '';
     // one list per artist; an artist with both public and private tracks gets one list of each,
-    // and every Bandcamp release (album) is a list of its own
+    // and its Bandcamp releases share a third list, separated by album
     const groups = [];
     tracks.forEach((t, i) => {
-      const name = t.artist || '', vis = visibility(t), album = vis === 'bandcamp' ? (t.album || '') : '';
-      let g = groups.find(x => x.name === name && x.vis === vis && x.album === album);
-      if (!g) { g = { name, vis, album, items: [] }; groups.push(g); }
+      const name = t.artist || '', vis = visibility(t);
+      let g = groups.find(x => x.name === name && x.vis === vis);
+      if (!g) { g = { name, vis, items: [] }; groups.push(g); }
       g.items.push(i);
     });
-    const artists = [...new Set(groups.map(g => g.name))];   // keep artist order; public, then releases, then private
+    const artists = [...new Set(groups.map(g => g.name))];   // keep artist order; public, then private, then releases
     groups.sort((a, b) => artists.indexOf(a.name) - artists.indexOf(b.name) || LIST_ORDER.indexOf(a.vis) - LIST_ORDER.indexOf(b.vis));
     groups.forEach(g => {
       const split = groups.some(x => x !== g && x.name === g.name);
       const cell = document.createElement('div'); cell.className = 'discog-cell track-group';
       const bar = document.createElement('div'); bar.className = 'y2k-titlebar'; bar.setAttribute('aria-hidden', 'true');
       bar.innerHTML = '<span class="y2k-titlebar-text"></span><span class="y2k-titlebar-btns"><i></i><i></i><i></i></span>';
-      bar.querySelector('.y2k-titlebar-text').textContent = ((g.name || 'tracks') + (split ? ' ' + (g.album || g.vis) : '')).replace(/[^\w.&-]+/g, '_') + '.m3u';
+      bar.querySelector('.y2k-titlebar-text').textContent = ((g.name || 'tracks') + (split ? ' ' + g.vis : '')).replace(/\s+/g, '_') + '.m3u';
       cell.appendChild(bar);
       const head = document.createElement('div'); head.className = 'cell-head';
       const h = document.createElement('h3'); h.className = 'track-group-name'; h.textContent = g.name || 'Tracks';
@@ -520,22 +520,33 @@ const viz = (function () {
         const tag = document.createElement('span'); tag.className = 'track-vis is-' + g.vis; tag.textContent = g.vis;
         h.appendChild(tag);
       }
-      // a release whose tracks all share one album is titled after it
+      // a release list with one album is titled after it; with several, each album gets a separator row
       const albums = new Set(g.items.map(i => tracks[i].album || ''));
       if (albums.size === 1 && !albums.has('')) {
         const album = document.createElement('span'); album.className = 'track-album'; album.textContent = [...albums][0];
         h.appendChild(album);
       }
+      const separate = albums.size > 1;
       const count = document.createElement('span'); count.className = 'track-count';
       count.textContent = g.items.length + (g.items.length === 1 ? ' track' : ' tracks');
       head.appendChild(h); head.appendChild(count); cell.appendChild(head);
       const ol = document.createElement('ol'); ol.className = 'track-list';
-      g.items.forEach((i, n) => {
+      let lastAlbum = null, n = 0;
+      g.items.forEach(i => {
         const t = tracks[i];
+        if (separate && (t.album || '') !== lastAlbum) {   // numbering restarts with each album
+          lastAlbum = t.album || ''; n = 0;
+          const sep = document.createElement('li'); sep.className = 'track-sep'; sep.setAttribute('aria-hidden', 'true');
+          sep.innerHTML = '<span class="track-sep-name"></span><span class="track-sep-count"></span>';
+          const len = g.items.filter(j => (tracks[j].album || '') === lastAlbum).length;
+          sep.querySelector('.track-sep-name').textContent = lastAlbum || 'singles';
+          sep.querySelector('.track-sep-count').textContent = len + (len === 1 ? ' track' : ' tracks');
+          ol.appendChild(sep);
+        }
         const li = document.createElement('li');
         li.className = 'track'; li.dataset.index = i;
         li.innerHTML = '<button type="button" class="track-btn">' +
-          '<span class="track-num">' + String(n + 1).padStart(2, '0') + '</span>' +
+          '<span class="track-num">' + String(++n).padStart(2, '0') + '</span>' +
           '<span class="track-title"></span>' +
           '<span class="track-meta"></span></button>';
         li.querySelector('.track-title').textContent = t.title;
@@ -555,7 +566,7 @@ const viz = (function () {
   const ro = new ResizeObserver(fitLists);
   function fitLists() {
     grid.querySelectorAll('.track-list').forEach(ol => {
-      const items = ol.children;
+      const items = ol.querySelectorAll('.track');   // separator rows don't count against the cap
       if (items.length <= MAX_ROWS) { ol.style.maxHeight = ''; ol.classList.remove('is-scroll'); return; }
       ro.observe(items[0]);
       const last = items[MAX_ROWS - 1];
@@ -605,7 +616,7 @@ const viz = (function () {
   function toggle() { if (current < 0) return load(0, true); audio.paused ? audio.play() : audio.pause(); }
 
   // ---- what plays next
-  const groupOf = i => (tracks[i].artist || '') + '|' + visibility(tracks[i]) + (visibility(tracks[i]) === 'bandcamp' ? '|' + (tracks[i].album || '') : '');
+  const groupOf = i => (tracks[i].artist || '') + '|' + visibility(tracks[i]);
   function pool() {                                 // the indices next/prev may move between
     const all = tracks.map((_, i) => i);
     return scope === 'list' && current >= 0 ? all.filter(i => groupOf(i) === groupOf(current)) : all;
