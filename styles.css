@@ -353,6 +353,17 @@ nav.primary-nav{ align-items:center; }
   mask-image:linear-gradient(to bottom, #000 calc(100% - 2.75rem), transparent);
 }
 .track{ flex:0 0 auto; }
+/* album separator inside a release list */
+.track-sep{
+  flex:0 0 auto; display:flex; align-items:baseline; justify-content:space-between; gap:0.75rem;
+  margin:0.35rem 0 0; padding:0.35rem 0.2rem 0.45rem; border-bottom:1px solid var(--border);
+}
+.track-sep:first-child{ margin-top:0; }
+.track-sep-name{
+  font-size:0.72rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#1da0aa;
+  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.track-sep-count{ font-size:0.68rem; letter-spacing:0.08em; color:var(--text-muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
 .track-btn{
   width:100%; display:grid; grid-template-columns: 2.5rem 1fr auto; align-items:center; gap:1rem;
   padding:0.9rem 1.2rem; border-radius:var(--radius-md); cursor:pointer; text-align:left;
