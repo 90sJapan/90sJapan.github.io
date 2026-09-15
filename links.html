@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRMSN — links</title>
+<meta name="description" content="Official site and music for CRMSN.">
+<script>
+  // Apply the saved design before first paint so there's no flash of the other theme.
+  try { var t = localStorage.getItem('crmsn-theme'); if (t === 'y2k') document.documentElement.dataset.theme = 'y2k'; } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Space+Grotesk:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Audiowide&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20260915g">
+<link rel="stylesheet" href="y2k.css?v=20260915g">
+</head>
+<body>
+
+<div class="aurora"><span></span><span></span><span></span></div>
+<div class="grain"></div>
+<div class="y2k-grid" aria-hidden="true"></div>
+<div class="y2k-sparkles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<header>
+  <a href="index.html" class="logo-mark">CRMSN</a>
+  <nav class="primary-nav">
+    <a href="index.html#discography">Discography</a>
+    <a href="links.html">Links</a>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Switch design">
+      <span class="theme-toggle-label">Y2K mode</span>
+    </button>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section id="links" class="links-page">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Links</h2>
+        <p>Everywhere else CRMSN lives.</p>
+      </div>
+      <ul class="link-list">
+        <li><a class="link-card" href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">
+          <span class="link-card-name">SoundCloud</span><span class="link-card-url">soundcloud.com/officialcrmsn</span></a></li>
+      </ul>
+
+      <div class="section-head">
+        <h2>On SoundCloud</h2>
+        <p>Streaming straight from SoundCloud — this list updates itself whenever a new track goes up.</p>
+      </div>
+      <div class="sc-embed-wrap">
+        <div class="y2k-titlebar" aria-hidden="true">
+          <span class="y2k-titlebar-text">crmsn_player.exe</span>
+          <span class="y2k-titlebar-btns"><i></i><i></i><i></i></span>
+        </div>
+        <iframe class="sc-frame" title="CRMSN on SoundCloud" scrolling="no" frameborder="no" allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fofficialcrmsn&color=%23ff3ea5&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true">
+        </iframe>
+      </div>
+      <a class="sc-full-link" href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">Full catalog on SoundCloud</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="contact" id="contact">
+  <div>
+    <p class="logo-mark" style="font-size:1.4rem;">CRMSN</p>
+  </div>
+  <div class="contact-links">
+    <a href="links.html">Links</a>
+    <a href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">SoundCloud</a>
+  </div>
+</footer>
+
+<script src="theme.js?v=20260915g"></script>
+</body>
+</html>

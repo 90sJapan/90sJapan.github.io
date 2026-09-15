@@ -1,20 +1,4 @@
-const themeToggle = document.getElementById('themeToggle');
-const root = document.documentElement;
-
-function applyTheme(theme) {
-  if (theme === 'y2k') root.dataset.theme = 'y2k';
-  else delete root.dataset.theme;
-  themeToggle.setAttribute('aria-pressed', theme === 'y2k' ? 'true' : 'false');
-  themeToggle.querySelector('.theme-toggle-label').textContent = theme === 'y2k' ? 'Classic mode' : 'Y2K mode';
-  try { localStorage.setItem('crmsn-theme', theme); } catch (e) {}
-}
-
-applyTheme(root.dataset.theme === 'y2k' ? 'y2k' : 'classic');
-
-themeToggle.addEventListener('click', () => {
-  applyTheme(root.dataset.theme === 'y2k' ? 'classic' : 'y2k');
-});
-
+/* ---------- discography page: visualizer + player (theme switch lives in theme.js) ---------- */
 /* ---------- visualizer ----------
    The audio host sends no CORS headers, so the browser can't analyse the stream itself.
    discog.py precomputes a small spectrum file per track (viz/<file>.bin: 24 log-spaced bands +
@@ -505,8 +489,9 @@ const viz = (function () {
       if (!g) { g = { name, vis, items: [] }; groups.push(g); }
       g.items.push(i);
     });
-    const artists = [...new Set(groups.map(g => g.name))];   // keep artist order; public, then private, then releases
-    groups.sort((a, b) => artists.indexOf(a.name) - artists.indexOf(b.name) || LIST_ORDER.indexOf(a.vis) - LIST_ORDER.indexOf(b.vis));
+    const artists = [...new Set(groups.map(g => g.name))];
+    // artist order, public then private within each; Bandcamp release lists go after every artist
+    groups.sort((a, b) => (a.vis === 'bandcamp') - (b.vis === 'bandcamp') || artists.indexOf(a.name) - artists.indexOf(b.name) || LIST_ORDER.indexOf(a.vis) - LIST_ORDER.indexOf(b.vis));
     groups.forEach(g => {
       const split = groups.some(x => x !== g && x.name === g.name);
       const cell = document.createElement('div'); cell.className = 'discog-cell track-group';
