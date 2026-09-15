@@ -70,7 +70,11 @@ def is_release(rel): return "bandcamp" in rel.lower().split("/")[1:-1]   # sub-f
 def parse_release(stem):
     """Bandcamp download name: 「artist」 - 「album」 - 01 「title」 (brackets optional) -> (title, album, n)"""
     m = re.match(r"^\s*「?(.+?)」?\s+-\s+「?(.+?)」?\s+-\s+(\d+)\s+「?(.+?)」?\s*$", stem)
-    if m: return m.group(4).strip(), m.group(2).strip(), int(m.group(3))
+    if m:
+        n = int(m.group(3))
+        title = re.sub(r"^0*%d\s+" % n, "", m.group(4).strip())      # "01 01 Above" when the track title itself starts with its number
+        album = re.sub(r"(\S)- ", r"\1: ", m.group(2).strip())         # Bandcamp writes ':' as '-' in file names
+        return title, album, n
     m = re.match(r"^\s*(\d+)[\s._-]+(.+?)\s*$", stem)         # "01 title" / "01 - title"
     if m: return m.group(2).strip("「」 "), None, int(m.group(1))
     return clean_title(stem), None, None
@@ -217,7 +221,7 @@ def cmd_match(args):
             title, album, n = parse_release(path.stem)
             if not entry.get("release_parsed"):     # first sight only, so hand edits to the title survive re-runs
                 entry["title"] = title; entry["release_parsed"] = True
-            if album: entry["album"] = album
+            if album and not entry.get("album"): entry["album"] = album
             if n is not None: entry["track"] = n
             for k in ("soundcloud", "sharing", "created_at", "needs_review"): entry.pop(k, None)
             report["releases"] += 1; continue
