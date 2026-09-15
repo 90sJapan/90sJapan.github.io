@@ -853,6 +853,45 @@
       "duplicate_of": "crmsn/soundcloud_public/odesza white lies crmsn remix.mp3"
     },
     {
+      "title": "obeisance",
+      "artist": "crmsn",
+      "source": "crmsn/bandcamp/「crmsn」 - 「est. 1998」 - 01 「obeisance」.wav",
+      "file": "crmsn--crmsn-est-1998-01-obeisance.wav",
+      "bytes": 43244008,
+      "duration": 245.147188,
+      "sha256": "4e82128833f2254df07ad88699fc2681d7a5bf9bfe30ec15b7eac446ce807aea",
+      "release_parsed": true,
+      "album": "est. 1998",
+      "track": 1,
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/crmsn--crmsn-est-1998-01-obeisance.wav"
+    },
+    {
+      "title": "s.o.s.",
+      "artist": "crmsn",
+      "source": "crmsn/bandcamp/「crmsn」 - 「est. 1998」 - 02 「s.o.s.」.wav",
+      "file": "crmsn--crmsn-est-1998-02-s-o-s.wav",
+      "bytes": 36170728,
+      "duration": 205.049229,
+      "sha256": "42dae6b4b026f41b6eb59d89f7b924a2889bb662f87471aad9fd967410e17e3e",
+      "release_parsed": true,
+      "album": "est. 1998",
+      "track": 2,
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/crmsn--crmsn-est-1998-02-s-o-s.wav"
+    },
+    {
+      "title": "extinction",
+      "artist": "crmsn",
+      "source": "crmsn/bandcamp/「crmsn」 - 「est. 1998」 - 03 「extinction」.wav",
+      "file": "crmsn--crmsn-est-1998-03-extinction.wav",
+      "bytes": 38483944,
+      "duration": 218.162698,
+      "sha256": "f10eb5073ceaa17f0b4c72ac19c38ce5dea62c159524ffc21c1067f81923b025",
+      "release_parsed": true,
+      "album": "est. 1998",
+      "track": 3,
+      "url": "https://github.com/90sJapan/90sJapan.github.io/releases/download/discography/crmsn--crmsn-est-1998-03-extinction.wav"
+    },
+    {
       "title": "housetime 2",
       "artist": "hush witch",
       "source": "hush witch/housetime.wav",

@@ -43,6 +43,7 @@ file name is shown as a small detail for whatever's playing.
 ```
 music/
   crmsn/…            # one top-level folder per artist/alias
+  crmsn/bandcamp/…   # a Bandcamp release: its own playlist, titles parsed from the download names
   hush witch/…
   spotlife/…
 ```
@@ -64,6 +65,9 @@ python3 discog.py viz [--force]    # (re)build visualizer data on its own
 - **Private SoundCloud tracks** are invisible to the public API. Give the script your session's
   OAuth token (soundcloud.com → DevTools → Application → Cookies → `oauth_token`) via
   `--token`, `SC_OAUTH_TOKEN`, or a git-ignored `.sc_token` file.
+- **Bandcamp releases** (`music/<artist>/bandcamp/…`) are never matched against SoundCloud. Bandcamp's
+  download names (`「artist」 - 「album」 - 01 「title」.wav`) are parsed into `title` / `album` / `track`;
+  the player shows the folder as a separate playlist headed by the album name, in track order.
 - Identical files that appear in two folders are uploaded once (`duplicate_of` marks the copy).
 - Upload skips files already on the release and checkpoints after every file, so it can be
   interrupted and resumed. To replace a file: `gh release delete-asset discography <asset>`,
@@ -72,7 +76,7 @@ python3 discog.py viz [--force]    # (re)build visualizer data on its own
 
 The player shows one list per artist, split into **public** and **private** when an artist has both —
 decided by the folder a file sits in (`…/soundcloud_private/…` vs `…/soundcloud_public/…`), falling
-back to what SoundCloud reported. Each list shows 7 rows and scrolls for the rest. The player's shuffle
+back to what SoundCloud reported; a `bandcamp/` folder is a third list of its own. Each list shows 7 rows and scrolls for the rest. The player's shuffle
 button has an **All / List** switch attached: next/previous and auto-advance (shuffled or not) either roam
 every playlist or stay inside the playlist of the song that's playing.
 

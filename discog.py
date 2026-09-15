@@ -17,6 +17,10 @@ similarity and by a "private"/"public" hint in the sub-folder name. Anything sti
 left with the filename as its title and flagged "needs_review" so you can fix it by hand.
 Hand-edited titles are never overwritten — delete the "soundcloud" key on an entry to re-match.
 
+A "bandcamp" folder (music/<alias>/bandcamp/…) is a release, not a SoundCloud upload: its files are
+never matched against SoundCloud. Bandcamp's download names, 「artist」 - 「album」 - 01 「title」.ext,
+are parsed into title / album / track number and the site shows the folder as its own playlist.
+
 Private tracks need the OAuth token of the account that owns them (invisible to the public API).
 Each SoundCloud account has its own token: log in as that account, then
   soundcloud.com -> DevTools -> Application -> Cookies -> soundcloud.com -> "oauth_token"
@@ -60,6 +64,16 @@ def norm(s):
 def similarity(a, b): return SequenceMatcher(None, norm(a), norm(b)).ratio()
 
 def clean_title(stem): return re.sub(r"[_\-]+", " ", stem).strip()
+
+def is_release(rel): return "bandcamp" in rel.lower().split("/")[1:-1]   # sub-folder named bandcamp
+
+def parse_release(stem):
+    """Bandcamp download name: 「artist」 - 「album」 - 01 「title」 (brackets optional) -> (title, album, n)"""
+    m = re.match(r"^\s*「?(.+?)」?\s+-\s+「?(.+?)」?\s+-\s+(\d+)\s+「?(.+?)」?\s*$", stem)
+    if m: return m.group(4).strip(), m.group(2).strip(), int(m.group(3))
+    m = re.match(r"^\s*(\d+)[\s._-]+(.+?)\s*$", stem)         # "01 title" / "01 - title"
+    if m: return m.group(2).strip("「」 "), None, int(m.group(1))
+    return clean_title(stem), None, None
 
 def local_duration(path):
     out = subprocess.run(["afinfo", str(path)], capture_output=True, text=True).stdout
@@ -176,7 +190,7 @@ def cmd_match(args):
     client_id = None
     catalog = {}       # alias -> list of sc tracks
     seen_hash = {}     # sha256 -> source (dedupe identical files)
-    report = {"matched": 0, "kept": 0, "review": [], "unmatched": [], "dupes": [], "unmapped": set()}
+    report = {"matched": 0, "kept": 0, "releases": 0, "review": [], "unmatched": [], "dupes": [], "unmapped": set()}
     pending = {}       # rel -> entry still needing a SoundCloud match
 
     files = list(scan_music())
@@ -199,6 +213,14 @@ def cmd_match(args):
         seen_hash[digest] = rel
         entry.pop("duplicate_of", None)
 
+        if is_release(rel):                         # a Bandcamp release: titles come from the file names, not SoundCloud
+            title, album, n = parse_release(path.stem)
+            if not entry.get("release_parsed"):     # first sight only, so hand edits to the title survive re-runs
+                entry["title"] = title; entry["release_parsed"] = True
+            if album: entry["album"] = album
+            if n is not None: entry["track"] = n
+            for k in ("soundcloud", "sharing", "created_at", "needs_review"): entry.pop(k, None)
+            report["releases"] += 1; continue
         if entry.get("soundcloud") and not entry.get("needs_review"):
             report["kept"] += 1; continue           # already matched or hand-edited: leave alone
 
@@ -245,11 +267,12 @@ def cmd_match(args):
     grouped = []
     for a in list(order) + sorted({t.get("artist") for t in data["tracks"]} - set(order)):
         grp = [t for t in data["tracks"] if t.get("artist") == a]
-        grouped += sorted(grp, key=lambda t: t.get("created_at") or "", reverse=True)
+        grouped += sorted([t for t in grp if not is_release(t["source"])], key=lambda t: t.get("created_at") or "", reverse=True)
+        grouped += sorted([t for t in grp if is_release(t["source"])], key=lambda t: (t.get("album") or "", t.get("track") or 0, t["source"]))
     data["tracks"] = grouped
     save_tracks(data)
 
-    print(f"\nmatched {report['matched']} new, kept {report['kept']} existing")
+    print(f"\nmatched {report['matched']} new, kept {report['kept']} existing, {report['releases']} release track(s) from bandcamp folders")
     if report["dupes"]:
         print(f"\n{len(report['dupes'])} identical duplicate(s) skipped (same bytes as another file):")
         for a, b in report["dupes"]: print(f"  {a}  ==  {b}")
@@ -381,10 +404,10 @@ def cmd_viz(args): build_viz(load_tracks(), force=args.force)
 def cmd_status(args):
     data = load_tracks()
     for t in data["tracks"]:
-        flag = "dupe " if t.get("duplicate_of") else "REVIEW" if t.get("needs_review") else "  ok " if t.get("soundcloud") else "  -- "
+        flag = "dupe " if t.get("duplicate_of") else "REVIEW" if t.get("needs_review") else "  ok " if t.get("soundcloud") else " rel " if is_release(t["source"]) else "  -- "
         up = "up" if t.get("url") else "  "
         print(f"[{flag}] [{up}] {t.get('artist','?'):<11} {t['title'][:40]:<40}  {t['source']}")
-    print(f"\n{len(data['tracks'])} entries; ok=matched to SoundCloud, --=filename title, REVIEW=ambiguous, dupe=identical file skipped")
+    print(f"\n{len(data['tracks'])} entries; ok=matched to SoundCloud, rel=bandcamp release, --=filename title, REVIEW=ambiguous, dupe=identical file skipped")
 
 # ---------------------------------------------------------------- main
 if __name__ == "__main__":
