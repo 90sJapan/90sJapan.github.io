@@ -47,10 +47,11 @@ const viz = (function () {
   const N = 24;                                   // bands drawn (matches the analysis)
   const cur = new Float32Array(N), peak = new Float32Array(N), peakV = new Float32Array(N);
   const wavePts = new Float32Array(128);
-  let mode = 'bars', rgb = false;
+  let mode = 'bars', rgb = false, power = true;
   try {
     const m = localStorage.getItem('crmsn-viz'); if (MODES.some(x => x.id === m)) mode = m;
     rgb = localStorage.getItem('crmsn-viz-rgb') === '1';
+    power = localStorage.getItem('crmsn-viz-power') !== '0';
   } catch (e) {}
   let audio = null, data = null, fetchCtl = null;
   const cache = new Map();
@@ -367,12 +368,17 @@ const viz = (function () {
     onBg = isBg(mode);
     const T = onBg ? targets.bg : targets.stage;
     ctx = T.ctx; W = T.W; H = T.H;
-    step(dt); DRAW[mode](); drawWaveform();
     const playing = audio && !audio.paused && !audio.ended;
+    if (!power) {                                 // switched off: only the waveform's playhead keeps moving
+      drawWaveform();
+      if (playing || rgb) raf = requestAnimationFrame(frame); else last = 0;
+      return;
+    }
+    step(dt); DRAW[mode](); drawWaveform();
     if ((onBg || inView) && (playing || energy > 0.003 || mode === 'ambience' || rgb)) raf = requestAnimationFrame(frame);
     else last = 0;
   }
-  function kick() { if (!raf && (isBg(mode) || inView)) raf = requestAnimationFrame(frame); }
+  function kick() { if (!raf && (!power || isBg(mode) || inView)) raf = requestAnimationFrame(frame); }
 
   function size(t, w, h, maxDpr) {
     const dpr = Math.min(maxDpr, window.devicePixelRatio || 1);
@@ -395,6 +401,28 @@ const viz = (function () {
     wrap.classList.toggle('is-bg', isBg(id));     // the player's screen folds away while the page is the canvas
     clear(targets.stage); clear(targets.bg); kick();
   }
+  // the light switch: off stops the analysis and drawing, folds the screen away and greys out the style buttons
+  function setPower(on) {
+    power = on;
+    try { localStorage.setItem('crmsn-viz-power', on ? '1' : '0'); } catch (e) {}
+    powerBtn.setAttribute('aria-checked', on ? 'true' : 'false');
+    wrap.classList.toggle('is-off', !on);
+    modesEl.querySelectorAll('.viz-mode, .viz-rgb').forEach(b => { b.disabled = !on; });
+    if (!on) { cur.fill(0); peak.fill(0); tgt.fill(0); level = energy = 0; }
+    clear(targets.stage); clear(targets.bg); kick();
+  }
+  let clickCtx = null;
+  function clickSound(on) {                       // a short mechanical snap, brighter going on than off
+    try {
+      const ac = clickCtx || (clickCtx = new (window.AudioContext || window.webkitAudioContext)());
+      if (ac.state === 'suspended') ac.resume();
+      const n = Math.round(ac.sampleRate * 0.035), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3);
+      const src = ac.createBufferSource(), bp = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = on ? 2600 : 1700; bp.Q.value = 1.2; g.gain.value = 0.35;
+      src.connect(bp).connect(g).connect(ac.destination); src.start();
+    } catch (e) {}
+  }
   function setRgb(on) {
     rgb = on;
     try { localStorage.setItem('crmsn-viz-rgb', on ? '1' : '0'); } catch (e) {}
@@ -411,10 +439,17 @@ const viz = (function () {
   rgbBtn.type = 'button'; rgbBtn.className = 'viz-rgb'; rgbBtn.title = 'Fade through soft rainbow colours instead of the theme palette';
   rgbBtn.innerHTML = '<i aria-hidden="true"></i>Pastel RGB';
   rgbBtn.addEventListener('click', () => setRgb(!rgb));
+  const powerBtn = document.createElement('button');
+  powerBtn.type = 'button'; powerBtn.className = 'viz-power'; powerBtn.setAttribute('role', 'switch');
+  powerBtn.setAttribute('aria-label', 'Visualizer'); powerBtn.title = 'Visualizer on / off';
+  powerBtn.innerHTML = '<span class="switch-plate" aria-hidden="true"><i class="switch-screw"></i><i class="switch-screw"></i>' +
+    '<span class="switch-well"><span class="switch-lever"></span></span></span>';
+  powerBtn.addEventListener('click', () => { clickSound(!power); setPower(!power); });
+  modesEl.appendChild(powerBtn);
   modesEl.appendChild(rgbBtn);
   targets.stage.canvas.addEventListener('click', () => setMode(MODES[(MODES.findIndex(m => m.id === mode) + 1) % MODES.length].id));
 
-  readColors(); resizeBg(); setMode(mode); setRgb(rgb);
+  readColors(); resizeBg(); setMode(mode); setRgb(rgb); setPower(power);
   return {
     attach(el, scrubCb) {                        // scrubCb(seconds) while the waveform is dragged, scrubCb(null) when released
       audio = el; onScrub = scrubCb || onScrub;
