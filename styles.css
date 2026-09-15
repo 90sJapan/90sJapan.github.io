@@ -282,15 +282,13 @@ nav.primary-nav{ align-items:center; }
   box-shadow:0 2px 8px rgba(0,0,0,0.35); transition:transform .22s cubic-bezier(.4,0,.2,1);
 }
 .scope-switch.is-list .scope-knob{ transform:translateX(100%); }
-.player-seek{
-  -webkit-appearance:none; appearance:none; width:100%; height:4px; margin:1.1rem 0 0.2rem;
-  border-radius:999px; background:var(--border-strong); cursor:pointer;
+/* waveform seek bar: bars with a reflection, drawn on a canvas by script.js */
+.player-wave{ margin:1rem 0 0; }
+.wave-canvas{
+  display:block; width:100%; height:72px; cursor:pointer; border-radius:6px;
+  touch-action:pan-y;                            /* a tap or sideways drag seeks; the page still scrolls vertically */
 }
-.player-seek::-webkit-slider-thumb{
-  -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
-  background:var(--chrome-1); box-shadow:0 0 12px rgba(53,230,255,0.7);
-}
-.player-seek::-moz-range-thumb{ width:14px; height:14px; border:0; border-radius:50%; background:var(--chrome-1); box-shadow:0 0 12px rgba(53,230,255,0.7); }
+.wave-canvas:focus-visible{ outline:2px solid rgba(53,230,255,0.6); outline-offset:4px; }
 
 .track-list{
   list-style:none; margin:0; padding:0 0.3rem 0 0; display:flex; flex-direction:column; gap:0.5rem;
@@ -350,9 +348,11 @@ footer.contact{
   nav.primary-nav a{ font-size:0.88rem; }
   .sc-frame{ height:380px; }
   .player{ padding:1rem; }
-  .player-nav{ display:none; }
-  .player-main{ flex-wrap:wrap; }
+  /* play + title fill the first row; prev/next and shuffle share the second */
+  .player-main{ flex-wrap:wrap; gap:0.9rem 1.1rem; }
+  .player-info{ flex:1 1 calc(100% - 56px - 1.1rem); }
   .player-shuffle{ margin-left:auto; }
+  .wave-canvas{ height:56px; }
   .track-btn{ grid-template-columns:2rem 1fr; }
   .track-meta{ grid-column:2; }
   .discog-grid{ grid-template-columns:1fr; gap:1rem; }

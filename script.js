@@ -20,7 +20,8 @@ themeToggle.addEventListener('click', () => {
    discog.py precomputes a small spectrum file per track (viz/<file>.bin: 24 log-spaced bands +
    tone + level, 16 fps); this reads it and follows audio.currentTime, interpolating between
    frames and smoothing so the motion stays fluid. Bars & Waves and Scope draw on the screen
-   inside the player; Ambience and Spikes draw on a full-page canvas behind everything.
+   inside the player; Ambience and Spikes draw on a full-page canvas behind everything. The same
+   file's level track also gives the SoundCloud-style waveform that doubles as the seek bar.
    Colours come from the active theme's --viz-* tokens, shifted along the palette by the tone
    (spectral centroid) of the music — or, with Pastel RGB on, from a slowly cycling pastel hue. */
 const viz = (function () {
@@ -98,19 +99,21 @@ const viz = (function () {
     if (buf.byteLength < 16 + n * stride) return null;
     return { fps, bands, stride, n, frames: new Uint8Array(buf, 16, n * stride) };
   }
-  function setTrack(track) {
+  let track = null;
+  function setTrack(t) {
     if (fetchCtl) fetchCtl.abort();
-    data = null; hint.hidden = true;
-    if (!track) return;
-    const key = track.file;
-    if (cache.has(key)) { data = cache.get(key); if (!data) hint.hidden = false; return; }
+    data = null; track = t; hint.hidden = true;
+    buildWave(); drawWaveform();
+    if (!t) return;
+    const key = t.file;
+    if (cache.has(key)) { data = cache.get(key); if (!data) hint.hidden = false; buildWave(); drawWaveform(); return; }
     fetchCtl = new AbortController();
     fetch('viz/' + encodeURIComponent(key) + '.bin', { signal: fetchCtl.signal })
       .then(r => r.ok ? r.arrayBuffer() : null)
       .then(buf => {
         const d = buf ? parse(buf) : null;
         cache.set(key, d);
-        if (audio && (audio.dataset.file === key)) { data = d; hint.hidden = !!d; kick(); }
+        if (audio && (audio.dataset.file === key)) { data = d; hint.hidden = !!d; buildWave(); drawWaveform(); kick(); }
       })
       .catch(() => {});
   }
@@ -265,6 +268,98 @@ const viz = (function () {
   }
   const DRAW = { bars: drawBars, scope: drawScope, ambience: drawAmbience, spikes: drawSpikes };
 
+  // ---- waveform seek bar
+  // SoundCloud-style: one bar per few frames of the level track, a shorter reflection underneath, played
+  // part in the theme palette, unplayed part the same hues dimmed. Click/drag/arrow keys seek.
+  const wave = { canvas: document.getElementById('wave'), W: 0, H: 0, bars: null, hover: -1, scrub: -1 };
+  wave.ctx = wave.canvas.getContext('2d');
+  const BAR = 2, PITCH = 3;                        // bar width and spacing in css px
+  let onScrub = () => {};
+  const waveDur = () => audio && isFinite(audio.duration) && audio.duration > 0 ? audio.duration : (track && track.duration) || 0;
+  function buildWave() {
+    const n = Math.max(1, Math.floor((wave.W + PITCH - BAR) / PITCH));
+    const out = new Float32Array(n);
+    if (!data) { out.fill(0.2); wave.bars = out; return; }   // no analysis: a flat strip that still seeks
+    const fr = data.frames, s = data.stride, L = data.bands + 1, per = data.n / n;
+    let mx = 0.001;
+    for (let i = 0; i < n; i++) {
+      let lv;
+      if (per >= 1) {                              // several frames per bar: keep the loudest
+        const a = Math.floor(i * per), b = Math.min(data.n, Math.max(a + 1, Math.floor((i + 1) * per)));
+        lv = 0; for (let f = a; f < b; f++) if (fr[f * s + L] > lv) lv = fr[f * s + L];
+      } else {                                     // short track: interpolate between frames
+        const x = (i + 0.5) * per, f0 = clamp(Math.floor(x), 0, data.n - 1), f1 = Math.min(f0 + 1, data.n - 1), a = x - f0;
+        lv = fr[f0 * s + L] + (fr[f1 * s + L] - fr[f0 * s + L]) * a;
+      }
+      // level is dB below the track's loud point, over 50 dB; back to amplitude, softened so verses still show
+      out[i] = Math.pow(10, -1.5 * (1 - lv / 255));
+      if (out[i] > mx) mx = out[i];
+    }
+    for (let i = 0; i < n; i++) out[i] /= mx;
+    wave.bars = out;
+  }
+  function drawWaveform() {
+    const c = wave.ctx, W = wave.W, H = wave.H;
+    if (!W || !wave.bars) return;
+    c.clearRect(0, 0, W, H);
+    const dur = waveDur(), pos = wave.scrub >= 0 ? wave.scrub : dur && audio ? clamp(audio.currentTime / dur, 0, 1) : 0;
+    const top = Math.round(H * 0.66), refl = H - top - 2;   // upper bars, 2px gap, the reflection
+    const px = pos * W, hx = wave.hover >= 0 ? wave.hover * W : -1;
+    const lo = Math.min(px, hx), hi = Math.max(px, hx), lt = light();
+    const n = wave.bars.length;
+    for (let i = 0; i < n; i++) {
+      const x = i * PITCH, cx = x + BAR / 2, h = Math.max(1.5, wave.bars[i] * (top - 2));
+      const col = grad(cx / W);
+      let a, b;                                    // alpha of the bar and its reflection
+      let fill = col;
+      if (cx <= px) { a = 1; b = 0.42; }
+      else if (hx >= 0 && cx > lo && cx <= hi) { a = 0.62; b = 0.26; }
+      else { fill = lt ? mix(col, [122, 130, 152], 0.55) : mix(col, colors.bg, 0.52); a = lt ? 0.9 : 0.85; b = lt ? 0.42 : 0.36; }   // unplayed: same hue, greyed
+      c.fillStyle = rgba(fill, a); c.fillRect(x, top - h, BAR, h);
+      c.fillStyle = rgba(fill, b); c.fillRect(x, top + 2, BAR, h * refl / top);
+    }
+    if (dur) {                                     // playhead
+      const ph = lt ? [18, 18, 42] : hot(), x = Math.min(W - 1, Math.round(px));
+      c.fillStyle = rgba(ph, 0.25); c.fillRect(x - 1, 0, 3, H);
+      c.fillStyle = rgba(ph, 0.95); c.fillRect(x, 0, 1, H);
+    }
+  }
+  function resizeWave() {
+    const r = wave.canvas.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+    wave.W = Math.max(1, Math.round(r.width)); wave.H = Math.max(1, Math.round(r.height));
+    wave.canvas.width = Math.round(wave.W * dpr); wave.canvas.height = Math.round(wave.H * dpr);
+    wave.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildWave(); drawWaveform();
+  }
+  new ResizeObserver(resizeWave).observe(wave.canvas);
+  {
+    const el = wave.canvas;
+    const at = e => clamp((e.clientX - el.getBoundingClientRect().left) / wave.W, 0, 1);
+    const scrubTo = f => { wave.scrub = f; onScrub(f * waveDur()); drawWaveform(); };
+    el.addEventListener('pointerdown', e => { if (!waveDur()) return; el.setPointerCapture(e.pointerId); scrubTo(at(e)); });
+    el.addEventListener('pointermove', e => {
+      if (wave.scrub >= 0) scrubTo(at(e));
+      else if (e.pointerType === 'mouse') { wave.hover = at(e); drawWaveform(); }
+    });
+    el.addEventListener('pointerup', () => {
+      if (wave.scrub < 0) return;
+      const f = wave.scrub; wave.scrub = -1;
+      if (audio && waveDur()) audio.currentTime = f * waveDur();
+      onScrub(null); drawWaveform();
+    });
+    el.addEventListener('pointercancel', () => { if (wave.scrub < 0) return; wave.scrub = -1; onScrub(null); drawWaveform(); });   // the page scrolled instead
+    el.addEventListener('pointerleave', () => { wave.hover = -1; drawWaveform(); });
+    el.addEventListener('keydown', e => {
+      const d = waveDur(); if (!audio || !d) return;
+      const jump = { ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5, PageDown: -30, PageUp: 30 }[e.key];
+      if (jump !== undefined) audio.currentTime = clamp(audio.currentTime + jump, 0, d);
+      else if (e.key === 'Home') audio.currentTime = 0;
+      else if (e.key === 'End') audio.currentTime = d;
+      else return;
+      e.preventDefault(); drawWaveform();
+    });
+  }
+
   // ---- loop
   function frame(now) {
     raf = 0;
@@ -272,7 +367,7 @@ const viz = (function () {
     onBg = isBg(mode);
     const T = onBg ? targets.bg : targets.stage;
     ctx = T.ctx; W = T.W; H = T.H;
-    step(dt); DRAW[mode]();
+    step(dt); DRAW[mode](); drawWaveform();
     const playing = audio && !audio.paused && !audio.ended;
     if ((onBg || inView) && (playing || energy > 0.003 || mode === 'ambience' || rgb)) raf = requestAnimationFrame(frame);
     else last = 0;
@@ -291,7 +386,7 @@ const viz = (function () {
   new ResizeObserver(resizeStage).observe(stage);
   window.addEventListener('resize', resizeBg);
   new IntersectionObserver(es => { inView = es[0].isIntersecting; kick(); }).observe(stage);
-  new MutationObserver(() => { readColors(); clear(targets.stage); kick(); }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  new MutationObserver(() => { readColors(); clear(targets.stage); drawWaveform(); kick(); }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 
   function setMode(id) {
     mode = id;
@@ -304,7 +399,7 @@ const viz = (function () {
     rgb = on;
     try { localStorage.setItem('crmsn-viz-rgb', on ? '1' : '0'); } catch (e) {}
     rgbBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    kick();
+    drawWaveform(); kick();
   }
   MODES.forEach(m => {
     const b = document.createElement('button');
@@ -321,7 +416,11 @@ const viz = (function () {
 
   readColors(); resizeBg(); setMode(mode); setRgb(rgb);
   return {
-    attach(el) { audio = el; ['play', 'playing', 'seeked'].forEach(ev => el.addEventListener(ev, kick)); },
+    attach(el, scrubCb) {                        // scrubCb(seconds) while the waveform is dragged, scrubCb(null) when released
+      audio = el; onScrub = scrubCb || onScrub;
+      ['play', 'playing', 'seeked'].forEach(ev => el.addEventListener(ev, kick));
+      ['timeupdate', 'seeked', 'loadedmetadata', 'durationchange', 'emptied'].forEach(ev => el.addEventListener(ev, drawWaveform));
+    },
     setTrack,
   };
 })();
@@ -334,7 +433,7 @@ const viz = (function () {
   const grid = document.getElementById('trackList');
   const empty = document.getElementById('trackEmpty');
   const playBtn = document.getElementById('playBtn');
-  const seek = document.getElementById('seek');
+  const waveEl = document.getElementById('wave');
   const titleEl = document.getElementById('playerTitle');
   const curEl = document.getElementById('timeCur');
   const durEl = document.getElementById('timeDur');
@@ -344,7 +443,7 @@ const viz = (function () {
   const scopeSwitch = document.getElementById('scopeSwitch');
   let tracks = [];
   let current = -1;
-  let seeking = false;
+  let scrubbing = false;
   // shuffle on/off, and whether next/prev/auto-advance roam all playlists or stay in the current song's
   let shuffle = false, scope = 'all';
   try { shuffle = localStorage.getItem('crmsn-shuffle') === '1'; if (localStorage.getItem('crmsn-scope') === 'list') scope = 'list'; } catch (e) {}
@@ -454,7 +553,9 @@ const viz = (function () {
     const srcName = (tracks[current].source || tracks[current].file).split('/').pop();
     fileEl.textContent = srcName;
     fileY2k.textContent = srcName.replace(/\s+/g, '_');
-    seek.value = 0; curEl.textContent = '0:00'; durEl.textContent = '0:00';
+    curEl.textContent = '0:00'; durEl.textContent = fmt(tracks[current].duration || 0);
+    waveEl.setAttribute('aria-valuemax', String(Math.round(tracks[current].duration || 0)));
+    waveEl.setAttribute('aria-valuenow', '0'); waveEl.setAttribute('aria-valuetext', '0:00');
     if (autoplay) audio.play().catch(() => {});
     mark(); reveal(current);
   }
@@ -503,14 +604,18 @@ const viz = (function () {
   audio.addEventListener('play', mark);
   audio.addEventListener('pause', mark);
   audio.addEventListener('ended', () => step(1));
-  audio.addEventListener('loadedmetadata', () => { durEl.textContent = fmt(audio.duration); });
-  audio.addEventListener('timeupdate', () => {
-    curEl.textContent = fmt(audio.currentTime);
-    if (!seeking && audio.duration) seek.value = Math.round(audio.currentTime / audio.duration * 1000);
+  audio.addEventListener('loadedmetadata', () => {
+    durEl.textContent = fmt(audio.duration);
+    waveEl.setAttribute('aria-valuemax', String(Math.round(audio.duration || 0)));
   });
-  seek.addEventListener('input', () => { seeking = true; curEl.textContent = fmt(seek.value / 1000 * (audio.duration || 0)); });
-  seek.addEventListener('change', () => { seeking = false; if (audio.duration) audio.currentTime = seek.value / 1000 * audio.duration; });
-  viz.attach(audio);
+  audio.addEventListener('timeupdate', () => {
+    if (scrubbing) return;
+    curEl.textContent = fmt(audio.currentTime);
+    waveEl.setAttribute('aria-valuenow', String(Math.round(audio.currentTime)));
+    waveEl.setAttribute('aria-valuetext', fmt(audio.currentTime));
+  });
+  // the waveform is the seek bar; while it's dragged the clock follows the finger, not the audio
+  viz.attach(audio, t => { scrubbing = t !== null; curEl.textContent = fmt(t === null ? audio.currentTime : t); });
 
   fetch('tracks.json', { cache: 'no-cache' })
     .then(r => r.json())
