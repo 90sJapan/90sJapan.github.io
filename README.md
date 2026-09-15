@@ -1,11 +1,13 @@
 # CRMSN site
 
-Static homepage for CRMSN. No build step: `index.html`, `styles.css`, `y2k.css`, `script.js`, plus `tracks.json` and `upload.sh` for the discography.
-The music section embeds your SoundCloud profile directly, so new uploads to
-soundcloud.com/officialcrmsn show up on the site automatically — no code changes needed.
+Static site for CRMSN. No build step: `index.html` (the discography player), `links.html` (links plus the
+SoundCloud embed), `styles.css`, `y2k.css`, `theme.js` (design switch, shared by both pages), `script.js`
+(player), plus `tracks.json` and `discog.py` for the discography. The SoundCloud embed on the links page
+reads your profile directly, so new uploads to soundcloud.com/officialcrmsn show up automatically. To add a
+link, copy one of the `<li>` cards in `links.html`.
 
 `index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `styles.css`,
-`y2k.css` or `script.js`, otherwise visitors' browsers can keep the old copies cached for a while
+`y2k.css`, `theme.js` or `script.js`, otherwise visitors' browsers can keep the old copies cached for a while
 after a deploy (GitHub Pages serves everything with a 10-minute cache).
 
 ## Two designs
@@ -16,7 +18,7 @@ The site ships with two looks, switched by the **Y2K mode / Classic mode** butto
 - **Y2K** (`y2k.css`) — silver chrome, glossy bubble buttons, holographic title, perspective grid, sparkles.
 
 The visitor's choice is remembered in their browser (`localStorage`). To make Y2K the default
-instead, change `'classic'` to `'y2k'` in the fallback line of `script.js` and flip the check in the
+instead, change `'classic'` to `'y2k'` in the fallback line of `theme.js` and flip the check in the
 small inline script at the top of `index.html`. All Y2K rules are scoped under
 `html[data-theme="y2k"]`, so editing one design never affects the other.
 
@@ -67,7 +69,7 @@ python3 discog.py viz [--force]    # (re)build visualizer data on its own
   `--token`, `SC_OAUTH_TOKEN`, or a git-ignored `.sc_token` file.
 - **Bandcamp releases** (`music/<artist>/bandcamp/…`) are never matched against SoundCloud. Bandcamp's
   download names (`「artist」 - 「album」 - 01 「title」.wav`) are parsed into `title` / `album` / `track`;
-  the player shows the folder as one playlist, last for that artist, with a separator row per album and numbering restarting at each.
+  the player shows the folder as one playlist, last for that artist, with a separator row per album and numbering restarting at each; release lists sit after every artist's lists.
   Bandcamp's newer `Artist - Album - 01 01 Title.wav` names are handled too (a title's own leading number is dropped, and a `-` standing in for `:` in the album name is put back).
 - Identical files that appear in two folders are uploaded once (`duplicate_of` marks the copy).
 - Upload skips files already on the release and checkpoints after every file, so it can be
