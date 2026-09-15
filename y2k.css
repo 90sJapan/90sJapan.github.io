@@ -290,6 +290,8 @@ html[data-theme="y2k"] .track-vis{
   background:linear-gradient(180deg, #8fb8ff, var(--y2k-blue)); box-shadow:0 0 0 1px var(--y2k-blue);
 }
 html[data-theme="y2k"] .track-vis.is-private{ background:linear-gradient(180deg, #ff8de4, var(--y2k-pink)); box-shadow:0 0 0 1px var(--y2k-pink); color:#fff; }
+html[data-theme="y2k"] .track-vis.is-bandcamp{ background:linear-gradient(180deg, #7fd8e0, #1da0aa); box-shadow:0 0 0 1px #1da0aa; color:#fff; }
+html[data-theme="y2k"] .track-album{ color:var(--y2k-silver-4); text-shadow:none; }
 html[data-theme="y2k"] .track-count{ color:var(--y2k-silver-4); font-family:'Space Grotesk', system-ui, sans-serif; }
 html[data-theme="y2k"] .track-list{ padding:0 0.35rem 0 0.3rem; scrollbar-color: var(--y2k-blue) transparent; }
 html[data-theme="y2k"] .track-list::-webkit-scrollbar-thumb{ background:linear-gradient(180deg, #8fb8ff, var(--y2k-blue)); border:1px solid #fff; }

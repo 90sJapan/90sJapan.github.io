@@ -486,11 +486,12 @@ const viz = (function () {
 
   const fmt = s => isFinite(s) ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0') : '0:00';
 
-  // public vs private follows the folder the file was sorted into (music/<artist>/…private…/),
-  // falling back to what SoundCloud reported at match time
+  // which playlist a track belongs to follows the folder the file was sorted into
+  // (music/<artist>/…private…/, …public…/, bandcamp/), falling back to what SoundCloud reported at match time
+  const LIST_ORDER = ['public', 'bandcamp', 'private'];
   function visibility(t) {
     const folder = (t.source || '').split('/').slice(0, -1).join('/').toLowerCase();
-    return /private/.test(folder) ? 'private' : /public/.test(folder) ? 'public' : (t.sharing || 'public');
+    return /bandcamp/.test(folder) ? 'bandcamp' : /private/.test(folder) ? 'private' : /public/.test(folder) ? 'public' : (t.sharing || 'public');
   }
 
   function render() {
@@ -503,8 +504,8 @@ const viz = (function () {
       if (!g) { g = { name, vis, items: [] }; groups.push(g); }
       g.items.push(i);
     });
-    const artists = [...new Set(groups.map(g => g.name))];   // keep artist order, public before private
-    groups.sort((a, b) => artists.indexOf(a.name) - artists.indexOf(b.name) || (a.vis === 'public' ? -1 : 1));
+    const artists = [...new Set(groups.map(g => g.name))];   // keep artist order; public, then releases, then private
+    groups.sort((a, b) => artists.indexOf(a.name) - artists.indexOf(b.name) || LIST_ORDER.indexOf(a.vis) - LIST_ORDER.indexOf(b.vis));
     groups.forEach(g => {
       const split = groups.some(x => x !== g && x.name === g.name);
       const cell = document.createElement('div'); cell.className = 'discog-cell track-group';
@@ -517,6 +518,12 @@ const viz = (function () {
       if (split) {
         const tag = document.createElement('span'); tag.className = 'track-vis is-' + g.vis; tag.textContent = g.vis;
         h.appendChild(tag);
+      }
+      // a release whose tracks all share one album is titled after it
+      const albums = new Set(g.items.map(i => tracks[i].album || ''));
+      if (albums.size === 1 && !albums.has('')) {
+        const album = document.createElement('span'); album.className = 'track-album'; album.textContent = [...albums][0];
+        h.appendChild(album);
       }
       const count = document.createElement('span'); count.className = 'track-count';
       count.textContent = g.items.length + (g.items.length === 1 ? ' track' : ' tracks');
