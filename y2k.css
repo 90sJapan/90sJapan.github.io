@@ -216,9 +216,12 @@ html[data-theme="y2k"] .scope-knob{
   border:1px solid #fff; background:linear-gradient(180deg, #8fb8ff 0%, var(--y2k-blue) 48%, #0f4fd6 52%, #5c98ff 100%);
   box-shadow:0 2px 6px rgba(43,123,255,0.5);
 }
-html[data-theme="y2k"] .player-seek{ margin:1rem 0.9rem 0; width:calc(100% - 1.8rem); height:8px; border:1px solid #fff; background:linear-gradient(180deg, #b7c3da, #dfe6f2); box-shadow:0 1px 2px rgba(0,0,0,0.25) inset; }
-html[data-theme="y2k"] .player-seek::-webkit-slider-thumb{ width:18px; height:18px; border:2px solid #fff; background:linear-gradient(180deg, #ff8de4, var(--y2k-pink)); box-shadow:0 0 10px var(--y2k-pink); }
-html[data-theme="y2k"] .player-seek::-moz-range-thumb{ width:18px; height:18px; border:2px solid #fff; background:linear-gradient(180deg, #ff8de4, var(--y2k-pink)); box-shadow:0 0 10px var(--y2k-pink); }
+/* waveform seek bar: a recessed silver tray */
+html[data-theme="y2k"] .player-wave{
+  margin:1rem 0.9rem 0; padding:6px 8px; border:1px solid #fff; border-radius:10px;
+  background:linear-gradient(180deg, #c3cde0, #e4eaf4); box-shadow:0 1px 3px rgba(0,0,0,0.25) inset;
+}
+html[data-theme="y2k"] .wave-canvas:focus-visible{ outline:2px solid var(--y2k-cyan); outline-offset:2px; }
 
 /* visualizer: a dark CRT-ish screen set into the chrome player, with scanlines */
 html[data-theme="y2k"] .player-viz{ margin:1rem 0.9rem 0; }
