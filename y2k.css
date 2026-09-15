@@ -256,6 +256,22 @@ html[data-theme="y2k"] .viz-rgb[aria-pressed="true"]{
 }
 html[data-theme="y2k"] .viz-rgb[aria-pressed="true"]::before{ display:none; }
 html[data-theme="y2k"] .viz-rgb i{ border:1px solid #fff; }
+/* the light switch as a white plastic plate with a blue lever */
+html[data-theme="y2k"] .switch-plate{
+  border:2px solid #fff; border-radius:6px; background:linear-gradient(180deg, #fbfcff, #d6dcea);
+  box-shadow:0 0 0 1px var(--y2k-silver-3), 0 3px 8px rgba(43,123,255,0.25), inset 0 -1px 0 rgba(0,0,0,0.12);
+}
+html[data-theme="y2k"] .viz-power:hover .switch-plate{ box-shadow:0 0 0 2px var(--y2k-cyan), 0 4px 10px rgba(63,245,255,0.35); }
+html[data-theme="y2k"] .viz-power:focus-visible .switch-plate{ box-shadow:0 0 0 2px var(--y2k-cyan); }
+html[data-theme="y2k"] .switch-screw{ background:radial-gradient(circle at 35% 30%, #fff, #9aa4bb 70%); box-shadow:inset 0 0 0 1px rgba(0,0,0,0.3); }
+html[data-theme="y2k"] .switch-well{ background:#1a2040; box-shadow:inset 0 1px 3px rgba(0,0,0,0.7), 0 0 0 1px #fff; }
+html[data-theme="y2k"] .switch-lever{
+  background:linear-gradient(180deg, #b5d1ff 0%, #5c98ff 55%, var(--y2k-blue) 100%);
+  box-shadow:0 3px 5px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+html[data-theme="y2k"] .switch-lever::after{ background:linear-gradient(180deg, #1a5be0, #0f3fa6); }
+html[data-theme="y2k"] .switch-lever::before{ background:linear-gradient(180deg, #0f3fa6, #1a5be0); }
+html[data-theme="y2k"] .viz-power[aria-checked="false"] .switch-lever{ box-shadow:0 -3px 5px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(255,255,255,0.7); }
 html[data-theme="y2k"] .viz-mode[aria-pressed="true"]{
   color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.35);
   background:linear-gradient(180deg, #8fb8ff 0%, var(--y2k-blue) 48%, #0f4fd6 52%, #5c98ff 100%);

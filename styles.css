@@ -210,9 +210,57 @@ nav.primary-nav{ align-items:center; }
 }
 .viz-mode:hover{ color:var(--text-primary); border-color:var(--border-strong); }
 .viz-mode[aria-pressed="true"]{ color:var(--text-primary); border-color:rgba(53,230,255,0.45); background:rgba(53,230,255,0.08); }
+/* the visualizer's light switch: a wall plate with a toggle lever, up = on. Sits right of the styles */
+.viz-power{ margin-left:auto; padding:0; border:0; background:none; cursor:pointer; }
+.switch-plate{
+  position:relative; display:block; width:34px; height:52px; border-radius:4px;
+  background:linear-gradient(180deg, #2c2e3a, #1b1c26);
+  border:1px solid rgba(255,255,255,0.14);
+  box-shadow:0 3px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5);
+  transition:box-shadow .2s ease;
+}
+.viz-power:hover .switch-plate{ box-shadow:0 3px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 0 1px var(--border-strong); }
+.viz-power:focus-visible{ outline:none; }
+.viz-power:focus-visible .switch-plate{ box-shadow:0 0 0 2px rgba(53,230,255,0.6); }
+.switch-screw{
+  position:absolute; left:50%; width:5px; height:5px; margin-left:-2.5px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #a3a8b8, #4a4e5c 70%); box-shadow:inset 0 0 0 1px rgba(0,0,0,0.55);
+}
+.switch-screw::after{ content:""; position:absolute; left:1px; right:1px; top:50%; height:1px; margin-top:-0.5px; background:rgba(0,0,0,0.55); transform:rotate(-30deg); }
+.switch-screw:nth-child(1){ top:4px; } .switch-screw:nth-child(2){ bottom:4px; }
+.switch-well{
+  position:absolute; left:50%; top:50%; width:14px; height:28px; margin:-14px 0 0 -7px; border-radius:2px;
+  background:#07070c; box-shadow:inset 0 1px 3px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(255,255,255,0.05);
+  perspective:120px;                               /* the lever tilts toward you (flat context: it always paints over the well) */
+}
+.switch-lever{
+  position:absolute; left:1px; right:1px; top:2px; height:15px; border-radius:2px 2px 1px 1px;
+  background:linear-gradient(180deg, #f2f3f7 0%, #c9cdd9 60%, #aab0c0 100%);
+  box-shadow:0 3px 5px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.8);
+  transform:rotateX(14deg);                        /* up and tilted toward you: on */
+  transition:transform .13s cubic-bezier(.3,1.6,.5,1), box-shadow .13s ease, border-radius .13s ease;
+}
+/* the lever's side faces: the lower one shows while it points up, the upper one while it points down */
+.switch-lever::before, .switch-lever::after{
+  content:""; position:absolute; left:0; right:0; height:5px; transition:opacity .13s ease;
+}
+.switch-lever::after{ bottom:-5px; border-radius:0 0 2px 2px; background:linear-gradient(180deg, #6d7385, #4a4f5e); }
+.switch-lever::before{ top:-5px; border-radius:2px 2px 0 0; background:linear-gradient(180deg, #4a4f5e, #6d7385); opacity:0; }
+.viz-power[aria-checked="false"] .switch-lever{
+  transform:translateY(9px) rotateX(-14deg);       /* down: off */
+  border-radius:1px 1px 2px 2px;
+  box-shadow:0 -3px 5px rgba(0,0,0,0.65), inset 0 -1px 0 rgba(255,255,255,0.8);
+}
+.viz-power[aria-checked="false"] .switch-lever::after{ opacity:0; }
+.viz-power[aria-checked="false"] .switch-lever::before{ opacity:1; }
+/* off: the screen folds away and the style buttons go dark until it's switched back on */
+.player-viz.is-off .viz-stage{ display:none; }
+.player-viz.is-off .viz-mode, .player-viz.is-off .viz-rgb{ opacity:0.35; pointer-events:none; }
+.player-viz.is-off .viz-rgb i, .player-viz.is-off .viz-rgb::before{ animation:none !important; }
+
 /* pastel RGB fade toggle, kept to the right of the styles */
 .viz-rgb{
-  margin-left:auto; display:inline-flex; align-items:center; gap:0.45rem;
+  margin-left:0.6rem; display:inline-flex; align-items:center; gap:0.45rem;
   font-family:var(--font-body); font-size:0.72rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase;
   padding:0.32rem 0.8rem 0.32rem 0.55rem; border-radius:999px; cursor:pointer;
   border:1px solid var(--border); background:transparent; color:var(--text-muted);
@@ -353,6 +401,10 @@ footer.contact{
   .player-info{ flex:1 1 calc(100% - 56px - 1.1rem); }
   .player-shuffle{ margin-left:auto; }
   .wave-canvas{ height:56px; }
+  .switch-plate{ width:30px; height:46px; }
+  .switch-well{ height:24px; margin-top:-12px; }
+  .switch-lever{ height:13px; }
+  .viz-power[aria-checked="false"] .switch-lever{ transform:translateY(7px) rotateX(-14deg); }
   .track-btn{ grid-template-columns:2rem 1fr; }
   .track-meta{ grid-column:2; }
   .discog-grid{ grid-template-columns:1fr; gap:1rem; }
