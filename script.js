@@ -200,7 +200,7 @@ const viz = (function () {
   }
   function drawAmbience() {
     fade(onBg ? 0.16 : 0.11);
-    const k = onBg ? 0.34 : 1;                   // gentler behind the page so text stays readable
+    const amp = onBg ? 0.34 : 1;                 // gentler behind the page so text stays readable
     ctx.globalCompositeOperation = onBg ? 'source-over' : 'lighter';
     const R = Math.max(W, H) * (onBg ? 0.34 : 0.6);   // smaller orbs behind the page so several fit on screen
     for (let k = 0; k < 5; k++) {
@@ -210,13 +210,13 @@ const viz = (function () {
       const r = R * (0.16 + 0.34 * g + 0.08 * level);
       const c = grad(tone + (k - 2) * 0.11);
       const rg = ctx.createRadialGradient(x, y, 0, x, y, r);
-      rg.addColorStop(0, rgba(mix(c, hot(), 0.35), (0.26 + 0.5 * g) * k)); rg.addColorStop(0.5, rgba(c, (0.16 + 0.25 * g) * k)); rg.addColorStop(1, rgba(c, 0));
+      rg.addColorStop(0, rgba(mix(c, hot(), 0.35), (0.26 + 0.5 * g) * amp)); rg.addColorStop(0.5, rgba(c, (0.16 + 0.25 * g) * amp)); rg.addColorStop(1, rgba(c, 0));
       ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill();
     }
   }
   function drawSpikes() {
     fade(0.35);
-    const k = onBg ? 0.34 : 1;
+    const amp = onBg ? 0.34 : 1;
     ctx.globalCompositeOperation = onBg ? 'source-over' : 'lighter';
     // behind the page the whole ring (core + longest spike) is kept inside the viewport
     const cx = W / 2, cy = H / 2, R = Math.min(W, H) * (onBg ? 0.56 : 1), r0 = R * (0.19 + 0.07 * level), len = R * 0.5;
@@ -225,14 +225,14 @@ const viz = (function () {
       const i = k < N ? k : M - 1 - k;              // mirrored so the ring is symmetric
       const a = spin + k / M * 6.2832, h = r0 + cur[i] * len, w = 0.55 * (6.2832 / M);
       const c = grad(tone * 0.6 + (i / (N - 1)) * 0.4);
-      ctx.fillStyle = rgba(c, (0.35 + 0.6 * cur[i]) * k);
+      ctx.fillStyle = rgba(c, (0.35 + 0.6 * cur[i]) * amp);
       ctx.beginPath();
       ctx.moveTo(cx + Math.cos(a - w) * r0, cy + Math.sin(a - w) * r0);
       ctx.lineTo(cx + Math.cos(a) * h, cy + Math.sin(a) * h);
       ctx.lineTo(cx + Math.cos(a + w) * r0, cy + Math.sin(a + w) * r0);
       ctx.closePath(); ctx.fill();
       const p = r0 + peak[i] * len;
-      ctx.fillStyle = rgba(hot(), 0.6 * peak[i] * k); ctx.beginPath(); ctx.arc(cx + Math.cos(a) * p, cy + Math.sin(a) * p, R * 0.006, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = rgba(hot(), 0.6 * peak[i] * amp); ctx.beginPath(); ctx.arc(cx + Math.cos(a) * p, cy + Math.sin(a) * p, R * 0.006, 0, 6.2832); ctx.fill();
     }
     drawSphere(cx, cy, r0);
   }
