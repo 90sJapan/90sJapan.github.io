@@ -281,7 +281,9 @@ nav.primary-nav a{ padding:0.35rem 0.7rem; }
   pointer-events:none; white-space:nowrap;
 }
 /* Ambience / Spikes draw here, behind the whole page; the player's screen folds away meanwhile */
-.viz-bg{ position:fixed; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; }
+.viz-bg{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+/* the page sits on a layer above it, rather than relying on z-index:-1 clearing the body background */
+main, footer.contact{ position:relative; z-index:1; }
 .player-viz.is-bg .viz-stage{ display:none; }
 .viz-modes{ display:flex; flex-wrap:wrap; align-items:center; gap:3px; margin-top:6px; }
 .viz-mode, .viz-rgb{ padding:0.38rem 0.6rem; font-size:0.58rem; }
