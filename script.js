@@ -639,6 +639,11 @@ const viz = (function () {
   setShuffle(shuffle); setScope(scope);
 
   playBtn.addEventListener('click', toggle);
+  // "Listen now" scrolls down to the player (its href) and starts it
+  document.getElementById('listenBtn').addEventListener('click', () => {
+    if (!tracks.length) return;
+    if (current < 0) load(0, true); else audio.play().catch(() => {});
+  });
   document.getElementById('prevBtn').addEventListener('click', () => step(-1));
   document.getElementById('nextBtn').addEventListener('click', () => step(1));
   audio.addEventListener('play', mark);
