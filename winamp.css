@@ -39,6 +39,13 @@
   --bevel-in: inset 1px 1px 0 var(--wa-lo), inset -1px -1px 0 var(--wa-hi);
 }
 
+/* Ambience / Spikes draw behind the whole page: while one is on, the windows turn see-through so it shows */
+:root:has(.player-viz.is-bg:not(.is-off)){
+  --wa-face:rgba(43,43,62,0.55);
+  --wa-face-2:rgba(58,58,85,0.55);
+  --wa-lcd:rgba(0,0,0,0.4);
+}
+
 *{box-sizing:border-box;}
 [hidden]{display:none !important;}
 html{scroll-behavior:smooth;}
@@ -202,12 +209,12 @@ nav.primary-nav a{ padding:0.35rem 0.7rem; }
 .player.is-playing .player-time::before{ content:"\25B6"; color:var(--wa-green); }
 #timeCur{ font-size:2.9rem; line-height:0.9; color:var(--wa-green); text-shadow:0 0 8px rgba(0,227,59,0.5); }
 .player-title{
-  grid-area:title; overflow:hidden; white-space:nowrap;
+  grid-area:title; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
   font-size:1.5rem; line-height:1.1; text-shadow:0 0 6px rgba(0,227,59,0.45);
 }
-.player-title span{ display:inline-block; padding-left:100%; animation:wa-marquee 14s linear infinite; animation-play-state:paused; }
-.player-title span::after{ content:"  ***"; }
-.player.is-playing .player-title span{ animation-play-state:running; }
+/* paused: the title sits still; playing: it scrolls through from the right */
+.player.is-playing .player-title span{ display:inline-block; padding-left:100%; animation:wa-marquee 14s linear infinite; }
+.player.is-playing .player-title span::after{ content:"  ***"; }
 @keyframes wa-marquee{ from{ transform:translateX(0); } to{ transform:translateX(-100%); } }
 .player-file{
   grid-area:file; font-family:var(--font-pixel); font-size:0.58rem; letter-spacing:0.08em; text-transform:uppercase;
@@ -447,7 +454,6 @@ footer.contact{
 
 @media (prefers-reduced-motion: reduce){
   .hero .chrome-text::after, .viz-rgb i{ animation:none !important; }
-  .player-title span{ animation:none !important; padding-left:0; }
-  .player-title{ text-overflow:ellipsis; }
+  .player.is-playing .player-title span{ display:inline; animation:none; padding-left:0; }
   html{ scroll-behavior:auto; }
 }

@@ -3,6 +3,8 @@
 CLAUDE.md
 *.zip
 files/
+# links page: hidden from the site for now, kept locally
+links.html
 
 # song files live here locally only; they are published as GitHub Release assets
 music/

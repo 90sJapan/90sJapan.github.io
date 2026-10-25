@@ -1,13 +1,12 @@
 # CRMSN site
 
-Static site for CRMSN. No build step: `index.html` (the discography player), `links.html` (links plus the
-SoundCloud embed), `styles.css`, `y2k.css`, `theme.js` (design switch, shared by both pages), `script.js`
-(player), plus `tracks.json` and `discog.py` for the discography. The SoundCloud embed on the links page
-reads your profile directly, so new uploads to soundcloud.com/officialcrmsn show up automatically. To add a
-link, copy one of the `<li>` cards in `links.html`.
+Static site for CRMSN. No build step: `index.html` (the discography player), `winamp.css` (the Winamp
+design), `script.js` (player), plus `tracks.json` and `discog.py` for the discography. The earlier Classic /
+Y2K design is kept in `archive/`. `links.html` (links plus the SoundCloud embed) is hidden for now: it is
+git-ignored and kept locally only.
 
-`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `styles.css`,
-`y2k.css`, `theme.js` or `script.js`, otherwise visitors' browsers can keep the old copies cached for a while
+`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `winamp.css` or
+`script.js`, otherwise visitors' browsers can keep the old copies cached for a while
 after a deploy (GitHub Pages serves everything with a 10-minute cache).
 
 ## Two designs
