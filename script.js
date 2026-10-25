@@ -1,4 +1,5 @@
-/* ---------- discography page: visualizer + player (theme switch lives in theme.js) ---------- */
+/* ---------- discography page: visualizer + player ---------- */
+const root = document.documentElement;
 /* ---------- visualizer ----------
    The audio host sends no CORS headers, so the browser can't analyse the stream itself.
    discog.py precomputes a small spectrum file per track (viz/<file>.bin: 24 log-spaced bands +
@@ -446,7 +447,7 @@ const viz = (function () {
 
 /* ---------- discography player ---------- */
 (function () {
-  const MAX_ROWS = 7;                               // rows visible per list before it scrolls
+  const MAX_ROWS = 12;                              // rows visible per list before it scrolls
   const player = document.getElementById('player');
   const audio = document.getElementById('audio');
   const grid = document.getElementById('trackList');

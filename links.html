@@ -5,15 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRMSN — links</title>
 <meta name="description" content="Official site and music for CRMSN.">
-<script>
-  // Apply the saved design before first paint so there's no flash of the other theme.
-  try { var t = localStorage.getItem('crmsn-theme'); if (t === 'y2k') document.documentElement.dataset.theme = 'y2k'; } catch (e) {}
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Space+Grotesk:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Audiowide&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260915g">
-<link rel="stylesheet" href="y2k.css?v=20260915g">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="winamp.css?v=20261025a">
 </head>
 <body>
 
@@ -27,9 +22,6 @@
   <nav class="primary-nav">
     <a href="index.html#discography">Discography</a>
     <a href="links.html">Links</a>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Switch design">
-      <span class="theme-toggle-label">Y2K mode</span>
-    </button>
   </nav>
 </header>
 
@@ -75,6 +67,5 @@
   </div>
 </footer>
 
-<script src="theme.js?v=20260915g"></script>
 </body>
 </html>
