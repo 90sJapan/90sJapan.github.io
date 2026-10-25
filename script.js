@@ -464,9 +464,9 @@ const viz = (function () {
   let tracks = [];
   let current = -1;
   let scrubbing = false;
-  // shuffle on/off, and whether next/prev/auto-advance roam all playlists or stay in the current song's
+  // shuffle on/off (always starts off), and whether next/prev/auto-advance roam all playlists or stay in the current song's
   let shuffle = false, scope = 'all';
-  try { shuffle = localStorage.getItem('crmsn-shuffle') === '1'; if (localStorage.getItem('crmsn-scope') === 'list') scope = 'list'; } catch (e) {}
+  try { if (localStorage.getItem('crmsn-scope') === 'list') scope = 'list'; } catch (e) {}
   const played = new Set(), history = [];
 
   const fmt = s => isFinite(s) ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0') : '0:00';
@@ -625,7 +625,6 @@ const viz = (function () {
     if (current >= 0) played.add(current);
     shuffleBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
     player.classList.toggle('is-shuffle', on);
-    try { localStorage.setItem('crmsn-shuffle', on ? '1' : '0'); } catch (e) {}
   }
   function setScope(v) {
     scope = v; played.clear(); history.length = 0;
