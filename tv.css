@@ -127,6 +127,9 @@ p, h1, dl, dd{margin:0;}
   position:absolute; inset:0; overflow:hidden;
   background:linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 55%, var(--sky-3) 100%);
 }
+/* the WebGL flight through the clouds; the painted clouds below are only the fallback */
+.sky-gl{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.sky.has-gl i{ display:none; }
 .sky i{
   position:absolute; width:46%; height:22%; border-radius:50%;
   background:radial-gradient(ellipse at 50% 55%, color-mix(in srgb, var(--cloud) 55%, transparent) 0%, color-mix(in srgb, var(--cloud) 28%, transparent) 38%, transparent 68%);
