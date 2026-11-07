@@ -7,8 +7,8 @@
 <meta name="description" content="Official site and music for CRMSN.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=VT323&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="winamp.css?v=20261025d">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,800&family=Barlow+Semi+Condensed:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="retro.css?v=20261107a">
 </head>
 <body>
 
@@ -23,6 +23,7 @@
   <nav class="primary-nav">
     <a href="#discography">Discography</a>
   </nav>
+  <div class="wx-clock" aria-hidden="true"><span class="wx-time" id="wxTime"></span><span class="wx-date" id="wxDate"></span></div>
 </header>
 
 <main id="top">
@@ -102,6 +103,26 @@
   </div>
 </footer>
 
-<script src="script.js?v=20261025d"></script>
+<div class="wx-crawl" aria-hidden="true">
+  <span class="wx-crawl-label">Now Playing</span>
+  <div class="wx-crawl-track"><span class="wx-crawl-text" id="wxCrawl">CRMSN · full-quality files, straight from the studio · press play on any track below</span></div>
+</div>
+
+<script src="script.js?v=20261107a"></script>
+<script>
+  /* the header clock and the crawl bar: the crawl repeats whatever the player is showing */
+  (function () {
+    var t = document.getElementById('wxTime'), d = document.getElementById('wxDate');
+    function tick() {
+      var n = new Date();
+      t.textContent = n.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+      d.textContent = n.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+    tick(); setInterval(tick, 1000);
+    var title = document.getElementById('playerTitle'), crawl = document.getElementById('wxCrawl'), idle = crawl.textContent;
+    function sync() { var s = title.textContent.trim(); crawl.textContent = s && s !== '\u2014' ? 'CRMSN · ' + s : idle; }
+    new MutationObserver(sync).observe(title, { childList: true, characterData: true, subtree: true });
+  })();
+</script>
 </body>
 </html>

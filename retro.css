@@ -1,0 +1,490 @@
+/* =====================================================================
+   Retro weather design: the site styled like an early-90s cable weather
+   channel's "local forecast" screens. Blue gradient panels on an indigo sky,
+   a gold-and-orange header band with a live clock, yellow headings over
+   outlined white type, and a crawl bar along the bottom showing what's playing.
+   Earlier designs are kept in archive/.
+   ===================================================================== */
+
+/* ---------- tokens ---------- */
+:root{
+  --wx-sky-1:#0e0a48;                /* page background, top to bottom */
+  --wx-sky-2:#22197a;
+  --wx-sky-3:#4a2a86;
+  --wx-panel-1:#3b56cf;              /* panel gradient */
+  --wx-panel-2:#1f2c8c;
+  --wx-edge:#9fb2ff;                 /* panel border */
+  --wx-deep:#0a0838;                 /* dark wells, outlines */
+  --wx-well:#0d0d4a;
+  --wx-gold:#ffe23a;                 /* headings */
+  --wx-amber:#f0a030;
+  --wx-orange:#d0561c;
+  --wx-white:#ffffff;
+  --wx-dim:#b9c4ff;
+  --wx-sel:#5f7cff;
+
+  /* visualizer palette: deep blue at the bottom through gold to orange; white peaks */
+  --viz-a:#4a7dff;
+  --viz-b:#ffe23a;
+  --viz-c:#ff7a1e;
+  --viz-hot:#ffffff;
+  --viz-bg:#0b0a40;
+
+  --font-wx:'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+  --font-num:'Barlow Semi Condensed', 'Barlow Condensed', Arial, sans-serif;
+
+  /* outlined type: the screens drew a hard black edge round every letter */
+  --wx-outline: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  --wx-outline-sm: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+
+  --crawl-h:42px;
+}
+
+/* Ambience / Spikes draw behind the whole page: while one is on, the panels turn see-through so it shows */
+:root:has(.player-viz.is-bg:not(.is-off)){
+  --wx-panel-1:rgba(59,86,207,0.5);
+  --wx-panel-2:rgba(31,44,140,0.5);
+  --wx-well:rgba(13,13,74,0.45);
+}
+
+*{box-sizing:border-box;}
+[hidden]{display:none !important;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; padding-bottom:var(--crawl-h);
+  color:var(--wx-white);
+  font-family:var(--font-wx); font-weight:600;
+  line-height:1.35;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  background-color:var(--wx-sky-1);
+  background-image:linear-gradient(180deg, var(--wx-sky-1) 0%, var(--wx-sky-2) 55%, var(--wx-sky-3) 100%);
+  background-attachment:fixed;
+}
+h1,h2,h3{margin:0; font-weight:700;}
+p{margin:0;}
+a{color:inherit; text-decoration:none;}
+section{padding: clamp(2.5rem, 6vw, 5rem) clamp(1rem, 5vw, 4rem);}
+.wrap{max-width:1080px; margin:0 auto;}
+#discography .wrap{max-width:900px;}
+:focus-visible{outline:2px solid var(--wx-gold); outline-offset:2px;}
+
+/* ambient layers from older designs stay off; the full-page visualizer canvas stays.
+   .grain becomes faint scanlines, like a CRT */
+.aurora, .y2k-grid, .y2k-sparkles{ display:none; }
+.grain{
+  position:fixed; inset:0; z-index:2; pointer-events:none; opacity:0.06;
+  background:repeating-linear-gradient(to bottom, #000 0 1px, transparent 1px 3px);
+}
+
+/* ---------- shared bits: buttons and panels ---------- */
+nav.primary-nav a, .btn, .viz-mode, .viz-rgb, .link-card, .shuffle-btn, .scope-switch{
+  font-family:var(--font-wx); font-weight:700; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase;
+  color:var(--wx-white); text-shadow:var(--wx-outline-sm);
+  background:linear-gradient(180deg, #5470e6, #2a3aa6);
+  border:2px solid var(--wx-edge); border-radius:4px; cursor:pointer;
+  box-shadow:0 2px 0 var(--wx-deep);
+}
+nav.primary-nav a:hover, .btn:hover, .viz-mode:hover, .viz-rgb:hover, .link-card:hover, .shuffle-btn:hover{ color:var(--wx-gold); }
+nav.primary-nav a:active, .btn:active, .viz-mode:active, .viz-rgb:active, .shuffle-btn:active, .scope-switch:active{
+  transform:translateY(2px); box-shadow:none;
+}
+
+/* a panel: blue gradient with a light edge and a dark outline */
+.player, .discog-cell, .sc-embed-wrap{
+  background:linear-gradient(180deg, var(--wx-panel-1), var(--wx-panel-2));
+  border:2px solid var(--wx-edge); border-radius:6px;
+  box-shadow:0 0 0 2px var(--wx-deep), 0 12px 28px rgba(0,0,0,0.45);
+}
+
+/* panel heading: the window title bar becomes a yellow heading on a darker strip */
+.y2k-titlebar{
+  display:flex; align-items:center; gap:0.6rem; min-height:34px; padding:4px 12px;
+  background:linear-gradient(90deg, #17166a 0%, #2b2499 70%, transparent 100%);
+  border-bottom:2px solid var(--wx-amber); border-radius:4px 4px 0 0;
+  font-family:var(--font-wx); font-weight:700; font-size:1.15rem; letter-spacing:0.04em; text-transform:uppercase;
+  color:var(--wx-gold); text-shadow:var(--wx-outline);
+  user-select:none;
+}
+.y2k-titlebar-text{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.y2k-titlebar-btns{ display:none; }
+
+/* ---------- header: orange band on the left, sky blue on the right, clock at the end ---------- */
+header{
+  position:sticky; top:0; z-index:40;
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  min-height:64px; padding:0 clamp(1rem, 5vw, 4rem);
+  background:
+    linear-gradient(105deg, var(--wx-orange) 0%, var(--wx-amber) 26%, var(--wx-gold) 27.2%, #2c2a9e 28.4%, #171466 100%);
+  border-bottom:3px solid var(--wx-deep);
+  box-shadow:0 4px 14px rgba(0,0,0,0.45);
+}
+.logo-mark{
+  font-family:var(--font-wx); font-weight:800; font-style:italic; font-size:1.7rem; letter-spacing:0.08em;
+  color:var(--wx-white); text-shadow:var(--wx-outline);
+}
+nav.primary-nav{display:flex; align-items:center; gap:0.5rem; margin-left:auto;}
+nav.primary-nav a{ padding:0.3rem 0.8rem; }
+.theme-toggle{ display:none; }
+.wx-clock{
+  display:flex; flex-direction:column; align-items:flex-end; line-height:1.05;
+  font-family:var(--font-num); font-weight:700; text-shadow:var(--wx-outline-sm); font-variant-numeric:tabular-nums;
+}
+.wx-time{ font-size:1.35rem; color:var(--wx-white); }
+.wx-date{ font-size:0.9rem; color:var(--wx-gold); text-transform:uppercase; letter-spacing:0.04em; }
+
+/* ---------- hero: the big station title card ---------- */
+.hero{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; gap:1.6rem; padding-top:clamp(3rem, 7vw, 5rem); padding-bottom:0;
+}
+.hero + #discography{ padding-top:clamp(2rem, 4vw, 3rem); }
+.hero .chrome-text{
+  position:relative;
+  font-family:var(--font-wx); font-weight:800; font-style:italic;
+  font-size:clamp(4.5rem, 16vw, 10rem); line-height:0.95; letter-spacing:0.04em;
+  padding:0.12em 0.45em 0.1em 0.4em;
+  color:var(--wx-white);
+  background:linear-gradient(180deg, var(--wx-panel-1), var(--wx-panel-2));
+  border:3px solid var(--wx-edge); border-radius:8px;
+  box-shadow:0 0 0 3px var(--wx-deep), 0 18px 40px rgba(0,0,0,0.5);
+  text-shadow:4px 4px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+}
+/* the gold "local forecast" strip under the title */
+.hero .chrome-text::after{
+  content:"Local Music Forecast";
+  position:absolute; left:50%; bottom:-0.95rem; transform:translateX(-50%);
+  padding:0.15rem 1rem; white-space:nowrap;
+  font-size:1rem; font-style:normal; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--wx-deep); text-shadow:none;
+  background:linear-gradient(180deg, var(--wx-gold), var(--wx-amber));
+  border:2px solid var(--wx-deep); border-radius:3px;
+}
+.hero .cta-row{display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-top:1.4rem;}
+.btn{ display:inline-block; padding:0.6rem 1.6rem; font-size:1.15rem; }
+
+/* ---------- section headings ---------- */
+.section-head{ margin-bottom:1.5rem; max-width:60ch; }
+.section-head h2{
+  font-family:var(--font-wx); font-weight:800; font-size:clamp(1.8rem, 3.6vw, 2.4rem); letter-spacing:0.03em; text-transform:uppercase;
+  color:var(--wx-gold); margin-bottom:0.2rem; text-shadow:var(--wx-outline);
+}
+.section-head p{ color:var(--wx-dim); font-size:1.05rem; font-weight:500; }
+
+/* ---------- the player: a "current conditions" panel ----------
+   .player-main and .player-nav drop out of the layout so their buttons sit on the player's own grid:
+   heading / readout / seek bar / controls / visualizer */
+.player{
+  display:grid; margin-bottom:1.2rem;
+  grid-template-columns:auto auto auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "title title title title title"
+    "info  info  info  info  info"
+    "wave  wave  wave  wave  wave"
+    "prev  play  next  .     shuffle"
+    "viz   viz   viz   viz   viz";
+  gap:10px 6px; padding:0 12px 14px;
+}
+.player > .y2k-titlebar{ grid-area:title; margin:0 -12px; }
+.player > .y2k-titlebar .y2k-titlebar-text{ font-size:0; }          /* the .exe name is replaced with a heading */
+.player > .y2k-titlebar .y2k-titlebar-text::before{ content:"Now Playing"; font-size:1.15rem; }
+.player-main, .player-nav{ display:contents; }
+#prevBtn{ grid-area:prev; }
+#nextBtn{ grid-area:next; }
+.player-btn{ grid-area:play; }
+.player-info{ grid-area:info; }
+.player-wave{ grid-area:wave; }
+.player-shuffle{ grid-area:shuffle; }
+.player-viz{ grid-area:viz; }
+
+/* readout: big clock on the left like a temperature, title and file on the right */
+.player-info{
+  display:grid; grid-template-columns:auto minmax(0, 1fr); grid-template-areas:"time title" "time file";
+  align-items:center; gap:2px 20px; min-width:0; padding:6px 4px;
+}
+.player-sub{ display:contents; }
+.player-time{
+  grid-area:time; display:flex; align-items:baseline; gap:6px;
+  font-family:var(--font-num); font-weight:700; font-size:1.2rem; color:var(--wx-dim);
+  text-shadow:var(--wx-outline-sm); font-variant-numeric:tabular-nums;
+}
+#timeCur{ font-size:3.6rem; line-height:0.95; color:var(--wx-white); text-shadow:var(--wx-outline); }
+.player-title{
+  grid-area:title; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  font-size:2rem; font-weight:700; line-height:1.1; color:var(--wx-gold); text-shadow:var(--wx-outline);
+}
+.player-file{
+  grid-area:file; font-size:1rem; font-weight:500; letter-spacing:0.04em; text-transform:uppercase;
+  color:var(--wx-dim); text-shadow:var(--wx-outline-sm);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.player-file:empty{ display:none; }
+
+/* seek bar: the waveform in a dark well */
+.player-wave{ padding:5px 6px; background:var(--wx-well); border:2px solid var(--wx-deep); border-radius:4px; box-shadow:inset 0 2px 6px rgba(0,0,0,0.5); }
+.wave-canvas{
+  display:block; width:100%; height:48px; cursor:pointer;
+  touch-action:pan-y;                            /* a tap or sideways drag seeks; the page still scrolls vertically */
+}
+.wave-canvas:focus-visible{ outline:2px solid var(--wx-gold); outline-offset:3px; }
+
+/* transport: gold buttons with dark blue glyphs */
+.player-btn, .player-skip:not(.shuffle-btn){
+  height:40px; padding:0; display:flex; align-items:center; justify-content:center;
+  color:var(--wx-deep); background:linear-gradient(180deg, #fff27a, var(--wx-gold) 45%, var(--wx-amber));
+  border:2px solid var(--wx-deep); border-radius:5px; cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 0 var(--wx-deep);
+}
+.player-btn{ width:58px; }
+.player-skip:not(.shuffle-btn){ width:46px; }
+.player-btn:hover, .player-skip:not(.shuffle-btn):hover{ filter:brightness(1.08); }
+.player-btn:active, .player-skip:not(.shuffle-btn):active{ transform:translateY(2px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.7); }
+.player-btn svg{ width:20px; height:20px; }
+.player-skip svg{ width:17px; height:17px; }
+.player-btn .icon-pause{ display:none; }
+.player.is-playing .player-btn .icon-play{ display:none; }
+.player.is-playing .player-btn .icon-pause{ display:block; }
+
+/* shuffle and the All / List switch: blue buttons with a status lamp */
+.player-shuffle{ display:flex; align-items:center; gap:6px; justify-self:end; }
+.shuffle-btn{ height:40px; display:flex; align-items:center; gap:8px; padding:0 12px 0 10px; }
+.shuffle-btn svg{ display:none; }
+.shuffle-btn::before{ content:""; width:9px; height:9px; border-radius:50%; background:#1a2260; box-shadow:inset 0 0 0 1px var(--wx-deep); }
+.shuffle-btn::after{ content:"Shuffle"; }
+.shuffle-btn[aria-pressed="true"]::before{ background:var(--wx-gold); box-shadow:0 0 8px var(--wx-gold); }
+.scope-switch{ position:relative; display:flex; align-items:center; gap:2px; height:40px; padding:0 6px; }
+.scope-opt{ display:flex; align-items:center; gap:6px; padding:0 6px; color:var(--wx-dim); }
+.scope-opt::before{ content:""; width:9px; height:9px; border-radius:50%; background:#1a2260; box-shadow:inset 0 0 0 1px var(--wx-deep); }
+.scope-switch:not(.is-list) .scope-all, .scope-switch.is-list .scope-list{ color:var(--wx-white); }
+.scope-switch:not(.is-list) .scope-all::before, .scope-switch.is-list .scope-list::before{ background:var(--wx-gold); box-shadow:0 0 8px var(--wx-gold); }
+.scope-knob{ display:none; }
+
+/* ---------- visualizer: a radar screen ---------- */
+.player-viz{ margin-top:2px; }
+.viz-stage{
+  position:relative; height:clamp(150px, 24vw, 220px); overflow:hidden; background:var(--viz-bg);
+  border:2px solid var(--wx-deep); border-radius:4px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.6);
+}
+.viz-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; cursor:pointer; }
+.viz-stage::after{                               /* a faint map grid over the screen */
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:0.35;
+  background-image:
+    linear-gradient(rgba(159,178,255,0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(159,178,255,0.25) 1px, transparent 1px);
+  background-size:32px 32px;
+}
+.viz-hint{
+  position:absolute; left:50%; bottom:0.7rem; transform:translateX(-50%); z-index:1;
+  font-size:1rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--wx-dim); text-shadow:var(--wx-outline-sm);
+  pointer-events:none; white-space:nowrap;
+}
+/* Ambience / Spikes draw here, behind the whole page; the player's screen folds away meanwhile */
+.viz-bg{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+/* the page sits on a layer above it, rather than relying on z-index:-1 clearing the body background */
+main, footer.contact{ position:relative; z-index:1; }
+.player-viz.is-bg .viz-stage{ display:none; }
+.viz-modes{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:8px; }
+.viz-mode, .viz-rgb{ padding:0.3rem 0.7rem; font-size:0.85rem; }
+.viz-mode[aria-pressed="true"]{ color:var(--wx-deep); text-shadow:none; background:linear-gradient(180deg, #fff27a, var(--wx-gold) 45%, var(--wx-amber)); border-color:var(--wx-deep); }
+.viz-rgb{ display:inline-flex; align-items:center; gap:0.45rem; margin-left:2px; }
+.viz-rgb i{
+  width:11px; height:11px; border-radius:50%; opacity:0.6;
+  background:conic-gradient(#ffb3c6, #ffe0a3, #c6ffb3, #a3e6ff, #d1b3ff, #ffb3c6);
+  box-shadow:inset 0 0 0 1px var(--wx-deep);
+}
+.viz-rgb[aria-pressed="true"]{ color:var(--wx-gold); background:linear-gradient(180deg, #2a3aa6, #17166a); }
+.viz-rgb[aria-pressed="true"] i{ opacity:1; animation:rgb-spin 2s linear infinite; }
+@keyframes rgb-spin{ to{ transform:rotate(360deg); } }
+
+/* the visualizer's light switch: a wall plate with a toggle lever, up = on. Sits right of the styles */
+.viz-power{ margin-left:auto; padding:0; border:0; background:none; cursor:pointer; }
+.switch-plate{
+  position:relative; display:block; width:30px; height:44px;
+  background:linear-gradient(180deg, #5470e6, #2a3aa6);
+  border:2px solid var(--wx-edge); border-radius:4px; box-shadow:0 2px 0 var(--wx-deep);
+}
+.viz-power:hover .switch-plate{ border-color:var(--wx-gold); }
+.viz-power:focus-visible{ outline:none; }
+.viz-power:focus-visible .switch-plate{ outline:2px solid var(--wx-gold); outline-offset:2px; }
+.switch-screw{
+  position:absolute; left:50%; width:5px; height:5px; margin-left:-2.5px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #e0e6ff, #6f7cc0 70%); box-shadow:inset 0 0 0 1px rgba(0,0,0,0.55);
+}
+.switch-screw::after{ content:""; position:absolute; left:1px; right:1px; top:50%; height:1px; margin-top:-0.5px; background:rgba(0,0,0,0.55); transform:rotate(-30deg); }
+.switch-screw:nth-child(1){ top:2px; } .switch-screw:nth-child(2){ bottom:2px; }
+.switch-well{
+  position:absolute; left:50%; top:50%; width:12px; height:24px; margin:-12px 0 0 -6px;
+  background:var(--wx-deep); border-radius:2px;
+  perspective:120px;                               /* the lever tilts toward you (flat context: it always paints over the well) */
+}
+.switch-lever{
+  position:absolute; left:1px; right:1px; top:2px; height:13px; border-radius:2px;
+  background:linear-gradient(180deg, #fff27a 0%, var(--wx-amber) 100%);
+  box-shadow:0 3px 5px rgba(0,0,0,0.65), inset 0 1px 0 #fff;
+  transform:rotateX(14deg);                        /* up and tilted toward you: on */
+  transition:transform .13s cubic-bezier(.3,1.6,.5,1), box-shadow .13s ease;
+}
+/* the lever's side faces: the lower one shows while it points up, the upper one while it points down */
+.switch-lever::before, .switch-lever::after{
+  content:""; position:absolute; left:0; right:0; height:4px; transition:opacity .13s ease;
+}
+.switch-lever::after{ bottom:-4px; background:linear-gradient(180deg, #c07a1c, #8a5212); }
+.switch-lever::before{ top:-4px; background:linear-gradient(180deg, #8a5212, #c07a1c); opacity:0; }
+.viz-power[aria-checked="true"] .switch-well{ box-shadow:0 0 8px rgba(255,226,58,0.45); }
+.viz-power[aria-checked="false"] .switch-lever{
+  transform:translateY(7px) rotateX(-14deg);       /* down: off */
+  box-shadow:0 -3px 5px rgba(0,0,0,0.65), inset 0 -1px 0 #fff;
+}
+.viz-power[aria-checked="false"] .switch-lever::after{ opacity:0; }
+.viz-power[aria-checked="false"] .switch-lever::before{ opacity:1; }
+/* off: the screen folds away and the style buttons go dark until it's switched back on */
+.player-viz.is-off .viz-stage{ display:none; }
+.player-viz.is-off .viz-mode, .player-viz.is-off .viz-rgb{ opacity:0.4; pointer-events:none; }
+.player-viz.is-off .viz-rgb i{ animation:none !important; }
+
+/* ---------- track lists: one "latest observations" table per artist / release ---------- */
+.discog-grid{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:1.2rem; align-items:stretch; }
+.discog-cell:last-child:nth-child(odd){ grid-column:1 / -1; }   /* a list left alone on the last row fills it */
+.discog-cell{ display:flex; flex-direction:column; min-width:0; padding:0 10px 10px; }
+.discog-cell > .y2k-titlebar{ margin:0 -10px 8px; }
+.cell-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:0.75rem;
+  padding:2px 4px 6px; margin-bottom:4px; border-bottom:2px solid rgba(159,178,255,0.45);
+}
+.track-group-name{
+  font-size:1.2rem; font-weight:700; letter-spacing:0.03em; text-transform:uppercase;
+  color:var(--wx-white); text-shadow:var(--wx-outline-sm);
+  margin:0; display:flex; align-items:center; gap:0.55rem; min-width:0;
+}
+.track-vis{
+  font-size:0.78rem; padding:0 0.4rem; border-radius:3px; letter-spacing:0.06em; text-shadow:none;
+  color:var(--wx-deep); background:var(--wx-dim);
+}
+.track-vis.is-private{ background:#ff8a6a; }
+.track-vis.is-public{ background:var(--wx-gold); }
+.track-vis.is-bandcamp{ background:#7fe3ea; }
+.track-album{ font-size:1rem; font-weight:500; letter-spacing:0; text-transform:none; color:var(--wx-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.track-count{ font-family:var(--font-num); font-size:1.05rem; color:var(--wx-gold); text-shadow:var(--wx-outline-sm); white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+.track-list{
+  list-style:none; margin:0; padding:3px 0; display:flex; flex-direction:column;
+  position:relative; overflow-y:auto; overscroll-behavior:contain;
+  background:var(--wx-well); border:2px solid var(--wx-deep); border-radius:4px;
+  scrollbar-width:auto; scrollbar-color:var(--wx-sel) var(--wx-well);
+}
+.discog-cell .track-list{ flex:1 1 auto; }
+.track-list::-webkit-scrollbar{ width:12px; }
+.track-list::-webkit-scrollbar-track{ background:var(--wx-well); }
+.track-list::-webkit-scrollbar-thumb{ background:linear-gradient(90deg, #5470e6, #2a3aa6); border:2px solid var(--wx-deep); border-radius:6px; }
+.track{ flex:0 0 auto; }
+.track:nth-child(even) .track-btn{ background:rgba(159,178,255,0.06); }
+/* album separator inside a release list */
+.track-sep{
+  flex:0 0 auto; display:flex; align-items:baseline; justify-content:space-between; gap:0.75rem;
+  margin:6px 0 2px; padding:3px 10px; border-top:2px solid rgba(240,160,48,0.55);
+}
+.track-sep:first-child{ margin-top:0; border-top:0; }
+.track-sep-name{
+  font-size:0.95rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--wx-amber); text-shadow:var(--wx-outline-sm);
+  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.track-sep-count{ font-family:var(--font-num); font-size:0.95rem; color:var(--wx-dim); white-space:nowrap; }
+.track-btn{
+  width:100%; display:grid; grid-template-columns:auto minmax(0, 1fr) auto; align-items:center; gap:0.6rem;
+  padding:3px 10px; border:0; border-radius:0; cursor:pointer; text-align:left;
+  font-family:var(--font-wx); font-weight:600; font-size:1.1rem; line-height:1.3;
+  color:var(--wx-white); text-shadow:var(--wx-outline-sm); background:transparent;
+}
+.track .track-btn:hover{ background:rgba(95,124,255,0.35); }
+.track-btn:focus-visible{ outline:2px solid var(--wx-gold); outline-offset:-2px; }
+.track.is-current .track-btn{ color:var(--wx-gold); background:linear-gradient(90deg, rgba(95,124,255,0.75), rgba(95,124,255,0.25)); }
+.track-num{ font-family:var(--font-num); color:var(--wx-gold); font-variant-numeric:tabular-nums; }
+.track-title{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.track-meta{ font-family:var(--font-num); font-size:0.95rem; color:var(--wx-dim); font-variant-numeric:tabular-nums; }
+.track.is-current .track-meta{ color:var(--wx-white); }
+.track-empty{ color:var(--wx-white); font-size:1.4rem; text-shadow:var(--wx-outline-sm); padding:2rem 0; }
+
+/* ---------- links page ---------- */
+.link-list{ list-style:none; margin:0 0 2.5rem; padding:0; display:flex; flex-wrap:wrap; gap:0.8rem; }
+.link-card{ display:flex; flex-direction:column; gap:0.2rem; min-width:14rem; padding:0.7rem 1rem; text-transform:none; }
+.link-card-name{ font-size:1.05rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--wx-gold); }
+.link-card-url{ font-size:1rem; font-weight:500; color:var(--wx-white); }
+
+/* ---------- soundcloud embed: in its own panel ---------- */
+.sc-embed-wrap{ padding:0 10px 10px; }
+.sc-embed-wrap > .y2k-titlebar{ margin:0 -10px 10px; }
+.sc-frame{ width:100%; height:500px; border:2px solid var(--wx-deep); border-radius:4px; display:block; background:var(--wx-well); }
+.sc-full-link{
+  display:inline-block; margin-top:1rem; font-size:1.05rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+  color:var(--wx-gold); text-shadow:var(--wx-outline-sm); border-bottom:2px solid var(--wx-amber);
+}
+.sc-full-link:hover{ color:var(--wx-white); }
+
+/* ---------- footer ---------- */
+footer.contact{
+  padding:1.6rem clamp(1rem, 5vw, 4rem) 2rem;
+  display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:space-between; align-items:center;
+  background:linear-gradient(180deg, #1b1870, #0e0a48);
+  border-top:3px solid var(--wx-amber);
+}
+.contact-links{ display:flex; gap:1.4rem; flex-wrap:wrap; }
+.contact-links a{ font-size:1.1rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--wx-gold); text-shadow:var(--wx-outline-sm); }
+.contact-links a:hover{ color:var(--wx-white); }
+
+/* ---------- crawl bar: fixed along the bottom, scrolling what's playing ---------- */
+.wx-crawl{
+  position:fixed; left:0; right:0; bottom:0; z-index:45; height:var(--crawl-h);
+  display:flex; align-items:stretch; overflow:hidden;
+  background:linear-gradient(180deg, #2a3cc0, #121a78);
+  border-top:3px solid var(--wx-amber);
+  box-shadow:0 -4px 14px rgba(0,0,0,0.4);
+}
+.wx-crawl-label{
+  flex:0 0 auto; display:flex; align-items:center; padding:0 1rem 0 clamp(1rem, 5vw, 4rem);
+  font-size:1.05rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:var(--wx-deep);
+  background:linear-gradient(180deg, #fff27a, var(--wx-gold) 45%, var(--wx-amber));
+  clip-path:polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); padding-right:1.6rem;
+}
+.wx-crawl-track{ position:relative; flex:1 1 auto; overflow:hidden; display:flex; align-items:center; }
+.wx-crawl-text{
+  display:inline-block; white-space:nowrap; padding-left:100%;
+  font-size:1.25rem; font-weight:700; letter-spacing:0.03em; color:var(--wx-white); text-shadow:var(--wx-outline-sm);
+  animation:wx-crawl 22s linear infinite;
+}
+@keyframes wx-crawl{ from{ transform:translateX(0); } to{ transform:translateX(-100%); } }
+
+/* ---------- responsive ---------- */
+@media (max-width: 760px){
+  header{ padding-inline:1rem; flex-wrap:wrap; gap:0.4rem 1rem; padding-block:0.5rem; }
+  .wx-date{ display:none; }
+  .sc-frame{ height:380px; }
+  /* readout: clock on top, title and file underneath */
+  .player-info{ grid-template-columns:minmax(0, 1fr); grid-template-areas:"time" "title" "file"; }
+  #timeCur{ font-size:3rem; }
+  .player-title{ font-size:1.6rem; }
+  .wave-canvas{ height:42px; }
+  .discog-grid{ grid-template-columns:1fr; gap:1rem; }
+  .viz-stage{ height:170px; }
+  .wx-crawl-label{ padding-left:1rem; }
+}
+@media (max-width: 420px){
+  /* transport on one row, shuffle and All / List on the next */
+  .player{
+    grid-template-areas:
+      "title title title title title"
+      "info  info  info  info  info"
+      "wave  wave  wave  wave  wave"
+      "prev  play  next  .     ."
+      "shuffle shuffle shuffle shuffle shuffle"
+      "viz   viz   viz   viz   viz";
+  }
+  .player-shuffle{ justify-self:start; }
+  nav.primary-nav a{ padding:0.25rem 0.55rem; font-size:0.85rem; }
+  .hero .chrome-text::after{ font-size:0.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .viz-rgb i{ animation:none !important; }
+  .wx-crawl-text{ animation:none; padding-left:0; }
+  html{ scroll-behavior:auto; }
+}
