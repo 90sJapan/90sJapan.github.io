@@ -4,8 +4,9 @@ Static site for CRMSN. No build step. The page *is* the picture: a 4:3 broadcast
 90s cable weather channel's "local forecast", played off an old tape (soft, slightly colour-bled,
 black either side), retuned for music:
 
-- `index.html`: an intro (sky, sweeping beam, a dial counting down to the next minute ending in 8,
-  *Start Broadcast*, a gear for the colour scheme), then the broadcast with four channels:
+- `index.html`: an intro (a flight through the clouds, a record, today's forecast of what's on: how
+  many tracks and playlists, how long, which song plays first; *Start Broadcast* or *Look around first*;
+  the colour scheme), then the broadcast with four channels:
   **Now Playing**, **Latest Playlists**, **Local Radar** (the visualizer) and **Extended Outlook**
   (every playlist at a glance). The lower band shows one line at a time and holds the buttons:
   channel back / forward, previous, play, next, mute. Shuffle and All / This list are values you

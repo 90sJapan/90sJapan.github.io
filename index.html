@@ -16,7 +16,7 @@
     if (t === 'crimson' || t === 'teal') document.documentElement.dataset.theme = t;
   } catch (e) {}
 </script>
-<link rel="stylesheet" href="tv.css?v=20261107g">
+<link rel="stylesheet" href="tv.css?v=20261107k">
 </head>
 <body>
 
@@ -112,41 +112,33 @@
     </footer>
   </section>
 
-  <!-- ===== the intro: shown until the broadcast starts ===== -->
+  <!-- ===== the intro: what this is, what's on, and a way in ===== -->
   <section class="intro" id="intro" aria-label="Intro">
     <div class="sky" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="beam" id="beam" aria-hidden="true"></div>
-    <button class="intro-corner intro-skip" id="introSkip" type="button" aria-label="Skip intro" title="Skip intro">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
-    </button>
-    <button class="intro-corner mute-btn" type="button" aria-pressed="false" aria-label="Mute" title="Mute">
-      <svg class="icon-sound" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <svg class="icon-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
     <div class="bug intro-bug" aria-hidden="true"><span>CRMSN</span><span>MUSIC</span></div>
 
     <div class="intro-center">
       <p class="intro-title">CRMSN<br>Local Music Forecast</p>
-      <div class="dial" id="dial" aria-hidden="true">
-        <svg viewBox="-60 -60 120 120">
-          <circle class="dial-ring" r="44"/>
-          <circle class="dial-ring dial-ring-in" r="38"/>
-          <g class="dial-ticks" id="dialTicks"></g>
-          <g class="dial-record">
-            <circle r="30" class="rec"/>
-            <circle r="25" class="groove"/><circle r="21" class="groove"/><circle r="17" class="groove"/>
-            <circle r="10" class="rec-label"/>
-            <circle r="1.6" class="rec-hole"/>
-          </g>
-          <g class="dial-needle" id="dialNeedle"><path d="M0 -33 L3.2 0 L0 33 L-3.2 0 Z"/></g>
-        </svg>
-        <div class="dial-nums" id="dialNums"></div>
+      <svg class="record" viewBox="-50 -50 100 100" aria-hidden="true">
+        <circle r="46" class="rec"/>
+        <circle r="40" class="groove"/><circle r="35" class="groove"/><circle r="30" class="groove"/><circle r="25" class="groove"/>
+        <path class="rec-shine" d="M0 -46 A46 46 0 0 1 32.5 -32.5 L0 0 Z"/>
+        <circle r="15" class="rec-label"/>
+        <text class="rec-text" y="1.6">CRMSN</text>
+        <circle r="1.8" class="rec-hole"/>
+      </svg>
+      <dl class="forecast" id="forecast">
+        <div><dt>Today's outlook</dt><dd id="fcOutlook">Loading the playlists…</dd></div>
+        <div><dt>Conditions</dt><dd>Lossless, straight from the studio</dd></div>
+        <div><dt>Up first</dt><dd id="fcFirst">—</dd></div>
+      </dl>
+      <div class="intro-actions">
+        <button class="intro-start" id="listenBtn" type="button">Start Broadcast</button>
+        <button class="intro-quiet" id="introSkip" type="button">Look around first</button>
       </div>
-      <p class="intro-count" id="introCount">The broadcast begins<br>shortly</p>
-      <button class="intro-start" id="listenBtn" type="button">Start Broadcast</button>
       <p class="intro-loc">
         <a href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">SoundCloud</a>
-        <button class="theme-btn" type="button" title="Change the colour scheme"><span class="theme-name">Classic</span>
+        <button class="theme-btn" type="button" title="Change the colour scheme">Picture: <span class="theme-name">Classic</span>
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a7.4 7.4 0 0 0-1.7-1L14.9 3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.4L6.4 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.4 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.4zM12.9 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
         </button>
       </p>
@@ -157,7 +149,7 @@
   <div class="vhs" aria-hidden="true"><i class="vhs-noise"></i><i class="vhs-band"></i></div>
 </div>
 
-<script src="script.js?v=20261107g"></script>
-<script src="tv.js?v=20261107g"></script>
+<script src="script.js?v=20261107k"></script>
+<script src="tv.js?v=20261107k"></script>
 </body>
 </html>

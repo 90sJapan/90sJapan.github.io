@@ -19,41 +19,10 @@
     const n = new Date();
     $('wxTime').textContent = n.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' });
     $('wxDate').textContent = n.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).replace(',', '');
-    intro();
   }
 
-  /* ---------- intro: a dial counting down to the next minute ending in 8 ---------- */
-  const ticks = $('dialTicks'), nums = $('dialNums'), needle = $('dialNeedle'), beam = $('beam'), count = $('introCount');
-  const NS = 'http://www.w3.org/2000/svg';
-  for (let m = 0; m < 60; m++) {                   // 60 minute ticks; the ones ending in 8 are major and numbered
-    const a = m / 60 * Math.PI * 2, major = m % 10 === 8, r0 = major ? 38 : 41;
-    const l = document.createElementNS(NS, 'line');
-    l.setAttribute('x1', Math.sin(a) * r0); l.setAttribute('y1', -Math.cos(a) * r0);
-    l.setAttribute('x2', Math.sin(a) * 44); l.setAttribute('y2', -Math.cos(a) * 44);
-    if (major) l.setAttribute('class', 'major');
-    ticks.appendChild(l);
-    if (major) {
-      const s = document.createElement('span'); s.textContent = m; s.dataset.m = m;
-      s.style.left = (50 + Math.sin(a) * 44) + '%'; s.style.top = (50 - Math.cos(a) * 44) + '%';
-      nums.appendChild(s);
-    }
-  }
+  /* ---------- intro: what this is, what's on, and a way in ---------- */
   let introDone = false;
-  function intro() {
-    if (introDone) return;
-    const n = new Date(), secIntoHour = n.getMinutes() * 60 + n.getSeconds() + n.getMilliseconds() / 1000;
-    const minute = n.getMinutes();
-    let nextM = minute - (minute % 10) + 8; if (nextM <= minute) nextM += 10;    // the next hh:x8:00
-    const left = Math.max(0, Math.round(nextM * 60 - secIntoHour));
-    const prevM = nextM - 10;
-    needle.setAttribute('transform', 'rotate(' + (secIntoHour / 3600 * 360).toFixed(2) + ')');
-    beam.style.setProperty('--from', (prevM / 60 * 360) + 'deg');
-    beam.style.setProperty('--span', Math.max(0.5, (secIntoHour - prevM * 60) / 3600 * 360).toFixed(2) + 'deg');
-    nums.querySelectorAll('span').forEach(s => s.classList.toggle('is-next', +s.dataset.m === nextM % 60));
-    const mm = Math.floor(left / 60), ss = left % 60;
-    count.innerHTML = 'The broadcast begins<br>in ' + (mm ? mm + ' min and ' : '') + ss + ' sec';
-    if (left === 0) start();                       // on the 8s it tunes in by itself (no sound until a button is pressed)
-  }
   function start() {
     if (introDone) return;
     introDone = true;
@@ -61,8 +30,18 @@
     screen.classList.add('is-tuning');
     setTimeout(() => screen.classList.remove('is-tuning'), 800);
   }
+  // the forecast: how much music there is, and which song Start will play
+  function forecast() {
+    const cs = cells(); if (!cs.length) return;
+    const lens = [...grid.querySelectorAll('.track-meta')].map(m => secs(m.textContent));
+    const total = lens.reduce((x, y) => x + y, 0), n = grid.querySelectorAll('.track').length;
+    const h = Math.floor(total / 3600), m = Math.round((total % 3600) / 60);
+    $('fcOutlook').textContent = n + ' tracks · ' + cs.length + ' playlists · ' + (h ? h + ' hr ' + m + ' min' : m + ' min');
+    const t = title.textContent.trim();
+    $('fcFirst').textContent = t && t !== '—' ? t : '—';
+  }
   $('listenBtn').addEventListener('click', start);   // script.js starts the music on the same click
-  $('introSkip').addEventListener('click', start);
+  $('introSkip').addEventListener('click', start);  // in without sound
 
   /* ---------- channels ---------- */
   function go(id, cut) {
@@ -154,6 +133,7 @@
     });
     showCell(Math.min(activeCell, cells().length - 1));
     buildOutlook();
+    forecast();
   }
   new MutationObserver(buildTabs).observe(grid, { childList: true });
 
@@ -201,6 +181,7 @@
   }
   function sync() {
     const file = $('playerFile').textContent, ext = (file.split('.').pop() || '').toUpperCase();
+    forecast();
     $('nowFmt').textContent = file ? ext + (['WAV', 'AIF', 'AIFF', 'FLAC'].includes(ext) ? ' · lossless' : '') : '—';
     markCurrent();
   }
@@ -218,7 +199,7 @@
       out.push('Length: ' + $('timeDur').textContent + '   Format: ' + $('nowFmt').textContent);
     }
     out.push('Full-quality files, straight from the studio');
-    if (!has) out.push(introDone ? 'Press play to tune in' : 'Press start to tune in');
+    if (!has) out.push('Press play to tune in');
     return out;
   }
   function nextLine() {
