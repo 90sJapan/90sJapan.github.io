@@ -1,12 +1,27 @@
 # CRMSN site
 
-Static site for CRMSN. No build step: `index.html` (the discography player), `retro.css` (the retro
-weather-channel design), `script.js` (player), plus `tracks.json` and `discog.py` for the discography. Earlier
-designs are kept in `archive/`: the Winamp skin (`archive/2026-11-07-winamp/`) and Classic / Y2K
-(`archive/2026-10-25-classic-y2k/`), each with a README on how to bring it back. `links.html` (links plus the SoundCloud embed) is hidden for now: it is
-git-ignored and kept locally only.
+Static site for CRMSN. No build step. The page *is* the picture: a 4:3 broadcast in the style of a
+90s cable weather channel's "local forecast", played off an old tape (soft, slightly colour-bled,
+black either side), retuned for music:
 
-`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `retro.css` or
+- `index.html`: an intro (a flight through the clouds, a spinning CD, today's forecast of what's on: how
+  many tracks and playlists, how long, which song plays first; *Start Broadcast* or *Look around first*;
+  the colour scheme), then the broadcast with four channels:
+  **Now Playing**, **Latest Playlists**, **Local Radar** (the visualizer) and **Extended Outlook**
+  (every playlist at a glance). The lower band shows one line at a time and holds the buttons:
+  channel back / forward, previous, play, next, mute. Shuffle and All / This list are values you
+  click on Now Playing. The channels cycle by themselves; a touch stops that for 90 seconds.
+  Keys: `1`–`4` change channel, arrows step through them, space plays / pauses.
+- Colour schemes: Classic, Crimson, Teal (the gear on the intro, or `?theme=crimson` in the URL).
+- `tv.css`: the design. `tv.js`: intro, channels, clock, lower band, playlist tabs, outlook, scheme.
+- `script.js`: the player and visualizer, plus `tracks.json` and `discog.py` for the discography.
+
+Earlier designs are kept in `archive/`, each with a README on how to bring it back:
+the first retro weather page (`archive/2026-11-07-retro-weather/`, a full snapshot), the Winamp skin
+(`archive/2026-11-07-winamp/`) and Classic / Y2K (`archive/2026-10-25-classic-y2k/`).
+`links.html` (links plus the SoundCloud embed) is hidden for now: it is git-ignored and kept locally only.
+
+`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `tv.css`, `tv.js` or
 `script.js`, otherwise visitors' browsers can keep the old copies cached for a while
 after a deploy (GitHub Pages serves everything with a 10-minute cache).
 

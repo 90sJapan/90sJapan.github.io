@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRMSN — music</title>
+<meta name="description" content="Official site and music for CRMSN.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,800&family=Barlow+Semi+Condensed:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="retro.css?v=20261107a">
+</head>
+<body>
+
+<div class="aurora"><span></span><span></span><span></span></div>
+<canvas id="vizBg" class="viz-bg" aria-hidden="true"></canvas>
+<div class="grain"></div>
+<div class="y2k-grid" aria-hidden="true"></div>
+<div class="y2k-sparkles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<header>
+  <a href="#top" class="logo-mark">CRMSN</a>
+  <nav class="primary-nav">
+    <a href="#discography">Discography</a>
+  </nav>
+  <div class="wx-clock" aria-hidden="true"><span class="wx-time" id="wxTime"></span><span class="wx-date" id="wxDate"></span></div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <h1 class="chrome-text">CRMSN</h1>
+    <div class="cta-row">
+      <a href="#discography" class="btn btn-glow" id="listenBtn">Listen now</a>
+    </div>
+  </section>
+
+  <section id="discography">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Discography</h2>
+        <p>Full-quality files, straight from the studio — no streaming compression.</p>
+      </div>
+
+      <div class="player" id="player" hidden>
+        <div class="y2k-titlebar" aria-hidden="true">
+          <span class="y2k-titlebar-text" id="playerFileY2k">crmsn_discography.exe</span>
+          <span class="y2k-titlebar-btns"><i></i><i></i><i></i></span>
+        </div>
+        <div class="player-main">
+          <button class="player-btn" id="playBtn" type="button" aria-label="Play">
+            <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
+          </button>
+          <div class="player-info">
+            <div class="player-title"><span id="playerTitle">—</span></div>
+            <div class="player-sub">
+              <span class="player-time"><span id="timeCur">0:00</span> / <span id="timeDur">0:00</span></span>
+              <span class="player-file" id="playerFile" title="Source file"></span>
+            </div>
+          </div>
+          <div class="player-nav">
+            <button class="player-skip" id="prevBtn" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM19 5v14L9 12z"/></svg></button>
+            <button class="player-skip" id="nextBtn" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM5 5v14l10-7z"/></svg></button>
+          </div>
+          <div class="player-shuffle">
+            <button class="player-skip shuffle-btn" id="shuffleBtn" type="button" aria-pressed="false" aria-label="Shuffle" title="Shuffle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            </button>
+            <button class="scope-switch" id="scopeSwitch" type="button" role="switch" aria-checked="false" title="Play across all playlists, or only the playlist of the current song">
+              <span class="scope-opt scope-all">All</span>
+              <span class="scope-opt scope-list">List</span>
+              <i class="scope-knob" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <div class="player-wave">
+          <canvas class="wave-canvas" id="wave" tabindex="0" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" title="Click or drag to seek"></canvas>
+        </div>
+        <audio id="audio" preload="metadata"></audio>
+        <div class="player-viz">
+          <div class="viz-stage">
+            <canvas id="viz" aria-label="Audio visualizer" title="Click to switch style"></canvas>
+            <p class="viz-hint" id="vizHint" hidden></p>
+          </div>
+          <div class="viz-modes" id="vizModes" role="group" aria-label="Visualizer style"></div>
+        </div>
+      </div>
+
+      <div class="discog-grid" id="trackList" hidden></div>
+      <p class="track-empty" id="trackEmpty" hidden>No tracks uploaded yet — check back soon.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="contact" id="contact">
+  <div>
+    <p class="logo-mark" style="font-size:1.4rem;">CRMSN</p>
+  </div>
+  <div class="contact-links">
+    <a href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">SoundCloud</a>
+  </div>
+</footer>
+
+<div class="wx-crawl" aria-hidden="true">
+  <span class="wx-crawl-label">Now Playing</span>
+  <div class="wx-crawl-track"><span class="wx-crawl-text" id="wxCrawl">CRMSN · full-quality files, straight from the studio · press play on any track below</span></div>
+</div>
+
+<script src="script.js?v=20261107a"></script>
+<script>
+  /* the header clock and the crawl bar: the crawl repeats whatever the player is showing */
+  (function () {
+    var t = document.getElementById('wxTime'), d = document.getElementById('wxDate');
+    function tick() {
+      var n = new Date();
+      t.textContent = n.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+      d.textContent = n.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+    tick(); setInterval(tick, 1000);
+    var title = document.getElementById('playerTitle'), crawl = document.getElementById('wxCrawl'), idle = crawl.textContent;
+    function sync() { var s = title.textContent.trim(); crawl.textContent = s && s !== '\u2014' ? 'CRMSN · ' + s : idle; }
+    new MutationObserver(sync).observe(title, { childList: true, characterData: true, subtree: true });
+  })();
+</script>
+</body>
+</html>
