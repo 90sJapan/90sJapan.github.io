@@ -16,7 +16,7 @@
     if (t === 'crimson' || t === 'teal') document.documentElement.dataset.theme = t;
   } catch (e) {}
 </script>
-<link rel="stylesheet" href="tv.css?v=20261107k">
+<link rel="stylesheet" href="tv.css?v=20261107l">
 </head>
 <body>
 
@@ -119,14 +119,13 @@
 
     <div class="intro-center">
       <p class="intro-title">CRMSN<br>Local Music Forecast</p>
-      <svg class="record" viewBox="-50 -50 100 100" aria-hidden="true">
-        <circle r="46" class="rec"/>
-        <circle r="40" class="groove"/><circle r="35" class="groove"/><circle r="30" class="groove"/><circle r="25" class="groove"/>
-        <path class="rec-shine" d="M0 -46 A46 46 0 0 1 32.5 -32.5 L0 0 Z"/>
-        <circle r="15" class="rec-label"/>
-        <text class="rec-text" y="1.6">CRMSN</text>
-        <circle r="1.8" class="rec-hole"/>
-      </svg>
+      <div class="cd" aria-hidden="true">
+        <i class="cd-sheen"></i>
+        <svg class="cd-print" viewBox="-50 -50 100 100">
+          <defs><path id="cdRing" d="M0 -21.5 A21.5 21.5 0 1 1 -0.01 -21.5"/></defs>
+          <text><textPath href="#cdRing">CRMSN · LOCAL MUSIC FORECAST · CRMSN · LOCAL MUSIC FORECAST ·</textPath></text>
+        </svg>
+      </div>
       <dl class="forecast" id="forecast">
         <div><dt>Today's outlook</dt><dd id="fcOutlook">Loading the playlists…</dd></div>
         <div><dt>Conditions</dt><dd>Lossless, straight from the studio</dd></div>
@@ -149,7 +148,7 @@
   <div class="vhs" aria-hidden="true"><i class="vhs-noise"></i><i class="vhs-band"></i></div>
 </div>
 
-<script src="script.js?v=20261107k"></script>
-<script src="tv.js?v=20261107k"></script>
+<script src="script.js?v=20261107l"></script>
+<script src="tv.js?v=20261107l"></script>
 </body>
 </html>
