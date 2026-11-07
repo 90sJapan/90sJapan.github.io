@@ -1,12 +1,22 @@
 # CRMSN site
 
-Static site for CRMSN. No build step: `index.html` (the discography player), `retro.css` (the retro
-weather-channel design), `script.js` (player), plus `tracks.json` and `discog.py` for the discography. Earlier
-designs are kept in `archive/`: the Winamp skin (`archive/2026-11-07-winamp/`) and Classic / Y2K
-(`archive/2026-10-25-classic-y2k/`), each with a README on how to bring it back. `links.html` (links plus the SoundCloud embed) is hidden for now: it is
-git-ignored and kept locally only.
+Static site for CRMSN. No build step. The whole site is one CRT television showing a 90s
+weather-channel style "local forecast" loop, retuned for music:
 
-`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `retro.css` or
+- `index.html`: the set. An intro screen (sky, sweeping beam, a dial counting down to the next
+  minute ending in 8, *Start Broadcast*), then the broadcast with four channels: **Now Playing**,
+  **Latest Playlists**, **Local Radar** (the visualizer) and **Extended Outlook** (every playlist at a
+  glance). Channel buttons, transport, shuffle, All / List and mute sit in the set's control column.
+  Keys: `1`–`4` change channel, arrows step through them, space plays / pauses.
+- `tv.css`: the design. `tv.js`: intro, channels, auto-cycling, clock, crawl, playlist tabs, outlook.
+- `script.js`: the player and visualizer, plus `tracks.json` and `discog.py` for the discography.
+
+Earlier designs are kept in `archive/`, each with a README on how to bring it back:
+the first retro weather page (`archive/2026-11-07-retro-weather/`, a full snapshot), the Winamp skin
+(`archive/2026-11-07-winamp/`) and Classic / Y2K (`archive/2026-10-25-classic-y2k/`).
+`links.html` (links plus the SoundCloud embed) is hidden for now: it is git-ignored and kept locally only.
+
+`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `tv.css`, `tv.js` or
 `script.js`, otherwise visitors' browsers can keep the old copies cached for a while
 after a deploy (GitHub Pages serves everything with a 10-minute cache).
 
