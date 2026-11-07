@@ -36,6 +36,14 @@
   --viz-hot:#ffffff;
   --viz-bg:#0b0a3c;
 
+  /* the rest of the picture */
+  --head-1:#d0601c; --head-2:#b4482c; --head-3:#6a2a78; --head-4:#2a1a7c;   /* header band, left to right */
+  --crawl-1:#2a3cb0; --crawl-2:#1b2588; --crawl-3:#141b6a;
+  --bug-1:#5b86ff; --bug-2:#2a4fe0; --bug-3:#1b36b4;                        /* the station bug */
+  --cloud:#eceaff; --beam:#ffd26e; --beam-2:#aabeff; --ink:rgba(20,16,70,0.8); --label:#b2273a;
+  --lo:#9fd0ff;
+  --see:100%;                                    /* panel opacity; drops while Ambience / Spikes play behind */
+
   --f-cast:'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
   --f-mono:'IBM Plex Mono', ui-monospace, Menlo, monospace;
 
@@ -45,11 +53,7 @@
 }
 
 /* Ambience / Spikes draw behind the broadcast: while one is on, the panels turn see-through so it shows */
-:root:has(.player-viz.is-bg:not(.is-off)){
-  --b-panel-1:rgba(47,60,182,0.45);
-  --b-panel-2:rgba(37,34,154,0.45);
-  --b-well:rgba(17,15,82,0.45);
-}
+:root:has(.player-viz.is-bg:not(.is-off)){ --see:45%; }
 
 *{box-sizing:border-box;}
 [hidden]{display:none !important;}
@@ -63,6 +67,34 @@ button{font:inherit; color:inherit;}
 a{color:inherit;}
 p, h1, dl, dd{margin:0;}
 :focus-visible{outline:2px solid var(--b-yellow); outline-offset:2px;}
+
+/* ---------- colour schemes: html[data-theme], switched with the set's Picture button ---------- */
+/* Crimson: the band's colour. Deep red panels, gold type, a dusk sky */
+html[data-theme="crimson"]{
+  --b-top:#1c0408; --b-mid:#3e0a14; --b-low:#5e1222;
+  --b-orange:#ff7a2a; --b-amber:#f2b84b; --b-yellow:#ffd76a; --b-dim:#f3c6cb;
+  --b-panel-1:#9a1830; --b-panel-2:#5e0c1e; --b-hi:#ff8f9c; --b-lo:#1e0307; --b-well:#2c050d;
+  --sky-1:#2e0c2c; --sky-2:#6e1f3e; --sky-3:#c45a4e;
+  --viz-a:#ff3b4a; --viz-b:#ffb347; --viz-c:#ffe9a8; --viz-bg:#140308;
+  --head-1:#ff8a2a; --head-2:#d8402a; --head-3:#8a1430; --head-4:#3e0816;
+  --crawl-1:#8a1428; --crawl-2:#600c1c; --crawl-3:#3e0712;
+  --bug-1:#ff6d7c; --bug-2:#d0203a; --bug-3:#a01428;
+  --cloud:#ffd8d2; --beam:#ffc46e; --beam-2:#ff9aa8; --ink:rgba(50,8,16,0.85); --label:#f2b84b;
+  --lo:#ffb6bd;
+}
+/* Teal: a mid-90s daytime look. Teal panels, yellow and magenta, a bright sky */
+html[data-theme="teal"]{
+  --b-top:#03263a; --b-mid:#06506a; --b-low:#0a7486;
+  --b-orange:#ff4fa3; --b-amber:#ff7ac0; --b-yellow:#fff15a; --b-dim:#bff3f5;
+  --b-panel-1:#0f8ea0; --b-panel-2:#075c72; --b-hi:#8ff0f5; --b-lo:#021d2b; --b-well:#043646;
+  --sky-1:#1f78a6; --sky-2:#4fa9c9; --sky-3:#9fdbe4;
+  --viz-a:#19e3ff; --viz-b:#fff15a; --viz-c:#ff4fa3; --viz-bg:#032330;
+  --head-1:#ff4fa3; --head-2:#c63a9c; --head-3:#4a4fae; --head-4:#0b4f74;
+  --crawl-1:#0f8ea0; --crawl-2:#0a6a80; --crawl-3:#064a5c;
+  --bug-1:#4fe3ef; --bug-2:#0b98b4; --bug-3:#077a94;
+  --cloud:#ffffff; --beam:#fff15a; --beam-2:#ff9ad0; --ink:rgba(3,38,58,0.85); --label:#ff4fa3;
+  --lo:#9ff3ff;
+}
 
 /* ---------- the room and the set ---------- */
 .room{ min-height:100%; display:flex; align-items:center; justify-content:center; padding:16px; }
@@ -125,7 +157,7 @@ p, h1, dl, dd{margin:0;}
 }
 .sky i{                                            /* soft clouds drifting across */
   position:absolute; width:46%; height:22%; border-radius:50%;
-  background:radial-gradient(ellipse at 50% 55%, rgba(236,234,255,0.55) 0%, rgba(214,210,250,0.28) 38%, transparent 68%);
+  background:radial-gradient(ellipse at 50% 55%, color-mix(in srgb, var(--cloud) 55%, transparent) 0%, color-mix(in srgb, var(--cloud) 28%, transparent) 38%, transparent 68%);
   filter:blur(calc(var(--u) * 0.6));
   animation:cloud-drift 70s linear infinite;
 }
@@ -143,8 +175,8 @@ p, h1, dl, dd{margin:0;}
   --from:0deg; --span:30deg;
   position:absolute; left:50%; top:47%; width:300%; aspect-ratio:1; transform:translate(-50%, -50%);
   background:
-    conic-gradient(from var(--from), rgba(255,210,110,0.55) 0deg, rgba(255,226,140,0.32) var(--span), transparent var(--span)),
-    conic-gradient(from calc(var(--from) + var(--span)), rgba(170,190,255,0.22) 0deg, rgba(170,190,255,0.22) 52deg, transparent 52deg);
+    conic-gradient(from var(--from), color-mix(in srgb, var(--beam) 55%, transparent) 0deg, color-mix(in srgb, var(--beam) 32%, transparent) var(--span), transparent var(--span)),
+    conic-gradient(from calc(var(--from) + var(--span)), color-mix(in srgb, var(--beam-2) 22%, transparent) 0deg, color-mix(in srgb, var(--beam-2) 22%, transparent) 52deg, transparent 52deg);
   mix-blend-mode:screen; pointer-events:none;
 }
 
@@ -167,9 +199,9 @@ p, h1, dl, dd{margin:0;}
   width:calc(var(--u) * 6.4); aspect-ratio:1; border-radius:18%;
   font-family:var(--f-cast); font-weight:700; line-height:0.95; letter-spacing:0.02em; text-transform:uppercase;
   font-size:calc(var(--u) * 1.25); color:#fff; text-shadow:0 0.08em 0 rgba(0,0,0,0.55);
-  background:linear-gradient(180deg, #5b86ff 0%, #2a4fe0 48%, #1b36b4 52%, #2346cc 100%);
+  background:linear-gradient(180deg, var(--bug-1) 0%, var(--bug-2) 48%, var(--bug-3) 52%, var(--bug-2) 100%);
   border:calc(var(--u) * 0.25) solid #fff;
-  box-shadow:0 0 0 calc(var(--u) * 0.18) #0a1a66, 0 calc(var(--u) * 0.4) calc(var(--u) * 0.8) rgba(0,0,0,0.45);
+  box-shadow:0 0 0 calc(var(--u) * 0.18) var(--b-lo), 0 calc(var(--u) * 0.4) calc(var(--u) * 0.8) rgba(0,0,0,0.45);
 }
 .bug span:last-child{ font-size:0.78em; letter-spacing:0.1em; opacity:0.9; }
 .intro-bug{ position:absolute; top:3%; left:50%; transform:translateX(-50%); z-index:2; }
@@ -183,17 +215,17 @@ p, h1, dl, dd{margin:0;}
 .intro-title{ font-size:calc(var(--u) * 1.75); line-height:1.75; letter-spacing:0.02em; }
 .dial{ position:relative; width:calc(var(--u) * 22); aspect-ratio:1; margin:calc(var(--u) * 1) 0 calc(var(--u) * 0.6); }
 .dial svg{ width:100%; height:100%; overflow:visible; }
-.dial-ring{ fill:none; stroke:rgba(20,16,70,0.75); stroke-width:0.8; }
+.dial-ring{ fill:none; stroke:var(--ink); stroke-width:0.8; }
 .dial-ring-in{ stroke-width:0.5; }
-.dial-ticks line{ stroke:rgba(20,16,70,0.85); stroke-width:0.7; }
+.dial-ticks line{ stroke:var(--ink); stroke-width:0.7; }
 .dial-ticks line.major{ stroke-width:1.3; }
 .rec{ fill:#1a1430; stroke:rgba(255,255,255,0.15); stroke-width:0.4; }
 .groove{ fill:none; stroke:rgba(255,255,255,0.08); stroke-width:0.5; }
-.rec-label{ fill:#b2273a; stroke:#7a1424; stroke-width:0.5; }
+.rec-label{ fill:var(--label); stroke:var(--b-lo); stroke-width:0.5; }
 .rec-hole{ fill:#e8e6f6; }
 .dial-record{ transform-origin:0 0; animation:spin 4s linear infinite; }
 @keyframes spin{ to{ transform:rotate(360deg); } }
-.dial-needle path{ fill:#f4f3ff; stroke:rgba(30,26,90,0.6); stroke-width:0.4; }
+.dial-needle path{ fill:#f4f3ff; stroke:var(--ink); stroke-width:0.4; }
 .dial-needle{ filter:drop-shadow(0 0.6px 0.6px rgba(0,0,0,0.5)); }
 .dial-nums span{
   position:absolute; transform:translate(-50%, -50%);
@@ -231,7 +263,7 @@ p, h1, dl, dd{margin:0;}
   height:calc(var(--u) * 11); padding:0 calc(var(--u) * 4.5);
   background:
     linear-gradient(176deg, rgba(0,0,0,0) 62%, rgba(0,0,0,0.25) 100%),
-    linear-gradient(90deg, var(--b-orange) 0%, #b4482c 12%, #6a2a78 34%, #2a1a7c 58%, var(--b-top) 100%);
+    linear-gradient(90deg, var(--head-1) 0%, var(--head-2) 12%, var(--head-3) 34%, var(--head-4) 58%, var(--b-top) 100%);
   border-bottom:calc(var(--u) * 0.32) solid var(--b-amber);
 }
 .cast-head::after{                                 /* thin highlight line under the band */
@@ -258,7 +290,7 @@ p, h1, dl, dd{margin:0;}
 /* the panel: blue with a bevelled frame, lighter top-left, darker bottom-right */
 .panel{
   height:100%; min-height:0;
-  background:linear-gradient(180deg, var(--b-panel-1), var(--b-panel-2));
+  background:linear-gradient(180deg, color-mix(in srgb, var(--b-panel-1) var(--see), transparent), color-mix(in srgb, var(--b-panel-2) var(--see), transparent));
   border:calc(var(--u) * 0.45) solid; border-color:var(--b-hi) var(--b-lo) var(--b-lo) var(--b-hi);
   box-shadow:0 0 0 calc(var(--u) * 0.2) #000, calc(var(--u) * 0.6) calc(var(--u) * 0.6) 0 rgba(0,0,0,0.35);
 }
@@ -337,7 +369,7 @@ p, h1, dl, dd{margin:0;}
 .track-list::-webkit-scrollbar-thumb{ background:var(--b-hi); border:2px solid var(--b-lo); }
 .track-sep{
   display:flex; justify-content:space-between; gap:calc(var(--u) * 1); padding:calc(var(--u) * 0.6) calc(var(--u) * 1) calc(var(--u) * 0.2);
-  font-size:calc(var(--u) * 1.7); color:var(--b-amber); border-top:calc(var(--u) * 0.2) solid rgba(240,162,46,0.5);
+  font-size:calc(var(--u) * 1.7); color:var(--b-amber); border-top:calc(var(--u) * 0.2) solid color-mix(in srgb, var(--b-amber) 50%, transparent);
 }
 .track-sep:first-child{ border-top:0; }
 .track-sep-name{ text-transform:uppercase; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -366,12 +398,12 @@ p, h1, dl, dd{margin:0;}
 .viz-stage::after{                                 /* map grid with a sweeping radar arm */
   content:""; position:absolute; inset:0; pointer-events:none;
   background:
-    linear-gradient(rgba(154,160,255,0.16) 1px, transparent 1px) 0 0 / calc(var(--u) * 4) calc(var(--u) * 4),
-    linear-gradient(90deg, rgba(154,160,255,0.16) 1px, transparent 1px) 0 0 / calc(var(--u) * 4) calc(var(--u) * 4);
+    linear-gradient(color-mix(in srgb, var(--b-hi) 16%, transparent) 1px, transparent 1px) 0 0 / calc(var(--u) * 4) calc(var(--u) * 4),
+    linear-gradient(90deg, color-mix(in srgb, var(--b-hi) 16%, transparent) 1px, transparent 1px) 0 0 / calc(var(--u) * 4) calc(var(--u) * 4);
 }
 .viz-stage::before{
   content:""; position:absolute; left:50%; top:50%; width:150%; aspect-ratio:1; transform:translate(-50%, -50%);
-  background:conic-gradient(from 0deg, rgba(255,225,74,0.16), transparent 50deg);
+  background:conic-gradient(from 0deg, color-mix(in srgb, var(--b-yellow) 16%, transparent), transparent 50deg);
   animation:spin 6s linear infinite; pointer-events:none; z-index:1; mix-blend-mode:screen;
 }
 .viz-hint{
@@ -422,13 +454,13 @@ p, h1, dl, dd{margin:0;}
 .day-hilo{ display:flex; gap:calc(var(--u) * 1.4); font-size:calc(var(--u) * 1.6); }
 .day-hilo span{ display:flex; flex-direction:column; align-items:center; }
 .day-hilo b{ font-size:calc(var(--u) * 2.6); font-weight:600; color:#fff; font-variant-numeric:tabular-nums; }
-.day-hilo .lo{ color:#9fd0ff; } .day-hilo .hi{ color:var(--b-yellow); }
+.day-hilo .lo{ color:var(--lo); } .day-hilo .hi{ color:var(--b-yellow); }
 .day.has-current{ border-color:var(--b-yellow) var(--b-amber) var(--b-amber) var(--b-yellow); }
 
 /* ---------- crawl ---------- */
 .crawl{
   display:flex; align-items:stretch; height:calc(var(--u) * 6.4); overflow:hidden;
-  background:linear-gradient(180deg, #2a3cb0 0%, #1b2588 60%, #141b6a 100%);
+  background:linear-gradient(180deg, var(--crawl-1) 0%, var(--crawl-2) 60%, var(--crawl-3) 100%);
   border-top:calc(var(--u) * 0.32) solid var(--b-hi);
 }
 .crawl-label{
@@ -550,3 +582,6 @@ body:has(#player.is-playing) .player-btn .icon-pause{ display:block; }
   .crawl-text{ animation:none; padding-left:0; }
   .tv-screen.is-tuning .cast, .page.is-cut{ animation:none; }
 }
+
+/* the Picture button's lamp shows the current scheme's accent */
+.picture-btn i{ background:var(--b-yellow); box-shadow:0 0 6px var(--b-yellow); }

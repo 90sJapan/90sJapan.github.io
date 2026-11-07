@@ -197,6 +197,22 @@
   new MutationObserver(() => { $('nowShuffle').textContent = shuffleBtn.getAttribute('aria-pressed') === 'true' ? 'On' : 'Off'; })
     .observe(shuffleBtn, { attributes: true, attributeFilter: ['aria-pressed'] });
 
+  /* ---------- picture: the colour scheme ---------- */
+  const THEMES = [{ id: 'classic', name: 'Classic' }, { id: 'crimson', name: 'Crimson' }, { id: 'teal', name: 'Teal' }];
+  const root = document.documentElement;
+  function showTheme() { $('pictureName').textContent = (THEMES.find(t => t.id === (root.dataset.theme || 'classic')) || THEMES[0]).name; }
+  $('pictureBtn').addEventListener('click', () => {
+    const i = THEMES.findIndex(t => t.id === (root.dataset.theme || 'classic'));
+    const next = THEMES[(i + 1) % THEMES.length].id;
+    if (next === 'classic') delete root.dataset.theme; else root.dataset.theme = next;   // script.js recolours the visualizer on this change
+    try { localStorage.setItem('crmsn-theme', next); } catch (e) {}
+    showTheme();
+  });
+  showTheme();
+
   go('now'); syncMute(); tick();
+  // script.js may have loaded the tracks before this file ran: catch up on anything already there
+  if (grid.children.length) buildTabs();
+  sync();
   setInterval(tick, 1000);
 })();

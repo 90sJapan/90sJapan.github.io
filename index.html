@@ -8,7 +8,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="tv.css?v=20261107b">
+<script>
+  /* colour scheme before first paint: ?theme= in the URL, else the visitor's last pick */
+  try {
+    var q = new URLSearchParams(location.search).get('theme'), t = q || localStorage.getItem('crmsn-theme');
+    if (t === 'crimson' || t === 'teal') document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="stylesheet" href="tv.css?v=20261107d">
 </head>
 <body>
 
@@ -156,6 +163,7 @@
         <span class="scope-opt scope-list">List</span>
       </button>
       <button class="rocker mute-btn" type="button" aria-pressed="false" aria-label="Mute" title="Mute"><i aria-hidden="true"></i>Mute</button>
+      <button class="rocker picture-btn" id="pictureBtn" type="button" title="Change the colour scheme"><i aria-hidden="true"></i>Picture: <span id="pictureName">Classic</span></button>
     </div>
     <div class="tv-grille" aria-hidden="true"></div>
   </div>
@@ -163,7 +171,7 @@
 </div>
 </div>
 
-<script src="script.js?v=20261107b"></script>
-<script src="tv.js?v=20261107b"></script>
+<script src="script.js?v=20261107d"></script>
+<script src="tv.js?v=20261107d"></script>
 </body>
 </html>
