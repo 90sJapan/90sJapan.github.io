@@ -1,11 +1,12 @@
 # CRMSN site
 
-Static site for CRMSN. No build step: `index.html` (the discography player), `winamp.css` (the Winamp
-design), `script.js` (player), plus `tracks.json` and `discog.py` for the discography. The earlier Classic /
-Y2K design is kept in `archive/`. `links.html` (links plus the SoundCloud embed) is hidden for now: it is
+Static site for CRMSN. No build step: `index.html` (the discography player), `retro.css` (the retro
+weather-channel design), `script.js` (player), plus `tracks.json` and `discog.py` for the discography. Earlier
+designs are kept in `archive/`: the Winamp skin (`archive/2026-11-07-winamp/`) and Classic / Y2K
+(`archive/2026-10-25-classic-y2k/`), each with a README on how to bring it back. `links.html` (links plus the SoundCloud embed) is hidden for now: it is
 git-ignored and kept locally only.
 
-`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `winamp.css` or
+`index.html` links its CSS/JS with a `?v=…` tag; bump that number whenever you change `retro.css` or
 `script.js`, otherwise visitors' browsers can keep the old copies cached for a while
 after a deploy (GitHub Pages serves everything with a 10-minute cache).
 
