@@ -1,14 +1,18 @@
 # CRMSN site
 
-Static site for CRMSN. No build step. The whole site is one CRT television showing a 90s
-weather-channel style "local forecast" loop, retuned for music:
+Static site for CRMSN. No build step. The page *is* the picture: a 4:3 broadcast in the style of a
+90s cable weather channel's "local forecast", played off an old tape (soft, slightly colour-bled,
+black either side), retuned for music:
 
-- `index.html`: the set. An intro screen (sky, sweeping beam, a dial counting down to the next
-  minute ending in 8, *Start Broadcast*), then the broadcast with four channels: **Now Playing**,
-  **Latest Playlists**, **Local Radar** (the visualizer) and **Extended Outlook** (every playlist at a
-  glance). Channel buttons, transport, shuffle, All / List and mute sit in the set's control column.
+- `index.html`: an intro (sky, sweeping beam, a dial counting down to the next minute ending in 8,
+  *Start Broadcast*, a gear for the colour scheme), then the broadcast with four channels:
+  **Now Playing**, **Latest Playlists**, **Local Radar** (the visualizer) and **Extended Outlook**
+  (every playlist at a glance). The lower band shows one line at a time and holds the buttons:
+  channel back / forward, previous, play, next, mute. Shuffle and All / This list are values you
+  click on Now Playing. The channels cycle by themselves; a touch stops that for 90 seconds.
   Keys: `1`–`4` change channel, arrows step through them, space plays / pauses.
-- `tv.css`: the design. `tv.js`: intro, channels, auto-cycling, clock, crawl, playlist tabs, outlook.
+- Colour schemes: Classic, Crimson, Teal (the gear on the intro, or `?theme=crimson` in the URL).
+- `tv.css`: the design. `tv.js`: intro, channels, clock, lower band, playlist tabs, outlook, scheme.
 - `script.js`: the player and visualizer, plus `tracks.json` and `discog.py` for the discography.
 
 Earlier designs are kept in `archive/`, each with a README on how to bring it back:

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRMSN — Local Music Forecast</title>
 <meta name="description" content="Official site and music for CRMSN.">
+<meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -15,163 +16,148 @@
     if (t === 'crimson' || t === 'teal') document.documentElement.dataset.theme = t;
   } catch (e) {}
 </script>
-<link rel="stylesheet" href="tv.css?v=20261107d">
+<link rel="stylesheet" href="tv.css?v=20261107e">
 </head>
 <body>
 
-<div class="room">
-<div class="tv">
+<!-- the whole page is the picture: a 4:3 broadcast, black either side, played off an old tape -->
+<div class="screen" id="screen" data-view="intro" data-page="now">
 
-  <!-- the screen: everything happens inside this 4:3 CRT -->
-  <div class="tv-screen" id="screen" data-view="intro" data-page="now">
+  <!-- ===== the broadcast ===== -->
+  <div class="cast-bg" aria-hidden="true"></div>
+  <canvas id="vizBg" class="viz-bg" aria-hidden="true"></canvas>
 
-    <!-- ===== the broadcast ===== -->
-    <div class="cast-bg" aria-hidden="true"></div>
-    <canvas id="vizBg" class="viz-bg" aria-hidden="true"></canvas>
+  <section class="cast" id="cast" aria-label="CRMSN broadcast">
+    <header class="cast-head">
+      <div class="bug" aria-hidden="true"><span>CRMSN</span><span>MUSIC</span></div>
+      <h1 class="cast-title"><button type="button" id="castTitle" title="Next channel"><span id="castT1">Now</span><span id="castT2">Playing</span></button></h1>
+      <div class="cast-clock" aria-hidden="true"><span id="wxTime"></span><span id="wxDate"></span></div>
+    </header>
 
-    <section class="cast" id="cast" aria-label="CRMSN broadcast">
-      <header class="cast-head">
-        <div class="bug" aria-hidden="true"><span>CRMSN</span><span>MUSIC</span></div>
-        <h1 class="cast-title"><span id="castT1">Now</span><span id="castT2">Playing</span></h1>
-        <div class="cast-clock" aria-hidden="true"><span id="wxTime"></span><span id="wxDate"></span></div>
-      </header>
+    <main class="cast-body" id="castBody">
 
-      <main class="cast-body" id="castBody">
-
-        <!-- channel 1: now playing (current conditions) -->
-        <div class="page" data-page="now">
-          <div class="panel player" id="player" hidden>
-            <span id="playerFileY2k" hidden></span>
-            <div class="now-grid">
-              <div class="now-main">
-                <div class="now-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-                <div class="player-info">
-                  <span class="player-time"><span id="timeCur">0:00</span></span>
-                  <span class="now-state" aria-hidden="true"></span>
-                </div>
-              </div>
-              <dl class="now-stats">
-                <div class="stat stat-title"><dt>Track</dt><dd class="player-title"><span id="playerTitle">—</span></dd></div>
-                <div class="stat"><dt>Length</dt><dd id="timeDur">0:00</dd></div>
-                <div class="stat"><dt>Playlist</dt><dd id="nowList">—</dd></div>
-                <div class="stat"><dt>Format</dt><dd id="nowFmt">—</dd></div>
-                <div class="stat"><dt>Shuffle</dt><dd id="nowShuffle">Off</dd></div>
-                <div class="stat stat-file"><dt>File</dt><dd class="player-file" id="playerFile"></dd></div>
-              </dl>
-            </div>
-            <div class="player-wave">
-              <canvas class="wave-canvas" id="wave" tabindex="0" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" title="Click or drag to seek"></canvas>
-            </div>
-            <audio id="audio" preload="metadata"></audio>
+      <!-- channel 1: now playing, laid out like current conditions -->
+      <div class="page" data-page="now">
+        <div class="panel player" id="player" hidden>
+          <span id="playerFileY2k" hidden></span>
+          <div class="now-left">
+            <span class="player-time"><span id="timeCur">0:00</span></span>
+            <span class="now-state" aria-hidden="true"></span>
+            <div class="now-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="now-len">Length: <span id="timeDur">0:00</span></span>
           </div>
-          <p class="panel track-empty" id="trackEmpty" hidden>No tracks uploaded yet — check back soon.</p>
-        </div>
-
-        <!-- channel 2: playlists (latest observations) -->
-        <div class="page" data-page="lists">
-          <div class="panel lists-panel">
-            <div class="list-tabs" id="listTabs" role="tablist" aria-label="Playlists"></div>
-            <div class="discog-grid" id="trackList" hidden></div>
+          <div class="now-right">
+            <p class="player-title"><span id="playerTitle">—</span></p>
+            <dl class="now-stats">
+              <div class="stat"><dt>Playlist:</dt><dd id="nowList">—</dd></div>
+              <div class="stat"><dt>Track No:</dt><dd id="nowNum">—</dd></div>
+              <div class="stat"><dt>Format:</dt><dd id="nowFmt">—</dd></div>
+              <div class="stat"><dt>Shuffle:</dt><dd><button class="stat-btn shuffle-btn" id="shuffleBtn" type="button" aria-pressed="false" aria-label="Shuffle" title="Shuffle on / off"></button></dd></div>
+              <div class="stat"><dt>Plays from:</dt><dd><button class="stat-btn scope-switch" id="scopeSwitch" type="button" role="switch" aria-checked="false" title="Play across all playlists, or only the playlist of the current song"><span class="scope-opt scope-all">All lists</span><span class="scope-opt scope-list">This list</span></button></dd></div>
+            </dl>
+            <p class="player-file" id="playerFile"></p>
           </div>
-        </div>
-
-        <!-- channel 3: visualizer (local radar) -->
-        <div class="page" data-page="radar">
-          <div class="panel radar-panel player-viz">
-            <div class="viz-stage">
-              <canvas id="viz" aria-label="Audio visualizer" title="Click to switch style"></canvas>
-              <p class="viz-hint" id="vizHint" hidden></p>
-            </div>
-            <div class="viz-modes" id="vizModes" role="group" aria-label="Visualizer style"></div>
+          <div class="player-wave">
+            <canvas class="wave-canvas" id="wave" tabindex="0" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" title="Click or drag to seek"></canvas>
           </div>
+          <audio id="audio" preload="metadata"></audio>
         </div>
-
-        <!-- channel 4: every playlist at a glance (extended outlook) -->
-        <div class="page" data-page="outlook">
-          <div class="outlook" id="outlook"></div>
-        </div>
-
-      </main>
-
-      <footer class="crawl">
-        <span class="crawl-label">Now Playing</span>
-        <div class="crawl-track"><span class="crawl-text" id="crawl">CRMSN · full-quality files, straight from the studio · press START to tune in</span></div>
-      </footer>
-    </section>
-
-    <!-- ===== the intro: shown until the broadcast starts ===== -->
-    <section class="intro" id="intro" aria-label="Intro">
-      <div class="sky" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="beam" id="beam" aria-hidden="true"></div>
-      <button class="intro-corner intro-skip" id="introSkip" type="button" aria-label="Skip intro" title="Skip intro">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
-      </button>
-      <button class="intro-corner mute-btn" type="button" aria-pressed="false" aria-label="Mute" title="Mute">
-        <svg class="icon-sound" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <svg class="icon-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
-      <div class="bug intro-bug" aria-hidden="true"><span>CRMSN</span><span>MUSIC</span></div>
-
-      <div class="intro-center">
-        <p class="intro-title">CRMSN<br>Local Music Forecast</p>
-        <div class="dial" id="dial" aria-hidden="true">
-          <svg viewBox="-60 -60 120 120">
-            <circle class="dial-ring" r="44"/>
-            <circle class="dial-ring dial-ring-in" r="38"/>
-            <g class="dial-ticks" id="dialTicks"></g>
-            <g class="dial-record">
-              <circle r="30" class="rec"/>
-              <circle r="25" class="groove"/><circle r="21" class="groove"/><circle r="17" class="groove"/>
-              <circle r="10" class="rec-label"/>
-              <circle r="1.6" class="rec-hole"/>
-            </g>
-            <g class="dial-needle" id="dialNeedle"><path d="M0 -33 L3.2 0 L0 33 L-3.2 0 Z"/></g>
-          </svg>
-          <div class="dial-nums" id="dialNums"></div>
-        </div>
-        <p class="intro-count" id="introCount">The broadcast begins<br>shortly</p>
-        <button class="intro-start" id="listenBtn" type="button">Start Broadcast</button>
-        <p class="intro-loc">CRMSN · <a href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">SoundCloud</a></p>
+        <p class="panel track-empty" id="trackEmpty" hidden>No tracks uploaded yet — check back soon.</p>
       </div>
-    </section>
 
-    <div class="crt-fx" aria-hidden="true"></div>
-  </div>
+      <!-- channel 2: playlists, like latest observations -->
+      <div class="page" data-page="lists">
+        <div class="panel lists-panel">
+          <div class="list-tabs" id="listTabs" role="tablist" aria-label="Playlists"></div>
+          <div class="discog-grid" id="trackList" hidden></div>
+        </div>
+      </div>
 
-  <!-- the set's front panel: channels, transport and the power light -->
-  <div class="tv-panel">
-    <div class="tv-brand"><span class="power-led" aria-hidden="true"></span>CRMSN<small>Model CR-4000</small></div>
+      <!-- channel 3: the visualizer, as local radar -->
+      <div class="page" data-page="radar">
+        <div class="panel radar-panel player-viz">
+          <div class="viz-stage">
+            <canvas id="viz" aria-label="Audio visualizer" title="Click to switch style"></canvas>
+            <p class="viz-hint" id="vizHint" hidden></p>
+          </div>
+          <div class="viz-modes" id="vizModes" role="group" aria-label="Visualizer style"></div>
+        </div>
+      </div>
 
-    <div class="tv-channels" role="tablist" aria-label="Channels">
-      <button class="ch-btn" type="button" data-go="now"><b>1</b>Now</button>
-      <button class="ch-btn" type="button" data-go="lists"><b>2</b>Lists</button>
-      <button class="ch-btn" type="button" data-go="radar"><b>3</b>Radar</button>
-      <button class="ch-btn" type="button" data-go="outlook"><b>4</b>Outlook</button>
-      <button class="ch-btn ch-auto" type="button" id="autoBtn" aria-pressed="true" title="Cycle the channels by themselves, like the real thing"><i aria-hidden="true"></i>Auto</button>
+      <!-- channel 4: every playlist at a glance, like the extended forecast -->
+      <div class="page" data-page="outlook">
+        <div class="outlook" id="outlook"></div>
+      </div>
+
+    </main>
+
+    <!-- the lower band: one line at a time on the left, the buttons on the right -->
+    <footer class="band">
+      <p class="band-text" id="bandText" aria-live="polite">CRMSN Local Music Forecast</p>
+      <div class="band-btns">
+        <button class="sq sq-ch" id="chPrev" type="button" aria-label="Previous channel" title="Previous channel"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 5v14L6 12z"/></svg></button>
+        <button class="sq sq-ch" id="chNext" type="button" aria-label="Next channel" title="Next channel"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 5v14l9-7z"/></svg></button>
+        <span class="band-gap" aria-hidden="true"></span>
+        <button class="sq player-skip" id="prevBtn" type="button" aria-label="Previous track" title="Previous track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM19 5v14L9 12z"/></svg></button>
+        <button class="sq player-btn" id="playBtn" type="button" aria-label="Play" title="Play / pause">
+          <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
+        </button>
+        <button class="sq player-skip" id="nextBtn" type="button" aria-label="Next track" title="Next track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM5 5v14l10-7z"/></svg></button>
+        <button class="sq mute-btn" type="button" aria-pressed="false" aria-label="Mute" title="Mute">
+          <svg class="icon-sound" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="icon-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ===== the intro: shown until the broadcast starts ===== -->
+  <section class="intro" id="intro" aria-label="Intro">
+    <div class="sky" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="beam" id="beam" aria-hidden="true"></div>
+    <button class="intro-corner intro-skip" id="introSkip" type="button" aria-label="Skip intro" title="Skip intro">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <button class="intro-corner mute-btn" type="button" aria-pressed="false" aria-label="Mute" title="Mute">
+      <svg class="icon-sound" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg class="icon-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="bug intro-bug" aria-hidden="true"><span>CRMSN</span><span>MUSIC</span></div>
+
+    <div class="intro-center">
+      <p class="intro-title">CRMSN<br>Local Music Forecast</p>
+      <div class="dial" id="dial" aria-hidden="true">
+        <svg viewBox="-60 -60 120 120">
+          <circle class="dial-ring" r="44"/>
+          <circle class="dial-ring dial-ring-in" r="38"/>
+          <g class="dial-ticks" id="dialTicks"></g>
+          <g class="dial-record">
+            <circle r="30" class="rec"/>
+            <circle r="25" class="groove"/><circle r="21" class="groove"/><circle r="17" class="groove"/>
+            <circle r="10" class="rec-label"/>
+            <circle r="1.6" class="rec-hole"/>
+          </g>
+          <g class="dial-needle" id="dialNeedle"><path d="M0 -33 L3.2 0 L0 33 L-3.2 0 Z"/></g>
+        </svg>
+        <div class="dial-nums" id="dialNums"></div>
+      </div>
+      <p class="intro-count" id="introCount">The broadcast begins<br>shortly</p>
+      <button class="intro-start" id="listenBtn" type="button">Start Broadcast</button>
+      <p class="intro-loc">
+        <a href="https://soundcloud.com/officialcrmsn" target="_blank" rel="noopener">SoundCloud</a>
+        <button class="theme-btn" type="button" title="Change the colour scheme"><span class="theme-name">Classic</span>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a7.4 7.4 0 0 0-1.7-1L14.9 3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.4L6.4 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.4 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.4zM12.9 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+        </button>
+      </p>
     </div>
+  </section>
 
-    <div class="tv-transport">
-      <button class="knob player-skip" id="prevBtn" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM19 5v14L9 12z"/></svg></button>
-      <button class="knob knob-big player-btn" id="playBtn" type="button" aria-label="Play">
-        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>
-        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
-      </button>
-      <button class="knob player-skip" id="nextBtn" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM5 5v14l10-7z"/></svg></button>
-      <button class="rocker shuffle-btn" id="shuffleBtn" type="button" aria-pressed="false" aria-label="Shuffle" title="Shuffle"><i aria-hidden="true"></i>Shuffle</button>
-      <button class="rocker scope-switch" id="scopeSwitch" type="button" role="switch" aria-checked="false" title="Play across all playlists, or only the playlist of the current song">
-        <span class="scope-opt scope-all">All</span>
-        <span class="scope-opt scope-list">List</span>
-      </button>
-      <button class="rocker mute-btn" type="button" aria-pressed="false" aria-label="Mute" title="Mute"><i aria-hidden="true"></i>Mute</button>
-      <button class="rocker picture-btn" id="pictureBtn" type="button" title="Change the colour scheme"><i aria-hidden="true"></i>Picture: <span id="pictureName">Classic</span></button>
-    </div>
-    <div class="tv-grille" aria-hidden="true"></div>
-  </div>
-
-</div>
+  <!-- the tape: noise, scanlines and a soft rolling band over everything -->
+  <div class="vhs" aria-hidden="true"><i class="vhs-noise"></i><i class="vhs-band"></i></div>
 </div>
 
-<script src="script.js?v=20261107d"></script>
-<script src="tv.js?v=20261107d"></script>
+<script src="script.js?v=20261107e"></script>
+<script src="tv.js?v=20261107e"></script>
 </body>
 </html>
