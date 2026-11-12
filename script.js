@@ -638,9 +638,10 @@ const viz = (function () {
   setShuffle(shuffle); setScope(scope);
 
   playBtn.addEventListener('click', toggle);
-  // "Listen now" scrolls down to the player (its href) and starts it
+  // Start Broadcast starts the music; pressed before the track list has loaded, it plays once it arrives
+  let wantPlay = false;
   document.getElementById('listenBtn').addEventListener('click', () => {
-    if (!tracks.length) return;
+    if (!tracks.length) { wantPlay = true; return; }
     if (current < 0) load(0, true); else audio.play().catch(() => {});
   });
   document.getElementById('prevBtn').addEventListener('click', () => step(-1));
@@ -669,7 +670,7 @@ const viz = (function () {
       player.hidden = false;
       grid.hidden = false;
       render();
-      load(0, false);
+      load(0, wantPlay);
     })
     .catch(() => { empty.hidden = false; });
 })();

@@ -479,21 +479,58 @@ body:has(#player.is-playing) .player-btn .icon-pause{ display:block; }
   .cast-title button{ font-size:calc(var(--u) * 3.2); }
   .cast-clock{ right:4%; top:calc(var(--u) * 2.2); font-size:calc(var(--u) * 2.4); }
   .cast-bg::after{ width:36%; height:calc(var(--u) * 12); }
-  .cast-body{ left:4%; right:4%; top:calc(var(--u) * 14); bottom:calc(var(--u) * 12); }
-  .band{ height:calc(var(--u) * 11); padding:0 4%; flex-direction:column; justify-content:center; align-items:stretch; gap:calc(var(--u) * 1); }
-  .band-text{ font-size:calc(var(--u) * 2.6); }
+  /* the band holds a line of text over a row of thumb-sized buttons, so it needs more room than on a 4:3 picture */
+  .cast-body{ left:4%; right:4%; top:calc(var(--u) * 14); bottom:calc(var(--u) * 16.5); }
+  .band{ height:calc(var(--u) * 15); padding:0 4%; flex-direction:column; justify-content:center; align-items:stretch; gap:calc(var(--u) * 1.2); }
+  .band-text{ flex:0 0 auto; font-size:calc(var(--u) * 2.6); }
   .band-btns{ justify-content:space-between; }
-  .sq{ width:calc(var(--u) * 5); height:calc(var(--u) * 5); }
-  .player{ grid-template-columns:1fr; grid-template-rows:auto minmax(0, 1fr) auto; }
+  .sq{ width:calc(var(--u) * 6.4); height:calc(var(--u) * 6.4); }
+  /* now playing: stacked, with the spare height shared out instead of pooling above the waveform */
+  .player{ grid-template-columns:1fr; grid-template-rows:auto auto auto; align-content:space-evenly; }
   .now-left{ flex-direction:row; flex-wrap:wrap; justify-content:center; gap:calc(var(--u) * 1) calc(var(--u) * 3); }
-  .now-icon{ height:calc(var(--u) * 8); order:-1; }
-  .outlook{ grid-auto-flow:row; grid-template-columns:repeat(2, minmax(0, 1fr)); grid-auto-columns:auto; grid-auto-rows:minmax(0, 1fr); }
+  .now-icon{ height:calc(var(--u) * 9); order:-1; }
+  .now-stats{ gap:calc(var(--u) * 1.4); }
+  .player-file{ margin-top:calc(var(--u) * 1.6); }
+  .wave-canvas{ height:calc(var(--u) * 6); }
+  /* bigger touch targets for the small text buttons */
+  .stat-btn{ padding:calc(var(--u) * 0.6) 0 calc(var(--u) * 0.2) calc(var(--u) * 2); }
+  .list-tab, .viz-mode, .viz-rgb, .viz-power{ font-size:calc(var(--u) * 2.4); padding:calc(var(--u) * 0.8) 0; }
+  .list-tabs{ gap:0 calc(var(--u) * 2.2); }
+  .track-btn{ padding:calc(var(--u) * 0.7) calc(var(--u) * 0.6); }
+  /* the radar sweep is a square centred on the stage: on a tall stage it must be big enough to reach the corners */
+  .viz-stage::before{ width:300%; }
+  /* two cards a row; rows never squash a card's contents (Safari's toolbars leave little height), the channel scrolls instead */
+  .outlook{ grid-auto-flow:row; grid-template-columns:repeat(2, minmax(0, 1fr)); grid-auto-columns:auto; grid-auto-rows:minmax(max-content, 1fr);
+    overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; }
+  .outlook::-webkit-scrollbar{ display:none; }
+  .day{ padding:calc(var(--u) * 1.2) calc(var(--u) * 0.6); gap:calc(var(--u) * 0.4); }
+  .day > *{ flex-shrink:0; }
+  .day-icon{ height:calc(var(--u) * 4.5); }
   .intro-center{ padding-top:calc(var(--u) * 10); }
   .intro-bug{ width:calc(var(--u) * 9); }
   .forecast div{ grid-template-columns:1fr; gap:0; text-align:center; }
   .forecast dt{ text-align:center; }
   .forecast dd{ max-width:none; white-space:normal; }
   .intro-actions{ flex-direction:column; }
+  .intro-quiet{ font-size:calc(var(--u) * 2); padding:calc(var(--u) * 1) 0 0; }
+  .intro-loc{ font-size:calc(var(--u) * 1.8); }
+  .intro-loc a, .theme-btn{ padding:calc(var(--u) * 1) 0; }
+  .intro-loc a{ border-bottom:0; text-decoration:underline; text-underline-offset:0.3em; }
+}
+
+/* ---------- phones held sideways: the 4:3 picture is short, so the controls and the intro's small type grow ---------- */
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse){
+  .sq{ width:calc(var(--u) * 6.2); height:calc(var(--u) * 6.2); }
+  .band-btns{ gap:calc(var(--u) * 1); }
+  .band-text{ font-size:calc(var(--u) * 3); }
+  .intro-quiet{ font-size:calc(var(--u) * 2); padding:calc(var(--u) * 1) 0; }
+  .intro-loc{ font-size:calc(var(--u) * 1.8); margin-top:calc(var(--u) * 1.2); }
+  .intro-loc a, .theme-btn{ padding:calc(var(--u) * 1) 0; }
+  .intro-loc a{ border-bottom:0; text-decoration:underline; text-underline-offset:0.3em; }
+  .forecast{ font-size:calc(var(--u) * 1.8); }
+  .forecast div{ grid-template-columns:calc(var(--u) * 19) auto; }
+  .stat-btn{ padding:calc(var(--u) * 0.5) 0 0 calc(var(--u) * 2); }
+  .list-tab, .viz-mode, .viz-rgb, .viz-power{ padding:calc(var(--u) * 0.6) 0; }
 }
 
 @media (prefers-reduced-motion: reduce){
