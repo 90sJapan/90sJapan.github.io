@@ -69,13 +69,29 @@
   $('chPrev').addEventListener('click', pick(() => step(-1)));
   screen.addEventListener('pointerdown', touched);
   screen.addEventListener('wheel', touched, { passive: true });
+  // wherever focus is (only text fields keep their keys): space plays / pauses, the arrows seek 5 s, and 0-9 jump
+  // to that tenth of the song, so 0 is the start and 9 is one tenth before the end
+  const SEEK_S = 5;
+  const seekTo = s => { const d = audio.duration; if (audio.src && isFinite(d) && d > 0) audio.currentTime = Math.max(0, Math.min(d, s(d))); };
   document.addEventListener('keydown', e => {
     touched();
-    if (e.target !== document.body || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    const t = e.target;
+    if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
     const k = e.key;
-    if (k >= '1' && k <= '4') { start(); go(PAGES[+k - 1].id, true); }
-    else if (k === 'ArrowRight' || k === 'ArrowLeft') { start(); step(k === 'ArrowRight' ? 1 : -1); }
-    else if (k === ' ') { e.preventDefault(); start(); $('playBtn').click(); }
+    if (k === ' ' || k === 'Spacebar') {
+      e.preventDefault();                       // a focused button would otherwise be clicked as well
+      if (!e.repeat) { start(); $('playBtn').click(); }
+    } else if (k === 'ArrowRight' || k === 'ArrowLeft') {
+      e.preventDefault();
+      seekTo(() => audio.currentTime + (k === 'ArrowRight' ? SEEK_S : -SEEK_S));
+    } else if (k.length === 1 && k >= '0' && k <= '9') {
+      e.preventDefault();
+      seekTo(d => d * +k / 10);
+    }
+  });
+  document.addEventListener('keyup', e => {      // Firefox presses a focused button on space's key-up
+    if ((e.key === ' ' || e.key === 'Spacebar') && e.target.tagName === 'BUTTON') e.preventDefault();
   });
 
   /* ---------- mute (the intro's corner button and the band's square stay in step) ---------- */
