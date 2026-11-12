@@ -44,13 +44,14 @@
   $('introSkip').addEventListener('click', start);  // in without sound
 
   /* ---------- channels ---------- */
-  function go(id, cut) {
+  // cell: open the lists channel on this playlist instead of the one that's playing
+  function go(id, cut, cell) {
     const p = PAGES.find(x => x.id === id) || PAGES[0];
     screen.dataset.page = p.id;
     $('castT1').textContent = p.t1; $('castT2').textContent = p.t2;
     const el = screen.querySelector('.page[data-page="' + p.id + '"]');
     if (cut && el) { el.classList.remove('is-cut'); void el.offsetWidth; el.classList.add('is-cut'); }
-    if (p.id === 'lists') showCurrentList();
+    if (p.id === 'lists') { if (cell === undefined) showCurrentList(); else showCell(cell); }
   }
   function step(d) { const i = PAGES.findIndex(p => p.id === screen.dataset.page); go(PAGES[(i + d + PAGES.length) % PAGES.length].id, true); }
 
@@ -74,7 +75,7 @@
     const k = e.key;
     if (k >= '1' && k <= '4') { start(); go(PAGES[+k - 1].id, true); }
     else if (k === 'ArrowRight' || k === 'ArrowLeft') { start(); step(k === 'ArrowRight' ? 1 : -1); }
-    else if (k === ' ') { e.preventDefault(); $('playBtn').click(); }
+    else if (k === ' ') { e.preventDefault(); start(); $('playBtn').click(); }
   });
 
   /* ---------- mute (the intro's corner button and the band's square stay in step) ---------- */
@@ -160,7 +161,7 @@
         '<span class="day-vis">' + (total ? Math.round(total / 60) + ' min total' : '') + '</span>';
       d.querySelector('.day-name').textContent = name;
       d.querySelector('.day-kind').textContent = vis || 'playlist';
-      d.addEventListener('click', () => { touched(); showCell(i); go('lists', true); });
+      d.addEventListener('click', () => { touched(); go('lists', true, i); });
       outlook.appendChild(d);
     });
     markCurrent();
